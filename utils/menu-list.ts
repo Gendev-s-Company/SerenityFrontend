@@ -1,5 +1,7 @@
 import { PMenu } from "@/types/menu-type";
 import { Calendar, Home, Inbox } from "lucide-react";
+import { HotelItems } from "./hotel-menu";
+import { RestoItems } from "./restaurant-menu";
 
 // Menu items.
 export const items: PMenu[] = [
@@ -70,71 +72,7 @@ export const items: PMenu[] = [
     subMenu: [],
     icon: Inbox,
   },
-  {
-    title: "Hotel",
-    url: "#",
-    dropdown: false,
-    isSubmenu: true,
-    subMenu: [
-      {
-        title: "First",
-        url: "#cdc",
-        dropdown: false,
-        isSubmenu: false,
-        subMenu: [],
-        icon: Inbox,
-      },
-      {
-        title: "Second",
-        url: "#thyh",
-        dropdown: false,
-        isSubmenu: false,
-        subMenu: [],
-        icon: Calendar,
-      },
-    ],
-    icon: Calendar,
-  },
-  {
-    title: "Restaurant",
-    url: "#",
-    dropdown: false,
-    isSubmenu: true,
-    subMenu: [
-      {
-        title: "First",
-        url: "#cdc",
-        dropdown: true,
-        isSubmenu: false,
-        subMenu: [
-          {
-            title: "First",
-            url: "#cdc",
-            dropdown: false,
-            isSubmenu: false,
-            subMenu: [],
-            icon: Inbox,
-          },
-          {
-            title: "Second",
-            url: "#thyh",
-            dropdown: false,
-            isSubmenu: false,
-            subMenu: [],
-            icon: Calendar,
-          },
-        ],
-        icon: Inbox,
-      },
-      {
-        title: "Second",
-        url: "#thyh",
-        dropdown: false,
-        isSubmenu: false,
-        subMenu: [],
-        icon: Calendar,
-      },
-    ],
-    icon: Calendar,
-  },
+  HotelItems,
+  RestoItems,
+
 ];
