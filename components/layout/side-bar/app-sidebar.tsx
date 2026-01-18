@@ -25,6 +25,7 @@ export function AppSidebar() {
             </span>
           </SidebarGroupLabel>
           <SidebarGroupContent>
+            <br />
             <SidebarMenu>
               {items.map((item) => (
                 <div key={item.title}>
