@@ -6,6 +6,7 @@ import {
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { PMenu } from "@/types/menu-type";
+import DropdownMenuComponent from "./dropdown-menu";
 
 const SubmenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
   items,
@@ -16,14 +17,25 @@ const SubmenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
       <SidebarMenuButton>{title}</SidebarMenuButton>
       <SidebarMenuSub>
         {items?.map((row, index) => {
-          const hasSubmenu = row.isSubmenu && row.subMenu.length > 0;
+          const hasSubmenu = row.subMenu.length > 0;
           if (hasSubmenu) {
             return (
-            <SubmenuComponent
-              key={index}
-              items={row.subMenu}
-              title={row.title}
-            />)
+              <div key={index}>
+                {row.isSubmenu ? (
+                  <SubmenuComponent
+                    key={index}
+                    items={row.subMenu}
+                    title={row.title}
+                  />
+                ) : (
+                  <DropdownMenuComponent
+                    key={index}
+                    items={row.subMenu}
+                    title={row.title}
+                  />
+                )}
+              </div>
+            );
           } else
             return (
               <SidebarMenuSubItem key={index}>

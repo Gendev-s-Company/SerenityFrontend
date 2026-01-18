@@ -104,9 +104,26 @@ export const items: PMenu[] = [
       {
         title: "First",
         url: "#cdc",
-        dropdown: false,
-        isSubmenu: true,
-        subMenu: [],
+        dropdown: true,
+        isSubmenu: false,
+        subMenu: [
+          {
+            title: "First",
+            url: "#cdc",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Inbox,
+          },
+          {
+            title: "Second",
+            url: "#thyh",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Calendar,
+          },
+        ],
         icon: Inbox,
       },
       {
