@@ -10,7 +10,7 @@ export interface PMenu {
     url: string,
     dropdown: boolean,
     isSubmenu: boolean,
-    subMenu: MMenu[],
+    subMenu: PMenu[],
     icon: LucideIcon,
 }
 

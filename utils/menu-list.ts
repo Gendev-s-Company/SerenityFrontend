@@ -3,69 +3,121 @@ import { Calendar, Home, Inbox } from "lucide-react";
 
 // Menu items.
 export const items: PMenu[] = [
-    {
-        title: "Personnel",
-        url: "",
+  {
+    title: "Personnel",
+    url: "",
+    dropdown: true,
+    isSubmenu: false,
+    subMenu: [
+      {
+        title: "First",
+        url: "#revvg",
         dropdown: true,
         isSubmenu: false,
         subMenu: [
-            {
+          {
+            title: "Subdrodp",
+            url: "#cdc",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Inbox,
+          },
+          {
+            title: "Seconddrop",
+            url: "#thyh",
+            dropdown: true,
+            isSubmenu: false,
+            subMenu: [
+              {
                 title: "First",
-                url: "#revvg",
+                url: "#cdc",
+                dropdown: false,
+                isSubmenu: false,
+                subMenu: [],
                 icon: Inbox,
-            },
-            {
+              },
+              {
                 title: "Second",
-                url: "#rer",
+                url: "#thyh",
+                dropdown: false,
+                isSubmenu: false,
+                subMenu: [],
                 icon: Calendar,
-            },
+              },
+            ],
+            icon: Calendar,
+          },
         ],
-        icon: Home,
-    },
-    {
-        title: "Inbox",
-        url: "#hyhy",
+        icon: Inbox,
+      },
+      {
+        title: "Second",
+        url: "#rer",
+        dropdown: false,
+        isSubmenu: false,
+        subMenu: [],
+        icon: Calendar,
+      },
+    ],
+    icon: Home,
+  },
+  {
+    title: "Inbox",
+    url: "#hyhy",
+    dropdown: false,
+    isSubmenu: false,
+    subMenu: [],
+    icon: Inbox,
+  },
+  {
+    title: "Hotel",
+    url: "#",
+    dropdown: false,
+    isSubmenu: true,
+    subMenu: [
+      {
+        title: "First",
+        url: "#cdc",
         dropdown: false,
         isSubmenu: false,
         subMenu: [],
         icon: Inbox,
-    },
-    {
-        title: "Hotel",
-        url: "#",
+      },
+      {
+        title: "Second",
+        url: "#thyh",
+        dropdown: false,
+        isSubmenu: false,
+        subMenu: [],
+        icon: Calendar,
+      },
+    ],
+    icon: Calendar,
+  },
+  {
+    title: "Restaurant",
+    url: "#",
+    dropdown: false,
+    isSubmenu: true,
+    subMenu: [
+      {
+        title: "First",
+        url: "#cdc",
         dropdown: false,
         isSubmenu: true,
-        subMenu: [
-            {
-                title: "First",
-                url: "#cdc",
-                icon: Inbox,
-            },
-            {
-                title: "Second",
-                url: "#thyh",
-                icon: Calendar,
-            },
-        ],
-        icon: Calendar,
-    },
-    {
-        title: "Restaurant",
-        url: "#",
+        subMenu: [],
+        icon: Inbox,
+      },
+      {
+        title: "Second",
+        url: "#thyh",
         dropdown: false,
-        isSubmenu: true,
-        subMenu: [
-            {
-                title: "First",
-                url: "#cdc",
-                icon: Inbox,
-            },
-            {
-                title: "Second",
-                url: "#thyh",
-                icon: Calendar,
-            },
-        ],
+        isSubmenu: false,
+        subMenu: [],
         icon: Calendar,
-    },
-]
+      },
+    ],
+    icon: Calendar,
+  },
+];
