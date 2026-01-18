@@ -4,7 +4,7 @@ import { Calendar, Home, Inbox } from "lucide-react";
 // Menu items.
 export const items: PMenu[] = [
     {
-        title: "jbdu",
+        title: "Personnel",
         url: "",
         dropdown: true,
         isSubmenu: false,
@@ -31,7 +31,26 @@ export const items: PMenu[] = [
         icon: Inbox,
     },
     {
-        title: "Calendar",
+        title: "Hotel",
+        url: "#",
+        dropdown: false,
+        isSubmenu: true,
+        subMenu: [
+            {
+                title: "First",
+                url: "#cdc",
+                icon: Inbox,
+            },
+            {
+                title: "Second",
+                url: "#thyh",
+                icon: Calendar,
+            },
+        ],
+        icon: Calendar,
+    },
+    {
+        title: "Restaurant",
         url: "#",
         dropdown: false,
         isSubmenu: true,
