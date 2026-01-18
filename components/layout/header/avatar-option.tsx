@@ -1,16 +1,19 @@
 import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Mavatar from '@/components/avatar/mavatar';
+import { Iavatar } from '@/types/menu-type';
 
 const AvatarOption = () => {
+    const avatar:Iavatar = {
+       src:"https://github.com/shadcn.png",
+        alt: "@shadcn",
+        fallback:"CN"
+    }
   return (
     <div className="ml-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <Mavatar avatar={avatar} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Mon Compte</DropdownMenuLabel>
