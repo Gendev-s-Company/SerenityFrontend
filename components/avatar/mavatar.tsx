@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Iavatar } from "@/types/menu-type";
+import { Iavatar } from "@/types/avatar-type";
 
 const Mavatar: React.FC<{avatar:Iavatar}> = ({avatar}) => {
   return (

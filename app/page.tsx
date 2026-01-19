@@ -1,8 +1,11 @@
+import AuthenticationPage from '@/components/features/authentication/authentication-page'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>Debut</div>
+    <>
+      <AuthenticationPage />
+    </>
   )
 }
 

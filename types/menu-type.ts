@@ -14,8 +14,3 @@ export interface PMenu {
     icon: LucideIcon,
 }
 
-export interface Iavatar {
-    src:string,
-    alt:string,
-    fallback: string
-}
