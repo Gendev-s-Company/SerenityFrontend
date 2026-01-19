@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
+  // CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -14,9 +14,9 @@ import { Label } from "@/components/ui/label";
 import { redirect } from "next/navigation";
 
 export default function AuthenticationPage() {
-    const formAction =  () => {
-        redirect('/view')
-    }
+  const formAction = () => {
+    redirect("/view");
+  };
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center p-4">
@@ -26,11 +26,11 @@ export default function AuthenticationPage() {
           <CardDescription>
             {"Application de gestion d'hotel et de restauration"}
           </CardDescription>
-          <CardAction>
+          {/* <CardAction>
             <Button className="cursor-pointer" variant="link">
               Créé un compte
             </Button>
-          </CardAction>
+          </CardAction> */}
         </CardHeader>
         <CardContent>
           <form>
@@ -47,7 +47,6 @@ export default function AuthenticationPage() {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Mot de passe</Label>
-                  
                 </div>
                 <Input id="password" type="password" required />
               </div>
@@ -55,12 +54,20 @@ export default function AuthenticationPage() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button onClick={formAction} type="submit" className="w-full cursor-pointer">
+          <Button
+            onClick={formAction}
+            type="submit"
+            className="w-full cursor-pointer"
+          >
             Se connecter
+          </Button>
+          <Button className="cursor-pointer" variant="link">
+            Créé un compte
           </Button>
           <a
             href="#"
             className="inline-block text-sm underline-offset-4 hover:underline"
+            
           >
             Mot de passe oublié?
           </a>
