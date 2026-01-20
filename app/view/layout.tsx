@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/side-bar/app-sidebar";
 import Header from "@/components/layout/header/header";
 import { Separator } from "@/components/ui/separator";
+import { Suspense } from "react";
 
 
 
@@ -25,6 +26,7 @@ export default function MainLayout({
                         <main>
                             <Header />
                             <Separator />
+                            <Suspense fallback={<div>Loading...</div>} />
                             {children}
                         </main>
                     </SidebarInset>
