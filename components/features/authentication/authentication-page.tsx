@@ -45,11 +45,20 @@ export default function AuthenticationPage() {
                 />
               </div>
               <div className="grid gap-2">
+
                 <div className="flex items-center">
                   <Label htmlFor="password">Mot de passe</Label>
+                  <a
+                    href="#"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+
+                  >
+                    Mot de passe oublié?
+                  </a>
                 </div>
                 <Input id="password" type="password" required />
               </div>
+
             </div>
           </form>
         </CardContent>
@@ -62,15 +71,8 @@ export default function AuthenticationPage() {
             Se connecter
           </Button>
           <Button className="cursor-pointer" variant="link">
-            Créé un compte
+            {"Besoin d'aide?"}
           </Button>
-          <a
-            href="#"
-            className="inline-block text-sm underline-offset-4 hover:underline"
-            
-          >
-            Mot de passe oublié?
-          </a>
         </CardFooter>
       </Card>
     </div>
