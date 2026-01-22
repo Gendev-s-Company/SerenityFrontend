@@ -55,7 +55,7 @@ export const HotelItems: PMenu =
             icon: Inbox,
           },
           {
-            title: "Ping pong",
+            title: "Exemple liste",
             url: "/view/payment",
             dropdown: false,
             isSubmenu: false,

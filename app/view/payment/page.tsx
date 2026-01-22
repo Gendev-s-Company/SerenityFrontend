@@ -1,9 +1,10 @@
+"use client";
 import { ColumnConfig } from "@/types/column-config";
 import { DataTable, Payment } from "../../../components/liste/complexe-data-table"
 
 
 
-export default async function DemoPage() {
+export default function DemoPage() {
   
 const data: Payment[] = [
   {
@@ -31,7 +32,19 @@ const data: Payment[] = [
     email: "Silas22@example.com",
   },
   {
-    id: "bhqecj4p",
+    id: "bhqecj4p7",
+    amount: 7210,
+    status: "failed",
+    email: "carmella@example.com",
+  },
+  {
+    id: "bhqecj4p6",
+    amount: 7210,
+    status: "failed",
+    email: "carmella@example.com",
+  },
+  {
+    id: "bhqecj4p5",
     amount: 7210,
     status: "failed",
     email: "carmella@example.com",
@@ -40,7 +53,7 @@ const data: Payment[] = [
 
 const ColumnOptions: ColumnConfig<Payment>[] = [
   { key: "select", header: "Select", type: "checkbox" },
-  { key: "status", header: "Statut" }, 
+  { key: "status", header: "Statut",sorting:true }, 
   { 
     key: "email", 
     header: "Email", 
@@ -60,7 +73,7 @@ const ColumnOptions: ColumnConfig<Payment>[] = [
   return (
     <div className="container mx-auto py-10 px-3">
       {/* <DataTable columns={columns} data={data} /> */}
-      <DataTable />
+      <DataTable data={data} mcolumns={ColumnOptions} />
     </div>
   )
 }

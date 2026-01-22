@@ -51,9 +51,8 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
                 const value = row.getValue(config.key)
                 const rowData = row.original
 
-                // --- Rendu conditionnel ---
 
-                // Cas : MONTANT (MGA)
+                // MONTANT (MGA)
                 if (config.type === "amount" && config.amountType) {
                     const amount = parseFloat(value as string)
                     const formatted = new Intl.NumberFormat(config.amountType.lang, {
@@ -64,7 +63,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
                     return <div className="text-right font-medium">{formatted}</div>
                 }
 
-                // Cas : BOUTON
+                // drop & update
                 if (config.type === "button") {
                     return (
                         <div className="flex items-start gap-2">
@@ -78,7 +77,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
                     )
                 }
 
-                // Cas : LIEN
+                // LIEN
                 if (config.type === "link") {
                     return (
                         <Link
@@ -90,7 +89,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
                     )
                 }
 
-                // Cas par défaut : TEXTE
+                // TEXTE
                 return <div className="lowercase">{value as string}</div>
             },
             enableSorting: isSortingEnabled,

@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -17,44 +17,48 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  PaginationState,
   useReactTable,
   type ColumnFiltersState,
   type SortingState,
   type VisibilityState,
-} from "@tanstack/react-table"
-import { ChevronDown } from "lucide-react"
-import { ColumnConfig } from "@/types/column-config"
-import { generateColumns } from "./generate-column"
+} from "@tanstack/react-table";
+import { ChevronDown } from "lucide-react";
+import { ColumnConfig } from "@/types/column-config";
+import { generateColumns } from "./generate-column";
+import { Paginate } from "../pagination/Paginate";
 
- export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
+export type Payment = {
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
+};
+
+interface DataTableProps<TData> {
+  mcolumns: ColumnConfig<TData>[];
+  data: TData[];
 }
-
-
-interface DataTableProps<TData, TValue> {
-  mcolumns: ColumnDef<TData, TValue>[]
-  data: TData[]
-}
-export function DataTable<TData, TValue>({mcolumns,data}) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function DataTable<TData>({ data, mcolumns }: DataTableProps<TData>) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+    [],
+  );
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
- const columns = generateColumns<Payment>(mcolumns);
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
+  const columns = generateColumns<TData>(mcolumns);
 
   const table = useReactTable({
     data,
@@ -62,6 +66,7 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
+    onPaginationChange: setPagination,
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -72,8 +77,9 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -82,7 +88,7 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
       */}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
+          placeholder="Recherche email..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
@@ -117,7 +123,7 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -139,10 +145,10 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -159,7 +165,7 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -171,7 +177,7 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Aucun résultat dans cette page.
                 </TableCell>
               </TableRow>
             )}
@@ -181,11 +187,16 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} {" sur "}
+          {table.getFilteredRowModel().rows.length} ligne(s) choisis.
         </div>
         <div className="space-x-2">
-          <Button
+          <div className="text-muted-foreground flex-1 text-sm">
+            Page {table.getState().pagination.pageIndex + 1} sur{" "}
+            {table.getPageCount()} ({data.length} éléments au total)
+          </div>
+          <Paginate />
+          {/* <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
@@ -200,9 +211,9 @@ export function DataTable<TData, TValue>({mcolumns,data}) {
             disabled={!table.getCanNextPage()}
           >
             Next
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
-  )
+  );
 }
