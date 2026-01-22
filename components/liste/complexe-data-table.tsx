@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -30,42 +31,22 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table"
 import { ChevronDown } from "lucide-react"
-import { columns, Payment } from "@/components/liste/columns"
+import { ColumnConfig } from "@/types/column-config"
+import { generateColumns } from "./generate-column"
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-]
+ export type Payment = {
+    id: string
+    amount: number
+    status: "pending" | "processing" | "success" | "failed"
+    email: string
+}
 
-export function DataTableDemo() {
+
+interface DataTableProps<TData, TValue> {
+  mcolumns: ColumnDef<TData, TValue>[]
+  data: TData[]
+}
+export function DataTable<TData, TValue>({mcolumns,data}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -73,6 +54,7 @@ export function DataTableDemo() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+ const columns = generateColumns<Payment>(mcolumns);
 
   const table = useReactTable({
     data,
