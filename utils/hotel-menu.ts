@@ -48,7 +48,7 @@ export const HotelItems: PMenu =
         isSubmenu: true,
         subMenu: [{
             title: "Billard",
-            url: "#billard",
+            url: "/view/liste",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
@@ -56,7 +56,7 @@ export const HotelItems: PMenu =
           },
           {
             title: "Ping pong",
-            url: "#ping",
+            url: "/view/payment",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
