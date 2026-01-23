@@ -9,7 +9,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
     return configs.map((config) => {
         const isSortingEnabled = config.sorting ?? false;
         const isHidingEnabled = config.hiding ?? true;
-        // 1. Cas spécifique : Checkbox
+        //  type  Checkbox
         if (config.type === "checkbox") {
             return {
                 id: "select",
@@ -32,7 +32,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
             }
         }
 
-        // 2. Configuration standard (Texte, Bouton, Lien, Montant)
+        // type  standard (Texte, Bouton, Lien, Montant)
         return {
             accessorKey: config.key,
             header: ({ column }) => {
