@@ -67,6 +67,8 @@ const ColumnOptions: ColumnConfig<Payment>[] = [
     header: "Action", 
     type: "button", 
     hiding:false,
+    onUpdate: (row) => console.log("Editer done:", row.id),
+    onDelete: (row) => console.log("Supprimer done:", row.id),
     onClick: (row) => console.log("Editer", row.id) 
   }
 ];

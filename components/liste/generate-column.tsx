@@ -1,9 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, Pencil, Trash2 } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import Link from "next/link"
 import { ColumnConfig } from "@/types/column-config"
+import DeleteBox from "../delete/delete-box"
+import UpdateBox from "../update/update-box"
 export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
 
     return configs.map((config) => {
@@ -67,12 +69,8 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
                 if (config.type === "button") {
                     return (
                         <div className="flex items-start gap-2">
-                            <Button className="cursor-pointer" size="icon-sm" aria-label="Submit" variant="outline">
-                                <Pencil color="#2683fd" />
-                            </Button>
-                            <Button className="cursor-pointer" size="icon-sm" aria-label="Submit" variant="outline">
-                                <Trash2 color="#f70808" />
-                            </Button>
+                            {config.onUpdate && <UpdateBox body={rowData} onUpdate={config.onUpdate} fields={[]} />}
+                            <DeleteBox id={rowData["id" as keyof T] as string} onDelete={() =>config.onDelete && config.onDelete(rowData)} />
                         </div>
                     )
                 }
