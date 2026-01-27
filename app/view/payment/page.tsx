@@ -86,7 +86,6 @@ export default function DemoPage() {
   ];
   return (
     <div className="container mx-auto py-10 px-3">
-      {/* <DataTable columns={columns} data={data} /> */}
       <DataTable data={data} mcolumns={ColumnOptions} fields={namefield} />
     </div>
   )

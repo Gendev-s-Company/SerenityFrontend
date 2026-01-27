@@ -2,13 +2,6 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -28,13 +21,13 @@ import {
   useReactTable,
   type ColumnFiltersState,
   type SortingState,
-  type VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { Plus } from "lucide-react";
 import { ColumnConfig } from "@/types/column-config";
 import { generateColumns } from "./generate-column";
 import { Paginate } from "../pagination/Paginate";
 import { FieldConfig } from "@/types/form-type";
+import Tooltips from "../tooltips/tooltips";
 
 export type Payment = {
   id: string;
@@ -57,9 +50,8 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
     pageIndex: 0,
     pageSize: 5,
   });
-  const [columnVisibility, setColumnVisibility] =  React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const columns = generateColumns<TData>(mcolumns,fields);
+  const columns = generateColumns<TData>(mcolumns, fields);
 
   const table = useReactTable({
     data,
@@ -71,12 +63,10 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
       rowSelection,
       pagination,
     },
@@ -84,54 +74,29 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
 
   return (
     <div className="w-full">
-      {/* 
+
+      <div className="flex items-center py-4">
+        <Tooltips libelle="Nouveau" >
+          <Button variant="default" size="icon" className="rounded-full cursor-pointer">
+            <Plus />
+          </Button>
+        </Tooltips>
+
+        {/* 
         début an'ilay filtre kely iny
       */}
-      <div className="flex items-center py-4">
         <Input
           placeholder="Recherche email..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm ml-auto"
         />
         {/* 
           fin input filter
-          début 
-          eto ilay misafidy liste columns ho affichena 
         */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuGroup>
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        {/* 
-          fin misafidy liste column affichena
-        */}
+
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -145,9 +110,9 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}
