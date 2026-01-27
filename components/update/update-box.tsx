@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -15,6 +14,8 @@ import { Pencil } from "lucide-react";
 
 import useForm from "@/hooks/use-form";
 import Forms from "../form-component/Forms";
+import Sbutton from "../button/Sbutton";
+import { useState } from "react";
 
 
 interface UpdateBoxProps<T> {
@@ -24,17 +25,19 @@ interface UpdateBoxProps<T> {
 }
 export default function UpdateBox<T>({ body, onUpdate, fields }: UpdateBoxProps<T>) {
   const forms = useForm(body)
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
+const [open, setOpen] = useState(false);
+  const handleOpenChange = (opens: boolean) => {
+    setOpen(opens);
+    if (!opens) {
       forms.resetForm();
     }
   };
   const submit = () => {
     onUpdate(forms.getForm)
+    setTimeout(() => setOpen(false), 500); 
   }
   return (
-    <Dialog onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <Button
             className="cursor-pointer"
@@ -59,12 +62,8 @@ export default function UpdateBox<T>({ body, onUpdate, fields }: UpdateBoxProps<
             <Forms forms={forms} fields={fields} />
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button className="cursor-pointer" onClick={forms.resetForm} variant="outline">Cancel</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button className="cursor-pointer" onClick={submit} >Save changes</Button>
-            </DialogClose>
+              <Button className="cursor-pointer" onClick={() => handleOpenChange(false)} variant="outline">Annuler</Button>
+              <Sbutton  formAction={submit} />
           </DialogFooter>
         </DialogContent>
     </Dialog>

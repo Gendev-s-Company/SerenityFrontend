@@ -1,4 +1,5 @@
 "use client";
+import Sbutton from "@/components/button/Sbutton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,11 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function AuthenticationPage() {
-  const formAction = () => {
-    redirect("/view");
+  const router = useRouter();
+  const formAction =  () => {
+    console.log("En cours d'authentification");
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    router.push("/view");
   };
 
   return (
@@ -45,31 +49,29 @@ export default function AuthenticationPage() {
                 />
               </div>
               <div className="grid gap-2">
-
                 <div className="flex items-center">
                   <Label htmlFor="password">Mot de passe</Label>
                   <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-
                   >
                     Mot de passe oublié?
                   </a>
                 </div>
                 <Input id="password" type="password" required />
               </div>
-
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button
+          {/* <Button
             onClick={formAction}
-            type="submit"
+            // type="submit"
             className="w-full cursor-pointer"
           >
             Se connecter
-          </Button>
+          </Button> */}
+          <Sbutton libelle="Se connecter" className="w-full" formAction={formAction} />
           <Button className="cursor-pointer" variant="link">
             {"Besoin d'aide?"}
           </Button>

@@ -40,9 +40,13 @@ export type Payment = {
 interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[];
   data: TData[];
-  fields: FieldConfig<TData>[]
+  fields: FieldConfig<TData>[];
 }
-export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TData>) {
+export function DataTable<TData>({
+  data,
+  mcolumns,
+  fields,
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -75,10 +79,13 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
 
   return (
     <div className="w-full">
-
       <div className="flex items-center py-4">
-        <Tooltips libelle="Nouveau" >
-          <Button variant="default" size="icon" className="rounded-full cursor-pointer">
+        <Tooltips libelle="Nouveau">
+          <Button
+            variant="default"
+            size="icon"
+            className="rounded-full cursor-pointer"
+          >
             <Plus />
           </Button>
         </Tooltips>
@@ -97,7 +104,6 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
         {/* 
           fin input filter
         */}
-
       </div>
       <div className="overflow-hidden rounded-md border">
         <Liste table={table} />
