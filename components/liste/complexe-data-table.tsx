@@ -28,6 +28,7 @@ import { generateColumns } from "./generate-column";
 import { Paginate } from "../pagination/Paginate";
 import { FieldConfig } from "@/types/form-type";
 import Tooltips from "../tooltips/tooltips";
+import Liste from "./Liste";
 
 export type Payment = {
   id: string;
@@ -99,57 +100,7 @@ export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TDat
 
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Table>
-          {/* maka header */}
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          {/* fin maka header et début body */}
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Aucun résultat dans cette page.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-          {/* fin body table */}
-        </Table>
+        <Liste table={table} />
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
