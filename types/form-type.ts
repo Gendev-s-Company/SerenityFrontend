@@ -1,5 +1,5 @@
-export type FieldConfig = {
-  name: string;
+export type FieldConfig<T> = {
+  name: keyof T;
   libelle: string;
   type: string;
   normal: boolean;

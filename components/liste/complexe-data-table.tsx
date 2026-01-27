@@ -34,6 +34,7 @@ import { ChevronDown } from "lucide-react";
 import { ColumnConfig } from "@/types/column-config";
 import { generateColumns } from "./generate-column";
 import { Paginate } from "../pagination/Paginate";
+import { FieldConfig } from "@/types/form-type";
 
 export type Payment = {
   id: string;
@@ -45,8 +46,9 @@ export type Payment = {
 interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[];
   data: TData[];
+  fields: FieldConfig<TData>[]
 }
-export function DataTable<TData>({ data, mcolumns }: DataTableProps<TData>) {
+export function DataTable<TData>({ data, mcolumns, fields }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -55,10 +57,9 @@ export function DataTable<TData>({ data, mcolumns }: DataTableProps<TData>) {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] =  React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const columns = generateColumns<TData>(mcolumns);
+  const columns = generateColumns<TData>(mcolumns,fields);
 
   const table = useReactTable({
     data,

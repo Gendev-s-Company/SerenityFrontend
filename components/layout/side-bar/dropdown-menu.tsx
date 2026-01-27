@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { PMenu } from "@/types/menu-type";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 const DropdownMenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
   items,
@@ -45,10 +46,14 @@ const DropdownMenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
                   return (
                     <SidebarMenuSubItem key={index}>
                       <SidebarMenuSubButton asChild>
-                        <a href={row.url}>
+                        {/* <a href={row.url}>
                           {Icon && <Icon size={16} />}
                           <span>{row.title}</span>
-                        </a>
+                        </a> */}
+                        <Link href={row.url}>
+                          {Icon && <Icon size={16} />}
+                          <span>{row.title}</span>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   );

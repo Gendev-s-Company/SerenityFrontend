@@ -6,7 +6,8 @@ import Link from "next/link"
 import { ColumnConfig } from "@/types/column-config"
 import DeleteBox from "../delete/delete-box"
 import UpdateBox from "../update/update-box"
-export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
+import { FieldConfig } from "@/types/form-type"
+export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConfig<T>[]): ColumnDef<T>[] {
 
     return configs.map((config) => {
         const isSortingEnabled = config.sorting ?? false;
@@ -69,7 +70,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[]): ColumnDef<T>[] {
                 if (config.type === "button") {
                     return (
                         <div className="flex items-start gap-2">
-                            {config.onUpdate && <UpdateBox body={rowData} onUpdate={config.onUpdate} fields={[]} />}
+                            {config.onUpdate && <UpdateBox body={rowData} onUpdate={config.onUpdate} fields={fields} />}
                             <DeleteBox id={rowData["id" as keyof T] as string} onDelete={() =>config.onDelete && config.onDelete(rowData)} />
                         </div>
                     )
