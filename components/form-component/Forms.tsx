@@ -26,7 +26,6 @@ interface FormsProps<T> {
 export default function Forms<T>({ forms, fields }: FormsProps<T>) {
   return (
     <form>
-      {/* <div className="w-full max-w-md"> */}
       <FieldGroup>
         <FieldSet>
           <FieldGroup>
