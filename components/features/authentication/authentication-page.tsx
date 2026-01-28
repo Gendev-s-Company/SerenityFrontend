@@ -3,7 +3,6 @@ import Sbutton from "@/components/button/Sbutton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  // CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -18,7 +17,6 @@ export default function AuthenticationPage() {
   const router = useRouter();
   const formAction =  () => {
     console.log("En cours d'authentification");
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
     router.push("/view");
   };
 
@@ -30,11 +28,6 @@ export default function AuthenticationPage() {
           <CardDescription>
             {"Application de gestion d'hotel et de restauration"}
           </CardDescription>
-          {/* <CardAction>
-            <Button className="cursor-pointer" variant="link">
-              Créé un compte
-            </Button>
-          </CardAction> */}
         </CardHeader>
         <CardContent>
           <form>
@@ -64,13 +57,6 @@ export default function AuthenticationPage() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          {/* <Button
-            onClick={formAction}
-            // type="submit"
-            className="w-full cursor-pointer"
-          >
-            Se connecter
-          </Button> */}
           <Sbutton libelle="Se connecter" className="w-full" formAction={formAction} />
           <Button className="cursor-pointer" variant="link">
             {"Besoin d'aide?"}

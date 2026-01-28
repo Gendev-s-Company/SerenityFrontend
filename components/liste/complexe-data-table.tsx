@@ -22,13 +22,13 @@ import {
   type ColumnFiltersState,
   type SortingState,
 } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
 import { ColumnConfig } from "@/types/column-config";
 import { generateColumns } from "./generate-column";
 import { Paginate } from "../pagination/Paginate";
 import { FieldConfig } from "@/types/form-type";
 import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
+import CreateBox from "../create/create-box";
 
 export type Payment = {
   id: string;
@@ -41,11 +41,15 @@ interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[];
   data: TData[];
   fields: FieldConfig<TData>[];
+  onCreate:(data: TData) => void;
+  body:TData
 }
 export function DataTable<TData>({
   data,
   mcolumns,
   fields,
+  onCreate,
+  body
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -53,7 +57,7 @@ export function DataTable<TData>({
   );
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 5,
+    pageSize: 10,
   });
   const [rowSelection, setRowSelection] = React.useState({});
   const columns = generateColumns<TData>(mcolumns, fields);
@@ -81,13 +85,7 @@ export function DataTable<TData>({
     <div className="w-full">
       <div className="flex items-center py-4">
         <Tooltips libelle="Nouveau">
-          <Button
-            variant="default"
-            size="icon"
-            className="rounded-full cursor-pointer"
-          >
-            <Plus />
-          </Button>
+          <CreateBox body={body} onSubmit={onCreate} fields={fields} />
         </Tooltips>
 
         {/* 

@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldConfig } from "@/types/form-type";
-import { Pencil } from "lucide-react";
+import { Plus } from "lucide-react";
 
 
 import useForm from "@/hooks/use-form";
@@ -18,12 +18,12 @@ import Sbutton from "../button/Sbutton";
 import { useState } from "react";
 
 
-interface UpdateBoxProps<T> {
+interface CreateBoxProps<T> {
   body: T,
-  onUpdate: (data: T) => void;
+  onSubmit: (data: T) => void;
   fields?: FieldConfig<T>[],
 }
-export default function UpdateBox<T>({ body, onUpdate, fields}: UpdateBoxProps<T>) {
+export default function CreateBox<T>({ body, onSubmit, fields}: CreateBoxProps<T>) {
   const forms = useForm(body)
 const [open, setOpen] = useState(false);
   const handleOpenChange = (opens: boolean) => {
@@ -33,26 +33,26 @@ const [open, setOpen] = useState(false);
     }
   };
   const submit = () => {
-    onUpdate(forms.getForm)
+    onSubmit(forms.getForm)
     setTimeout(() => setOpen(false), 500); 
+    forms.resetForm()
   }
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <Button
-            className="cursor-pointer"
-            size="icon-sm"
-            aria-label="Submit"
-            variant="outline"
+            variant="default"
+            size="icon"
+            className="rounded-full cursor-pointer"
           >
-            <Pencil color="#2683fd" />
+            <Plus />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{"Modification d'un"} Enregistrement</DialogTitle>
+            <DialogTitle>{"Création d'un"} Enregistrement</DialogTitle>
             <DialogDescription>
-              Modifier les champs puis valider pour enregistrer les modifications
+              Remplir les champs pour créer un enregistrement
             </DialogDescription>
           </DialogHeader>
           {/* <div className="w-full max-w-md"> */}

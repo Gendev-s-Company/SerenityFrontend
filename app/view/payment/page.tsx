@@ -77,6 +77,7 @@ export default function DemoPage() {
     { id: 'success', label: 'success' },
     { id: 'failed', label: 'failed' },
     { id: 'processing', label: 'processing' },
+    { id: 'pending', label: 'pending' },
   ]
 
   const namefield: FieldConfig<Payment>[] = [
@@ -84,9 +85,20 @@ export default function DemoPage() {
     { name: 'amount', libelle: 'Montant :', type: 'number', normal: true },
     { name: 'status', libelle: 'Status :', type: 'select', normal: false, items: list_status }
   ];
+  const body:Payment = {
+    id:'',
+    email:'',
+    amount:0,
+    status:'processing'
+  }
+  const onCreate = (formData:Payment) => {
+    console.log('Enregistrement OK ');
+    console.log(formData);
+    
+  }
   return (
     <div className="container mx-auto py-10 px-3">
-      <DataTable data={data} mcolumns={ColumnOptions} fields={namefield} />
+      <DataTable body={body} onCreate={onCreate} data={data} mcolumns={ColumnOptions} fields={namefield} />
     </div>
   )
 }
