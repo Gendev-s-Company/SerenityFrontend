@@ -16,7 +16,7 @@ export const UsersItems: PMenu =
             subMenu: [
                 {
                     title: "Profil utilisateur",
-                    url: "#cdc",
+                    url: "/view/users/profil",
                     dropdown: false,
                     isSubmenu: false,
                     subMenu: [],
@@ -24,7 +24,7 @@ export const UsersItems: PMenu =
                 },
                 {
                     title: "Utilisateurs",
-                    url: "#cdc",
+                    url: "/view/users/",
                     dropdown: false,
                     isSubmenu: false,
                     subMenu: [],

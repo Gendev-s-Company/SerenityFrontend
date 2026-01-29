@@ -1,6 +1,6 @@
 import { CallMethod } from "@/types/enums";
 
-const basePath = "http://localhost:8000";
+const basePath = "http://localhost:8000/api";
 
 
 const apiCall = async<T> (path: string, body?: unknown, method = CallMethod.get): Promise<T> => {
@@ -16,15 +16,19 @@ const apiCall = async<T> (path: string, body?: unknown, method = CallMethod.get)
   }
   
   const uri = basePath + path;
-
+  console.log(uri);
   const response = await fetch(uri, config);
   if (!response.ok)
-    throw new Error(`Erreur HTTP ! Statut: ${response.status}`);
-
-  return response.json() as Promise<T>;
+    throw new Error(`Erreur HTTP ! Statut: ${response.status}, Message: ${await response.text()}`);
+  try {
+    return response.json() as Promise<T>;
+    
+  } catch (error) {
+    return response.text() as unknown as T;
+  }
 };
 
-export const getCall = async<T> (path: string): Promise<T> => {
+export const getCall = async<T> (path: string): Promise<T> => {  
   return await apiCall(path, undefined, CallMethod.get)
 }
 export const postCall = async<T> (path: string, body:unknown): Promise<T> => {
