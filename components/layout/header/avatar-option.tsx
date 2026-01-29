@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Mavatar from "@/components/avatar/mavatar";
-import { Iavatar } from "@/types/avatar-type";
+import { Iavatar } from "@/types/component-type/avatar-type";
 import Link from "next/link";
 import { avatarDropdownOption } from "@/utils/dropdown-options/dropdown-option";
 

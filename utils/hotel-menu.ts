@@ -1,4 +1,4 @@
-import { PMenu } from "@/types/menu-type";
+import { PMenu } from "@/types/component-type/menu-type";
 import { BedSingle, BookText, Calendar, Gamepad, Hotel, Inbox } from "lucide-react";
 
 export const HotelItems: PMenu = 

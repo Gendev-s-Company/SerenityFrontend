@@ -3,10 +3,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import Link from "next/link"
-import { ColumnConfig } from "@/types/column-config"
+import { ColumnConfig } from "@/types/component-type/column-config"
 import DeleteBox from "../delete/delete-box"
 import UpdateBox from "../update/update-box"
-import { FieldConfig } from "@/types/form-type"
+import { FieldConfig } from "@/types/component-type/form-type"
 export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConfig<T>[]): ColumnDef<T>[] {
 
     return configs.map((config) => {

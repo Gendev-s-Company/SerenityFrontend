@@ -1,5 +1,5 @@
 // types.ts
-export type ColumnType = 'text' | 'button' | 'link' | 'actions' | 'checkbox' | 'amount';
+type ColumnType = 'text' | 'button' | 'link' | 'actions' | 'checkbox' | 'amount';
 
 interface CurrencyType {
     currency: string,

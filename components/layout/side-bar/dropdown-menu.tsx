@@ -11,7 +11,7 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
-import { PMenu } from "@/types/menu-type";
+import { PMenu } from "@/types/component-type/menu-type";
 import { ChevronRight, LucideIcon } from "lucide-react";
 import Link from "next/link";
 

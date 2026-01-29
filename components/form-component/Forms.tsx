@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { FieldConfig } from "@/types/form-type";
+import { FieldConfig, UseFormReturn } from "@/types/component-type/form-type";
 import {
   Select,
   SelectContent,
@@ -16,7 +16,6 @@ import {
   FieldLabel,
   FieldSet,
 } from "@/components/ui/field"
-import { UseFormReturn } from "@/hooks/use-form";
 
 
 interface FormsProps<T> {

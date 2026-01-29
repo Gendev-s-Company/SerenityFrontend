@@ -1,7 +1,7 @@
 "use client";
-import { ColumnConfig } from "@/types/column-config";
+import { ColumnConfig } from "@/types/component-type/column-config";
 import { DataTable, Payment } from "../../../components/liste/complexe-data-table"
-import { FieldConfig } from "@/types/form-type";
+import { FieldConfig } from "@/types/component-type/form-type";
 
 
 

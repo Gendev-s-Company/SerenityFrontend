@@ -1,4 +1,4 @@
-import { PMenu } from "@/types/menu-type";
+import { PMenu } from "@/types/component-type/menu-type";
 import { LayoutDashboard } from "lucide-react";
 import { HotelItems } from "./hotel-menu";
 import { RestoItems } from "./restaurant-menu";

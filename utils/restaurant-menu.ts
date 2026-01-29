@@ -1,4 +1,4 @@
-import { PMenu } from "@/types/menu-type";
+import { PMenu } from "@/types/component-type/menu-type";
 import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, UtensilsCrossed } from "lucide-react";
 
 export const RestoItems: PMenu = 

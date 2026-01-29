@@ -1,5 +1,5 @@
-import { PMenu } from "@/types/menu-type";
-import { BookUser, BriefcaseBusiness, Calendar, CircleUserRound, Home, Inbox, UsersRound } from "lucide-react";
+import { PMenu } from "@/types/component-type/menu-type";
+import { BookUser, BriefcaseBusiness, Calendar, CircleUserRound, Inbox, UsersRound } from "lucide-react";
 
 export const UsersItems: PMenu =
 {

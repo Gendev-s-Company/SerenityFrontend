@@ -1,10 +1,5 @@
 import { LucideIcon } from "lucide-react";
 
-export interface MMenu {
-    title: string,
-    url: string,
-    icon: LucideIcon
-}
 export interface PMenu {
     title: string,
     url: string,

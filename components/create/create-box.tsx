@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FieldConfig } from "@/types/form-type";
+import { FieldConfig } from "@/types/component-type/form-type";
 import { Plus } from "lucide-react";
 
 

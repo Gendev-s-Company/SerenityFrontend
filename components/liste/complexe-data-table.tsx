@@ -1,18 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -22,10 +12,10 @@ import {
   type ColumnFiltersState,
   type SortingState,
 } from "@tanstack/react-table";
-import { ColumnConfig } from "@/types/column-config";
+import { ColumnConfig } from "@/types/component-type/column-config";
 import { generateColumns } from "./generate-column";
 import { Paginate } from "../pagination/Paginate";
-import { FieldConfig } from "@/types/form-type";
+import { FieldConfig } from "@/types/component-type/form-type";
 import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
 import CreateBox from "../create/create-box";
