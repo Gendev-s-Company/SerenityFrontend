@@ -12,12 +12,13 @@ import {
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 import { PMenu } from "@/types/menu-type";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-const DropdownMenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
+const DropdownMenuComponent: React.FC<{ items: PMenu[]; title: string, Picon?: LucideIcon }> = ({
   items,
   title,
+  Picon
 }) => {
   return (
     <SidebarMenu>
@@ -25,6 +26,7 @@ const DropdownMenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             <SidebarMenuButton className="flex w-full items-center justify-between">
+              {Picon && <Picon style={{width:'25px', height:'25px'}}/>}
               {title}
               <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>
@@ -46,11 +48,7 @@ const DropdownMenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
                   return (
                     <SidebarMenuSubItem key={index}>
                       <SidebarMenuSubButton asChild>
-                        {/* <a href={row.url}>
-                          {Icon && <Icon size={16} />}
-                          <span>{row.title}</span>
-                        </a> */}
-                        <Link href={row.url}>
+                        <Link href={row.url} >
                           {Icon && <Icon size={16} />}
                           <span>{row.title}</span>
                         </Link>

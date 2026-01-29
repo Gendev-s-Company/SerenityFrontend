@@ -7,14 +7,22 @@ import {
 } from "@/components/ui/sidebar";
 import { PMenu } from "@/types/menu-type";
 import DropdownMenuComponent from "./dropdown-menu";
+import { LucideIcon } from "lucide-react";
 
-const SubmenuComponent: React.FC<{ items: PMenu[]; title: string }> = ({
+const SubmenuComponent: React.FC<{ items: PMenu[]; title: string, Picon?: LucideIcon }> = ({
   items,
   title,
+  Picon
 }) => {
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton>{title}</SidebarMenuButton>
+      <SidebarMenuButton>
+          {Picon && <Picon style={{width:'15px', height:'15px'}}/>}
+        {/* <h4 className="scroll-m-20 text-xl font-semibold tracking-tight"> */}
+        {Picon ? <strong> {title}</strong> : title} 
+
+        {/* </h4> */}
+      </SidebarMenuButton>
       <SidebarMenuSub>
         {items?.map((row, index) => {
           const hasSubmenu = row.subMenu.length > 0;

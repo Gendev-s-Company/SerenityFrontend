@@ -1,9 +1,9 @@
 import { PMenu } from "@/types/menu-type";
-import { Calendar, Inbox } from "lucide-react";
+import { BedSingle, BookText, Calendar, Gamepad, Hotel, Inbox } from "lucide-react";
 
 export const HotelItems: PMenu = 
   {
-    title: "Hotel",
+    title: "HOTEL",
     url: "#",
     dropdown: false,
     isSubmenu: true,
@@ -20,7 +20,7 @@ export const HotelItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: BedSingle,
           },
           {
             title: "Réservation",
@@ -28,7 +28,7 @@ export const HotelItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: BookText,
           },
           {
             title: "Calendrier",
@@ -36,7 +36,7 @@ export const HotelItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: Calendar,
           },
         ],
         icon: Inbox,
@@ -44,10 +44,10 @@ export const HotelItems: PMenu =
       {
         title: "Activité",
         url: "#activiter",
-        dropdown: false,
-        isSubmenu: true,
+        dropdown: true,
+        isSubmenu: false,
         subMenu: [{
-            title: "Billard",
+            title: "Création",
             url: "/view/liste",
             dropdown: false,
             isSubmenu: false,
@@ -55,16 +55,16 @@ export const HotelItems: PMenu =
             icon: Inbox,
           },
           {
-            title: "Exemple liste",
+            title: "Liste",
             url: "/view/payment",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: Gamepad,
           },],
         icon: Calendar,
       },
     ],
-    icon: Calendar,
+    icon: Hotel,
   }
 ;

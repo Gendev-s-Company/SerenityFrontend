@@ -1,9 +1,9 @@
 import { PMenu } from "@/types/menu-type";
-import { Calendar, Inbox } from "lucide-react";
+import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, UtensilsCrossed } from "lucide-react";
 
 export const RestoItems: PMenu = 
   {
-    title: "Restaurant",
+    title: "RESTAURANT",
     url: "#",
     dropdown: false,
     isSubmenu: true,
@@ -20,15 +20,15 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: Grid3x3,
           },
           {
             title: "Réservation table",
-            url: "#reservatont",
+            url: "#reservation",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: BookText,
           },
           {
             title: "Calendrier table",
@@ -36,10 +36,33 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: Calendar,
           },
         ],
         icon: Inbox,
+      },
+      {
+        title: "Plat",
+        url: "#crudplat",
+        dropdown: false,
+        isSubmenu: true,
+        subMenu: [{
+            title: "Catalogue",
+            url: "#liste",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: BookImage,
+          },
+          {
+            title: "Création plat",
+            url: "#situationc",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Beef,
+          },],
+        icon: Calendar,
       },
       {
         title: "Commande",
@@ -55,39 +78,17 @@ export const RestoItems: PMenu =
             icon: Inbox,
           },
           {
-            title: "situation commande",
+            title: "Commande",
             url: "#situationc",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: CalendarArrowUp,
           },],
         icon: Calendar,
       },
-      {
-        title: "Plat",
-        url: "#crudplat",
-        dropdown: false,
-        isSubmenu: true,
-        subMenu: [{
-            title: "Liste",
-            url: "#liste",
-            dropdown: false,
-            isSubmenu: false,
-            subMenu: [],
-            icon: Inbox,
-          },
-          {
-            title: "creation plat",
-            url: "#situationc",
-            dropdown: false,
-            isSubmenu: false,
-            subMenu: [],
-            icon: Inbox,
-          },],
-        icon: Calendar,
-      },
+      
     ],
-    icon: Calendar,
+    icon: UtensilsCrossed,
   }
 ;
