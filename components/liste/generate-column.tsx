@@ -50,8 +50,9 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                     </Button>
                 )
             },
-            cell: ({ row }) => {
-                const value = row.getValue(config.key)
+            cell: ({ row, getValue }) => {
+                // const value = row.getValue(config.key)
+                const value = getValue();
                 const rowData = row.original
 
 

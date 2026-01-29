@@ -1,7 +1,12 @@
 "use client";
 
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { createUser, deleteUser, getAllUser, updateUser } from "@/infrastructure/user/userRequest";
+import {
+  createUser,
+  deleteUser,
+  getAllUser,
+  updateUser,
+} from "@/infrastructure/user/userRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig } from "@/types/component-type/form-type";
 import { UserEntity } from "@/types/entity-type/userEntity";
@@ -14,11 +19,17 @@ export default function Users() {
   useEffect(() => {
     // Fetch profils or perform other side effects here
     getAllUser()
-      .then((data) => setUsers(data))
+      .then((data) => {
+        setUsers(data);
+        console.log(data);
+        
+      })
       .catch((error) => console.error("Error fetching users:", error));
   }, [refresh]);
 
   const onUpdate = async (formData: UserEntity) => {
+    console.log(formData);
+
     await updateUser(formData);
     setRefresh((prev) => prev + 1);
   };
@@ -36,9 +47,14 @@ export default function Users() {
       href: (row) => `/profil/${row?.userID}`,
       hiding: false,
     },
-    { key: "profil", header: "profil", type: "text", sorting: true },
+    { key: "profil.name", header: "profil", type: "text", sorting: true },
     { key: "phone", header: "Téléphone", type: "text", sorting: true },
-    { key: "joineddate", header: "Date d'inscription", type: "text", sorting: true },
+    {
+      key: "joinedDate",
+      header: "Date d'inscription",
+      type: "text",
+      sorting: true,
+    },
     { key: "status", header: "Statut", type: "text", sorting: true },
     {
       key: "action_btn",
@@ -50,29 +66,38 @@ export default function Users() {
       onClick: (row) => console.log("Editer", row.userID),
     },
   ];
-    const list_profil = [
-    { id: 'PROF000001', label: 'Responsable' },
-  ]
+  const list_profil = [{ id: "PROF000001", label: "Responsable" }];
   const namefield: FieldConfig<UserEntity>[] = [
     { name: "name", libelle: "Nom :", type: "text", normal: true },
-    { name: "profil", libelle: "Profil :", type: "select", normal: false, items: list_profil },
+    {
+      name: "profil",
+      libelle: "Profil :",
+      type: "select",
+      normal: false,
+      items: list_profil,
+    },
     { name: "phone", libelle: "Téléphone :", type: "text", normal: true },
-    { name: "joineddate", libelle: "Date d'inscription :", type: "date", normal: true },
+    {
+      name: "joineddate",
+      libelle: "Date d'inscription :",
+      type: "date",
+      normal: true,
+    },
     { name: "status", libelle: "Statut :", type: "number", normal: true },
   ];
   const body: UserEntity = {
     userID: "",
     name: "",
-    profil: "",
+    profil: { profilID: "", name: "", companyid: "COMP000001", authority: 0 },
     phone: "",
     joineddate: "",
     password: "1234",
     status: 0,
   };
-  
+
   const onCreate = async (formData: UserEntity) => {
     console.log(formData);
-    
+
     await createUser(formData);
     setRefresh((prev) => prev + 1);
   };
