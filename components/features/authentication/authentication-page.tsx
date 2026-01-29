@@ -11,12 +11,24 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { login } from "@/infrastructure/user/userRequest";
+import { UserEntity } from "@/types/entity-type/userEntity";
 import { useRouter } from "next/navigation";
 
 export default function AuthenticationPage() {
   const router = useRouter();
-  const formAction =  () => {
+  const body: UserEntity = {
+      userID: "",
+      name: "",
+      profil: { profilID: "", name: "", companyid: "", authority: 0 },
+      phone: "",
+      joineddate: "",
+      password: "",
+      status: 0,
+    };
+  const formAction =  async () => {
     console.log("En cours d'authentification");
+    await login(body);
     router.push("/view");
   };
 
@@ -33,11 +45,12 @@ export default function AuthenticationPage() {
           <form>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Téléphone</Label>
                 <Input
                   id="email"
-                  type="email"
+                  type="phone"
                   placeholder="m@example.com"
+                  value={"0320379216"}
                   required
                 />
               </div>
@@ -51,7 +64,7 @@ export default function AuthenticationPage() {
                     Mot de passe oublié?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" value={"1234"} type="password" required />
               </div>
             </div>
           </form>

@@ -19,3 +19,7 @@ export const updateUser = async (user: UserEntity) => {
 export const deleteUser = async (id: string) => {
     return await deleteCall<UserEntity>(`${userPath}/${id}`);
 }
+
+export const login = async (body:UserEntity) => {
+    return await postCall<UserEntity>(`${userPath}/auth/login`, body);
+}
