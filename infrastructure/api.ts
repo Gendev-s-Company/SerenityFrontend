@@ -19,13 +19,10 @@ const apiCall = async<T> (path: string, body?: unknown, method = CallMethod.get)
   console.log(uri);
   const response = await fetch(uri, config);
   if (!response.ok)
-    throw new Error(`Erreur HTTP ! Statut: ${response.status}, Message: ${await response.text()}`);
-  try {
+    throw new Error(` ${await response.text()}`);
+  
     return response.json() as Promise<T>;
     
-  } catch (error) {
-    return response.text() as unknown as T;
-  }
 };
 
 export const getCall = async<T> (path: string): Promise<T> => {  

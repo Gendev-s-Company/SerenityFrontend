@@ -11,25 +11,29 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import useForm from "@/hooks/use-form";
 import { login } from "@/infrastructure/user/userRequest";
-import { UserEntity } from "@/types/entity-type/userEntity";
 import { useRouter } from "next/navigation";
 
 export default function AuthenticationPage() {
   const router = useRouter();
-  const body: UserEntity = {
-      userID: "",
-      name: "",
-      profil: { profilID: "", name: "", companyid: "", authority: 0 },
-      phone: "",
-      joineddate: "",
-      password: "",
-      status: 0,
-    };
-  const formAction =  async () => {
+  const body = {
+    userID: "",
+    name: "UXUS",
+    profil: "cdc",
+    phone: "090903",
+    joineddate: "",
+    password: "DEDED",
+    status: 0,
+  };
+  const forms = useForm(body)
+  
+  const formAction = async () => {
     console.log("En cours d'authentification");
-    await login(body);
-    router.push("/view");
+    console.log(forms.getForm);
+    
+    await login(forms.getForm);
+    // router.push("/view");
   };
 
   return (
@@ -48,9 +52,11 @@ export default function AuthenticationPage() {
                 <Label htmlFor="email">Téléphone</Label>
                 <Input
                   id="email"
-                  type="phone"
-                  placeholder="m@example.com"
-                  value={"0320379216"}
+                  type="text"
+                  placeholder="0330099988"
+                  name="phone"
+                  value={forms.getForm && forms.getForm['phone'] as string}
+                  onChange={(e) => forms.handleInputChange('phone', e.target.value)}
                   required
                 />
               </div>
@@ -64,7 +70,14 @@ export default function AuthenticationPage() {
                     Mot de passe oublié?
                   </a>
                 </div>
-                <Input id="password" value={"1234"} type="password" required />
+                <Input
+                  id="password"
+                  value={forms.getForm && forms.getForm['password'] as string}
+                  name="password"
+                  onChange={(e) => forms.handleInputChange('password', e.target.value)}
+
+                  type="password"
+                  required />
               </div>
             </div>
           </form>

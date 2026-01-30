@@ -20,6 +20,6 @@ export const deleteUser = async (id: string) => {
     return await deleteCall<UserEntity>(`${userPath}/${id}`);
 }
 
-export const login = async (body:UserEntity) => {
-    return await postCall<UserEntity>(`${userPath}/auth/login`, body);
+export const login = async (body:unknown) => {
+    return await postCall<unknown>(`/auth/login`, body);
 }

@@ -32,8 +32,8 @@ const [open, setOpen] = useState(false);
       forms.resetForm();
     }
   };
-  const submit = () => {
-    onUpdate(forms.getForm)
+  const submit = async () => {
+    await onUpdate(forms.getForm)
     setTimeout(() => setOpen(false), 500); 
   }
   return (
