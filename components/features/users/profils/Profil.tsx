@@ -26,6 +26,7 @@ export default function Profil() {
   };
   const ColumnOptions: ColumnConfig<ProfilEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" },
+    { key: "profilID", header: "ProfilID", sorting: true },
     { key: "companyid", header: "CompanyID", sorting: true },
     {
       key: "name",

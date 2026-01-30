@@ -66,7 +66,7 @@ export default function Users() {
       onClick: (row) => console.log("Editer", row.userID),
     },
   ];
-  const list_profil = [{ id: "PROF000001", label: "Responsable" }];
+  const list_profil = [{ id: "PROF000002", label: "Responsable" }];
   const namefield: FieldConfig<UserEntity>[] = [
     { name: "name", libelle: "Nom :", type: "text", normal: true },
     {
