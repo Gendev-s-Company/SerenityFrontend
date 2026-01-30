@@ -32,9 +32,10 @@ export default function Liste<TData>({ table }: Listeprops<TData>) {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="normal-case"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="normal-case">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

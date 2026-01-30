@@ -14,12 +14,14 @@ interface SbuttonProps {
   | "secondary"
   | "ghost"
   | "link"; //variant du bouton(pareil que pour shadcn/ui grey theme)
+  message?:string;
 }
 export default function Sbutton({
   formAction,
   libelle = "Valider",
   variant = "default",
-  className = ""
+  className = "",
+  message = "Action réussi!!"
 }: SbuttonProps) {
   // on utilise useTransition pour pouvoir mettre le loader sur le bouton car on utilisera
   //la plus part du temps une fonction asynchrone
@@ -32,7 +34,7 @@ export default function Sbutton({
         await new Promise((res) => setTimeout(res, 2000));
         await formAction();
         //affichage de message si success
-        toast.success("Action réussi!!", { position: "top-right" })
+        toast.success(message, { position: "top-right" })
       } catch (error:unknown) {
         const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue";
         // affichage de message si erreur

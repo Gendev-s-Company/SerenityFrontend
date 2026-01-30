@@ -21,9 +21,9 @@ export default function AuthenticationPage() {
     userID: "",
     name: "UXUS",
     profil: "cdc",
-    phone: "090903",
+    phone: "0320876534",
     joineddate: "",
-    password: "DEDED",
+    password: "1234",
     status: 0,
   };
   const forms = useForm(body)
@@ -33,7 +33,7 @@ export default function AuthenticationPage() {
     console.log(forms.getForm);
     
     await login(forms.getForm);
-    // router.push("/view");
+    router.push("/view");
   };
 
   return (
@@ -83,7 +83,7 @@ export default function AuthenticationPage() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Sbutton libelle="Se connecter" className="w-full" formAction={formAction} />
+          <Sbutton message="Connexion réussi !" libelle="Se connecter" className="w-full" formAction={formAction} />
           <Button className="cursor-pointer" variant="link">
             {"Besoin d'aide?"}
           </Button>

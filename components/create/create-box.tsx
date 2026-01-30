@@ -62,7 +62,7 @@ const [open, setOpen] = useState(false);
           </div>
           <DialogFooter>
               <Button className="cursor-pointer" onClick={() => handleOpenChange(false)} variant="outline">Annuler</Button>
-              <Sbutton  formAction={submit} />
+              <Sbutton message="Création réussi!"  formAction={submit} />
           </DialogFooter>
         </DialogContent>
     </Dialog>

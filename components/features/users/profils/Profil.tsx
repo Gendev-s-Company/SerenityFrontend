@@ -52,7 +52,7 @@ export default function Profil() {
   ];
   const body: ProfilEntity = {
     profilID: "",
-    companyid: "COMP000001",
+    companyid: "COMP000002",
     name: "",
     authority: 0,
   };
