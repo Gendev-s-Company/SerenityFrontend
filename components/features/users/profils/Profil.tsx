@@ -11,7 +11,6 @@ export default function Profil() {
   const [profil, setProfil] = useState<ProfilEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
   useEffect(() => {
-    // Fetch profils or perform other side effects here
     getAllProfils()
       .then((data) => setProfil(data))
       .catch((error) => console.error("Error fetching profils:", error));
@@ -68,6 +67,7 @@ export default function Profil() {
         data={profil}
         mcolumns={ColumnOptions}
         fields={namefield}
+        columnFilter="name"
       />
     </div>
   );

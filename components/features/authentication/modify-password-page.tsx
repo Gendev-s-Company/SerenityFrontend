@@ -6,10 +6,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from "@/components/ui/label";
 import useForm from '@/hooks/use-form';
 import { updatePassword } from '@/infrastructure/user/userRequest';
+import { UserEntity } from '@/types/entity-type/userEntity';
+import { getLocalStorage } from '@/utils/storage';
 
 const ModifyPasswordPage = () => {
+  const user = getLocalStorage() as UserEntity
   const body = {
-    userID: "USER000002",
+    userID: user.userID,
     newPwd: "",
     oldpwd: "",
     confirmpwd: ""

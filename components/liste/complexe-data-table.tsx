@@ -32,14 +32,16 @@ interface DataTableProps<TData> {
   data: TData[];
   fields: FieldConfig<TData>[];
   onCreate:(data: TData) => void;
-  body:TData
+  body:TData,
+  columnFilter: string,
 }
 export function DataTable<TData>({
   data,
   mcolumns,
   fields,
   onCreate,
-  body
+  body,
+  columnFilter
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -82,11 +84,11 @@ export function DataTable<TData>({
         début an'ilay filtre kely iny
       */}
         <Input
-          placeholder="Recherche email..."
-          // value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          // onChange={(event) =>
-          //   table.getColumn("email")?.setFilterValue(event.target.value)
-          // }
+          placeholder={`Recherche ${columnFilter}...`}
+          value={(table.getColumn(columnFilter)?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn(columnFilter)?.setFilterValue(event.target.value)
+          }
           className="max-w-sm ml-auto"
         />
         {/* 

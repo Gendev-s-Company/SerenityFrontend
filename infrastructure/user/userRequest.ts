@@ -21,7 +21,7 @@ export const deleteUser = async (id: string) => {
 }
 
 export const login = async (body:unknown) => {
-    return await postCall<unknown>(`/auth/login`, body);
+    return await postCall<UserEntity>(`/auth/login`, body);
 }
 export const updatePassword = async ({userID, newPwd, oldpwd}:{userID:string, newPwd: string, oldpwd:string}) =>{
     const uri = `/auth/password/${userID}?oldPassword=${oldpwd}&newPassword=${newPwd}`

@@ -1,6 +1,8 @@
 "use client";
 
 import { DataTable } from "@/components/liste/complexe-data-table";
+import { convertListToOption } from "@/infrastructure/user/profil/profilFunction";
+import { getAllProfils } from "@/infrastructure/user/profil/profilRequest";
 import {
   createUser,
   deleteUser,
@@ -8,21 +10,28 @@ import {
   updateUser,
 } from "@/infrastructure/user/userRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
-import { FieldConfig } from "@/types/component-type/form-type";
+import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
+import { ProfilEntity } from "@/types/entity-type/profilEntity";
 import { UserEntity } from "@/types/entity-type/userEntity";
 import { useEffect, useState } from "react";
 
 export default function Users() {
   const [users, setUsers] = useState<UserEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
-
+  const [profilOption, setProfilOption] = useState<FieldOptions[]>([])
   useEffect(() => {
-    // Fetch profils or perform other side effects here
+    getAllProfils()
+      .then((data) => {
+        console.log(data);
+        setProfilOption(convertListToOption(data))
+      })
+      .catch((error) => console.error("Error fetching profils:", error));
+  }, []);
+  useEffect(() => {
     getAllUser()
       .then((data) => {
         setUsers(data);
         console.log(data);
-        
       })
       .catch((error) => console.error("Error fetching users:", error));
   }, [refresh]);
@@ -66,7 +75,6 @@ export default function Users() {
       onClick: (row) => console.log("Editer", row.userID),
     },
   ];
-  const list_profil = [{ id: "PROF000002", label: "Responsable" }];
   const namefield: FieldConfig<UserEntity>[] = [
     { name: "name", libelle: "Nom :", type: "text", normal: true },
     {
@@ -74,7 +82,7 @@ export default function Users() {
       libelle: "Profil :",
       type: "select",
       normal: false,
-      items: list_profil,
+      items: profilOption,
     },
     { name: "phone", libelle: "Téléphone :", type: "text", normal: true },
     {
@@ -109,6 +117,7 @@ export default function Users() {
         data={users}
         mcolumns={ColumnOptions}
         fields={namefield}
+        columnFilter="name"
       />
     </div>
   );

@@ -1,9 +1,12 @@
+export type FieldOptions = {
+  id: string; label: string
+}
 export type FieldConfig<T> = {
   name: keyof T;
   libelle: string;
   type: string;
   normal: boolean;
-  items?: { id: string; label: string }[];
+  items?: FieldOptions[];
 };
 
 export type UseFormReturn<G> = {
