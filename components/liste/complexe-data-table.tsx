@@ -7,6 +7,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  OnChangeFn,
   PaginationState,
   useReactTable,
   type ColumnFiltersState,
@@ -31,9 +32,13 @@ interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[];
   data: TData[];
   fields: FieldConfig<TData>[];
-  onCreate:(data: TData) => void;
-  body:TData,
+  onCreate: (data: TData) => void;
+  body: TData,
   columnFilter: string,
+  rowCount: number; 
+  pageCount: number; 
+  pagination: PaginationState; 
+  onPaginationChange: OnChangeFn<PaginationState>; 
 }
 export function DataTable<TData>({
   data,
@@ -41,26 +46,29 @@ export function DataTable<TData>({
   fields,
   onCreate,
   body,
-  columnFilter
+  columnFilter,
+  rowCount,
+  pageCount,
+  pagination,
+  onPaginationChange
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+
   const [rowSelection, setRowSelection] = React.useState({});
   const columns = generateColumns<TData>(mcolumns, fields);
 
   const table = useReactTable({
     data,
     columns,
+    pageCount: pageCount, 
+    manualPagination: true, 
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    onPaginationChange: setPagination,
+    onPaginationChange: onPaginationChange,
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -106,25 +114,9 @@ export function DataTable<TData>({
         <div className="space-x-2">
           <div className="text-muted-foreground flex-1 text-sm">
             Page {table.getState().pagination.pageIndex + 1} sur{" "}
-            {table.getPageCount()} ({data.length} éléments au total)
+            {table.getPageCount()} ({rowCount} éléments au total)
           </div>
-          <Paginate />
-          {/* <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button> */}
+          <Paginate table={table}/>
         </div>
       </div>
     </div>

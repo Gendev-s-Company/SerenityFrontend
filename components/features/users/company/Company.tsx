@@ -3,28 +3,48 @@ import { DataTable } from "@/components/liste/complexe-data-table";
 import { createCompany, deleteCompany, getPaginateCompany, updateCompany } from "@/infrastructure/user/company/companyRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig } from "@/types/component-type/form-type";
+import { PageType } from "@/types/component-type/PageType";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
+import { pageSize } from "@/utils/PaginationUtility";
+import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 
 export default function Company() {
     const [profil, setProfil] = useState<CompanyEntity[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
-    const [page, setPage] = useState(0)
+    const [page, setPage] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: pageSize,
+    })
+    const [all, setAll] = useState<PageType>({
+        totalElement: 0,
+        totalPage: 0
+    })
     useEffect(() => {
-        getPaginateCompany(page, 10)
+        getPaginateCompany(page.pageIndex, page.pageSize)
             .then((data) => {
                 setProfil(data.content)
-                setPage(data.pageable.pageNumber)
+                setPage({
+                    pageIndex: data.pageable.pageNumber,
+                    pageSize: page.pageSize
+                })
+                setAll({
+                    totalElement: data.totalElements,
+                    totalPage: data.totalPages
+                })
             })
             .catch((error) => console.error("Error fetching company:", error));
-    }, [refresh]);
+    }, [refresh, page.pageIndex, page.pageSize]);
+    
     const onUpdate = async (formData: CompanyEntity) => {
         await updateCompany(formData);
         setRefresh((prev) => prev + 1);
     };
-    const onDelete = async (id: string) => {
-        await deleteCompany(id);
-        setRefresh((prev) => prev + 1);
+    const onDelete = async (id: string | null) => {
+        if (id !== null) {
+            await deleteCompany(id);
+            setRefresh((prev) => prev + 1);
+        }
     };
 
     const ColumnOptions: ColumnConfig<CompanyEntity>[] = [
@@ -50,11 +70,7 @@ export default function Company() {
             onClick: (row) => console.log("Editer", row.companyID),
         },
     ];
-    //     companyID
-// mail
-// name
-// phone
-// status
+
     const namefield: FieldConfig<CompanyEntity>[] = [
         { name: "name", libelle: "Nom :", type: "text", normal: true },
         { name: "mail", libelle: "Email :", type: "text", normal: true },
@@ -62,7 +78,7 @@ export default function Company() {
         { name: "status", libelle: "Statut :", type: "number", normal: true }
     ];
     const body: CompanyEntity = {
-        companyID: "",
+        companyID: null,
         name: "",
         mail: "",
         phone: "",
@@ -80,6 +96,10 @@ export default function Company() {
                 data={profil}
                 mcolumns={ColumnOptions}
                 fields={namefield}
+                pageCount={all.totalPage}
+                rowCount={all.totalElement}
+                onPaginationChange={setPage}
+                pagination={page}
                 columnFilter="name"
             />
         </div>
