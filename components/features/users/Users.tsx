@@ -7,18 +7,31 @@ import {
   createUser,
   deleteUser,
   getAllUser,
+  getPaginateUsers,
   updateUser,
 } from "@/infrastructure/user/userRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
+import { PageType } from "@/types/component-type/PageType";
 import { ProfilEntity } from "@/types/entity-type/profilEntity";
 import { UserEntity } from "@/types/entity-type/userEntity";
-import { useEffect, useState } from "react";
+import { pageSize } from "@/utils/PaginationUtility";
+import { PaginationState } from "@tanstack/react-table";
+import { useEffect, useMemo, useState } from "react";
+import { UserNamefield, UsersColumnOptions } from "./prep-view-users";
 
 export default function Users() {
   const [users, setUsers] = useState<UserEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
   const [profilOption, setProfilOption] = useState<FieldOptions[]>([])
+  const [page, setPage] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: pageSize,
+  })
+  const [all, setAll] = useState<PageType>({
+    totalElement: 0,
+    totalPage: 0
+  })
   useEffect(() => {
     getAllProfils()
       .then((data) => {
@@ -28,10 +41,17 @@ export default function Users() {
       .catch((error) => console.error("Error fetching profils:", error));
   }, []);
   useEffect(() => {
-    getAllUser()
+    getPaginateUsers(page.pageIndex, page.pageSize)
       .then((data) => {
-        setUsers(data);
-        console.log(data);
+        setUsers(data.content)
+        setPage(prevPage => ({
+          ...prevPage,
+          pageIndex: data.pageable.pageNumber
+        }));
+        setAll({
+          totalElement: data.totalElements,
+          totalPage: data.totalPages
+        })
       })
       .catch((error) => console.error("Error fetching users:", error));
   }, [refresh]);
@@ -42,59 +62,39 @@ export default function Users() {
     await updateUser(formData);
     setRefresh((prev) => prev + 1);
   };
-  const onDelete = async (id: string) => {
-    await deleteUser(id);
-    setRefresh((prev) => prev + 1);
+  const onDelete = async (id: string | null) => {
+    if (id !== null) {
+      await deleteUser(id);
+      setRefresh((prev) => prev + 1);
+    }
   };
-  const ColumnOptions: ColumnConfig<UserEntity>[] = [
-    { key: "select", header: "Select", type: "checkbox" },
-    { key: "userID", header: "userID", sorting: true },
-    {
-      key: "name",
-      header: "Nom",
-      type: "text",
-      href: (row) => `/profil/${row?.userID}`,
-      hiding: false,
-    },
-    { key: "profil.name", header: "profil", type: "text", sorting: true },
-    { key: "phone", header: "Téléphone", type: "text", sorting: true },
-    {
-      key: "joinedDate",
-      header: "Date d'inscription",
-      type: "text",
-      sorting: true,
-    },
-    { key: "status", header: "Statut", type: "text", sorting: true },
-    {
-      key: "action_btn",
-      header: "Action",
-      type: "button",
-      hiding: false,
-      onUpdate: (row) => onUpdate(row),
-      onDelete: (row) => onDelete(row.userID),
-      onClick: (row) => console.log("Editer", row.userID),
-    },
-  ];
-  const namefield: FieldConfig<UserEntity>[] = [
-    { name: "name", libelle: "Nom :", type: "text", normal: true },
-    {
-      name: "profil",
-      libelle: "Profil :",
-      type: "select",
-      normal: false,
-      items: profilOption,
-    },
-    { name: "phone", libelle: "Téléphone :", type: "text", normal: true },
-    {
-      name: "joineddate",
-      libelle: "Date d'inscription :",
-      type: "date",
-      normal: true,
-    },
-    { name: "status", libelle: "Statut :", type: "number", normal: true },
-  ];
+
+  const btnAction: ColumnConfig<UserEntity> = {
+    key: "action_btn",
+    header: "Action",
+    type: "button",
+    hiding: false,
+    onUpdate: (row) => onUpdate(row),
+    onDelete: (row) => onDelete(row.userID),
+    onClick: (row) => console.log("Editer", row.userID),
+  };
+  const columns = useMemo(() => {
+    return [...UsersColumnOptions, btnAction];
+  }, []);
+  // mila amboarina
+  const options = {
+    name: "profil",
+    libelle: "Profil :",
+    type: "select",
+    normal: false,
+    items: profilOption
+  };
+  const namefield = useMemo(() => {
+    return [...UserNamefield, options]
+  }, [options])
+// fin mila amboarina
   const body: UserEntity = {
-    userID: "",
+    userID: null,
     name: "",
     profil: { profilID: "", name: "", companyid: "COMP000001", authority: 0 },
     phone: "",
@@ -115,9 +115,13 @@ export default function Users() {
         body={body}
         onCreate={onCreate}
         data={users}
-        mcolumns={ColumnOptions}
+        mcolumns={columns}
         fields={namefield}
         columnFilter="name"
+        pageCount={all.totalPage}
+        rowCount={all.totalElement}
+        onPaginationChange={setPage}
+        pagination={page}
       />
     </div>
   );

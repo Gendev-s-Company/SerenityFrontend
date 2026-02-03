@@ -1,7 +1,7 @@
 import { ProfilEntity } from "./profilEntity";
 
 export interface UserEntity {
-    userID: string,
+    userID: string | null,
     name: string,
     profil: ProfilEntity,
     phone: string,

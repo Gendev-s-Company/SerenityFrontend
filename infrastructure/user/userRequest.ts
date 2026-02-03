@@ -1,3 +1,4 @@
+import { Page } from "@/types/entity-type/common/Page";
 import { deleteCall, getCall, postCall, putCall } from "../api";
 import { UserEntity } from "@/types/entity-type/userEntity";
 
@@ -5,6 +6,9 @@ const userPath = "/user";
 
 export const getAllUser = async () => {
   return await getCall<UserEntity[]>(userPath );
+}
+export const getPaginateUsers = async (page:number,size:number) => {
+  return await getCall<Page<UserEntity>>(`${userPath}/${page}/${size}` );
 }
 export const getUserById = async (id: string) => {
     return await getCall<UserEntity>(`${userPath}/${id}`);

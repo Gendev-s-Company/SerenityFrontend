@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CompanyColumnOptions, CompanyNamefield } from "./prep-view-company";
 
 export default function Company() {
-    const [profil, setProfil] = useState<CompanyEntity[]>([]);
+    const [company, setCompany] = useState<CompanyEntity[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
     const [page, setPage] = useState<PaginationState>({
         pageIndex: 0,
@@ -23,7 +23,7 @@ export default function Company() {
     useEffect(() => {
         getPaginateCompany(page.pageIndex, page.pageSize)
             .then((data) => {
-                setProfil(data.content)
+                setCompany(data.content)
                 setPage(prevPage => ({
                     ...prevPage,
                     pageIndex: data.pageable.pageNumber
@@ -76,7 +76,7 @@ export default function Company() {
             <DataTable
                 body={body}
                 onCreate={onCreate}
-                data={profil}
+                data={company}
                 mcolumns={columns}
                 fields={CompanyNamefield}
                 pageCount={all.totalPage}

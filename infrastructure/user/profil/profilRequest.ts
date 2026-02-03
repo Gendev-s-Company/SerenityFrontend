@@ -1,10 +1,14 @@
 import { ProfilEntity } from "@/types/entity-type/profilEntity";
 import { deleteCall, getCall, postCall, putCall } from "../../api";
+import { Page } from "@/types/entity-type/common/Page";
 
 const profilPath = "/profil";
 
 export const getAllProfils = async () => {
   return await getCall<ProfilEntity[]>(profilPath );
+}
+export const getPaginateProfil = async (page:number,size:number) => {
+  return await getCall<Page<ProfilEntity>>(`${profilPath}/${page}/${size}` );
 }
 export const getProfilById = async (id: string) => {
     return await getCall<ProfilEntity>(`${profilPath}/${id}`);

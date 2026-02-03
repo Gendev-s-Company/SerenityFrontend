@@ -1,5 +1,5 @@
 export interface ProfilEntity {
-    profilID: string,
+    profilID: string|null,
     companyid: string,
     name: string,
     authority: number,
