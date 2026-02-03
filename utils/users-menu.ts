@@ -15,6 +15,14 @@ export const UsersItems: PMenu =
             isSubmenu: true,
             subMenu: [
                 {
+                    title: "Sociétés",
+                    url: "/view/users/company",
+                    dropdown: false,
+                    isSubmenu: false,
+                    subMenu: [],
+                    icon: Inbox,
+                },
+                {
                     title: "Profil utilisateur",
                     url: "/view/users/profil",
                     dropdown: false,
