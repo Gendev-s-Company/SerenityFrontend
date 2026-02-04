@@ -54,7 +54,7 @@ export default function Users() {
         })
       })
       .catch((error) => console.error("Error fetching users:", error));
-  }, [refresh]);
+  }, [refresh, page.pageIndex]);
 
   const onUpdate = async (formData: UserEntity) => {
     console.log(formData);
@@ -83,7 +83,7 @@ export default function Users() {
   }, []);
   
  const options:FieldConfig<UserEntity> = useMemo(() => ({
-  name: "profilID",
+  name: "profil",
   libelle: "Profil :",
   type: "select",
   normal: false,
@@ -95,10 +95,9 @@ export default function Users() {
   const body: UserEntity = {
     userID: null,
     name: "",
-    profilID:"",
+    profil:{profilID:"", companyid:"",name:"",authority: 0},
     phone: "",
     joineddate: new Date(),
-    password: "1234",
     status: 0,
   };
 

@@ -35,7 +35,7 @@ export default function Profil() {
         })
       })
       .catch((error) => console.error("Error fetching profils:", error));
-  }, [refresh]);
+  }, [refresh, page.pageIndex]);
   const onUpdate = async (formData: ProfilEntity) => {
     await updateProfil(formData);
     setRefresh((prev) => prev + 1);
