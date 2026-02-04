@@ -81,24 +81,23 @@ export default function Users() {
   const columns = useMemo(() => {
     return [...UsersColumnOptions, btnAction];
   }, []);
-  // mila amboarina
-  const options = {
-    name: "profil",
-    libelle: "Profil :",
-    type: "select",
-    normal: false,
-    items: profilOption
-  };
+  
+ const options:FieldConfig<UserEntity> = useMemo(() => ({
+  name: "profilID",
+  libelle: "Profil :",
+  type: "select",
+  normal: false,
+  items: profilOption 
+}), [profilOption]);
   const namefield = useMemo(() => {
     return [...UserNamefield, options]
   }, [options])
-// fin mila amboarina
   const body: UserEntity = {
     userID: null,
     name: "",
-    profil: { profilID: "", name: "", companyid: "COMP000001", authority: 0 },
+    profilID:"",
     phone: "",
-    joineddate: "",
+    joineddate: new Date(),
     password: "1234",
     status: 0,
   };
