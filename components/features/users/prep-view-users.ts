@@ -27,7 +27,7 @@ export const UserNamefield: FieldConfig<UserEntity>[] = [
 
     { name: "phone", libelle: "Téléphone :", type: "text", normal: true },
     {
-        name: "joineddate",
+        name: "joinedDate",
         libelle: "Date d'inscription :",
         type: "date",
         normal: true,

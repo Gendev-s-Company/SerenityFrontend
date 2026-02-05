@@ -5,7 +5,7 @@ export interface UserEntity {
     name: string,
     profil: ProfilEntity,
     phone: string,
-    joineddate: Date,
+    joineddate?: Date | string,
     joinedDate?: string,
     password?: string,
     status: number,

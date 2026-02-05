@@ -7,6 +7,10 @@ export type FieldConfig<T> = {
   type: string;
   normal: boolean;
   items?: FieldOptions[];
+  objectMapping?: {
+    idKey: string,
+    labelKey: string
+  };
 };
 
 export type UseFormReturn<G> = {

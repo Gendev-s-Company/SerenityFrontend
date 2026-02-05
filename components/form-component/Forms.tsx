@@ -7,97 +7,123 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-
+} from "@/components/ui/select";
 
 import {
   Field,
   FieldGroup,
   FieldLabel,
   FieldSet,
-} from "@/components/ui/field"
-
+} from "@/components/ui/field";
 
 interface FormsProps<T> {
   forms: UseFormReturn<T>;
   fields?: FieldConfig<T>[];
 }
+
 export default function Forms<T>({ forms, fields }: FormsProps<T>) {
+  
+  // Formate la date pour l'input HTML (format YYYY-MM-DD)
+  const formatDateForInput = (value: unknown): string => {
+    if (!value) return "";
+    const d = new Date(value as string | number | Date);
+    // console.log(value);
+    
+    if (isNaN(d.getTime())) return "";
+    return d.toISOString().split('T')[0];
+  };
+
   return (
-    <form>
+    <form onSubmit={(e) => e.preventDefault()}>
       <FieldGroup>
         <FieldSet>
           <FieldGroup>
-            {/* début boucle */}
             {fields?.map((row, index) => {
               const fieldName = row.name as keyof T;
+              const fieldValue = forms.getForm[fieldName];
+              const uniqueId = `field-${String(fieldName)}-${index}`;
+                
               return (
-                <div key={index}>
-                  {row.normal ?
+                <div key={uniqueId}>
+                  {row.normal ? (
                     <Field>
-                      <FieldLabel htmlFor="checkout-7j9-card-name-43j">
+                      <FieldLabel htmlFor={uniqueId}>
                         {row.libelle}
                       </FieldLabel>
                       <Input
-                        id="checkout-7j9-card-name-43j"
-                        name={row.name as string || ""}
+                        id={uniqueId}
+                        name={String(fieldName)}
                         type={row.type}
-                        // value={row.type === 'datetime-local' ? formatDateForInput(form[row.name]) : form[row.name]}
-                        value={forms.getForm && forms.getForm[fieldName] as string}
-                        onChange={(e) => forms.handleInputChange(fieldName, e.target.value as T[keyof T])}
+                        value={
+                          row.type === 'date'
+                            ? formatDateForInput(fieldValue)
+                            : (fieldValue as string)
+                        }
+                        onChange={(e) => 
+                          forms.handleInputChange(fieldName, e.target.value as T[keyof T])
+                        }
                         placeholder={"Entrez " + row.libelle}
                         required
                       />
                     </Field>
-                    :
-                    row.type === 'select' && row?.items && (
+                  ) : (
+                    row.type === 'select' && row.items && (
                       <Field>
-                        <FieldLabel htmlFor="checkout-7j9-exp-year-f59">
+                        <FieldLabel htmlFor={uniqueId}>
                           {row.libelle}
                         </FieldLabel>
                         <Select
-                          value={forms.getForm[fieldName] as string || ""}
-                          onValueChange={(e) => forms.handleInputChange(fieldName, e as T[keyof T])}
+                          // Extraction de la valeur d'affichage (ID)
+                          value={
+                            row.objectMapping && fieldValue && typeof fieldValue === 'object'
+                              ? String((fieldValue as Record<string, unknown>)[row.objectMapping.idKey])
+                              : (fieldValue as string)
+                          }
+                          onValueChange={(selectedId) => {
+                            const selectedOption = row.items && row.items.find((opt) => opt.id === selectedId);
+                            if (!selectedOption) return;
+
+                            if (row.objectMapping) {
+                              // Reconstruction de l'objet (ex: profil)
+                              const currentObj = (fieldValue && typeof fieldValue === 'object')
+                                ? (fieldValue as Record<string, unknown>)
+                                : {};
+
+                              const updatedValue = {
+                                ...currentObj,
+                                [row.objectMapping.idKey]: selectedOption.id,
+                                [row.objectMapping.labelKey]: selectedOption.label,
+                              };
+
+                              forms.handleInputChange(fieldName, updatedValue as T[keyof T]);
+                            } else {
+                              // Cas string simple
+                              forms.handleInputChange(fieldName, selectedId as T[keyof T]);
+                            }
+                          }}
                         >
-                          <SelectTrigger id="checkout-7j9-exp-year-f59">
-                            <SelectValue placeholder={"veuillez choisir le " + row.name.toString()} />
+                          <SelectTrigger id={uniqueId}>
+                            <SelectValue placeholder={"Choisir " + row.libelle} />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              {row.items.map((r) => (
-                                <SelectItem key={r.id} value={r.id}>{r.label}</SelectItem>
+                              {row.items.map((item) => (
+                                <SelectItem key={item.id} value={item.id}>
+                                  {item.label}
+                                </SelectItem>
                               ))}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                      </Field>)
-                  }
-
+                      </Field>
+                    )
+                  )}
                 </div>
-              )
+              );
             })}
-            {/* fin boucle */}
           </FieldGroup>
         </FieldSet>
-
-        {/* <FieldSeparator /> */}
-        {/* <FieldSet>
-                  <FieldGroup>
-                    <Field orientation="horizontal">
-                      <Checkbox
-                        id="checkout-7j9-same-as-shipping-wgm"
-                        defaultChecked
-                      />
-                      <FieldLabel
-                        htmlFor="checkout-7j9-same-as-shipping-wgm"
-                        className="font-normal"
-                      >
-                        Same as shipping address
-                      </FieldLabel>
-                    </Field>
-                  </FieldGroup>
-                </FieldSet> */}
       </FieldGroup>
     </form>
-  )
+  );
 }

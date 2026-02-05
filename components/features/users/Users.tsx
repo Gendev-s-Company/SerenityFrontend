@@ -81,30 +81,37 @@ export default function Users() {
   const columns = useMemo(() => {
     return [...UsersColumnOptions, btnAction];
   }, []);
-  
- const options:FieldConfig<UserEntity> = useMemo(() => ({
-  name: "profil",
-  libelle: "Profil :",
-  type: "select",
-  normal: false,
-  items: profilOption 
-}), [profilOption]);
+
+  const options: FieldConfig<UserEntity> = useMemo(() => ({
+    name: "profil",
+    libelle: "Profil :",
+    type: "select",
+    normal: false,
+    items: profilOption,
+    objectMapping: {
+      idKey: "profilID",
+      labelKey: "name"
+    }
+  }), [profilOption]);
   const namefield = useMemo(() => {
     return [...UserNamefield, options]
   }, [options])
   const body: UserEntity = {
     userID: null,
     name: "",
-    profil:{profilID:"", companyid:"",name:"",authority: 0},
+    profil: { profilID: "", companyid: "", name: "", authority: 0 },
     phone: "",
-    joineddate: new Date(),
+    joinedDate: new Date().toDateString(),
     status: 0,
   };
-
+  
   const onCreate = async (formData: UserEntity) => {
-    console.log(formData);
-
-    await createUser(formData);
+    const body = formData
+    if (formData.joinedDate) {
+      // Formate en DD/MM/YYYY
+      body.joinedDate = new Date(formData.joinedDate).toISOString().split('T')[0]
+    }
+    await createUser(body);
     setRefresh((prev) => prev + 1);
   };
   return (
