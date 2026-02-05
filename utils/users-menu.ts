@@ -49,7 +49,7 @@ export const UsersItems: PMenu =
             subMenu: [
                 {
                     title: "Travail",
-                    url: "#thyh",
+                    url: "/view/work",
                     dropdown: false,
                     isSubmenu: false,
                     subMenu: [],

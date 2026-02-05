@@ -9,12 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 
 interface FormsProps<T> {
   forms: UseFormReturn<T>;
@@ -22,15 +17,28 @@ interface FormsProps<T> {
 }
 
 export default function Forms<T>({ forms, fields }: FormsProps<T>) {
-  
   // Formate la date pour l'input HTML (format YYYY-MM-DD)
-  const formatDateForInput = (value: unknown): string => {
+  const formatDateForInput = (value: unknown, type: string): string => {
     if (!value) return "";
     const d = new Date(value as string | number | Date);
-    // console.log(value);
-    
     if (isNaN(d.getTime())) return "";
-    return d.toISOString().split('T')[0];
+
+    // On extrait les composants de la date locale un par un
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    const seconds = pad(d.getSeconds());
+
+    if (type === "datetime-local" || type === "datetime") {
+      // Retourne exactement "2026-02-05T07:00:00" peu importe le fuseau
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -42,32 +50,34 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
               const fieldName = row.name as keyof T;
               const fieldValue = forms.getForm[fieldName];
               const uniqueId = `field-${String(fieldName)}-${index}`;
-                
+
               return (
                 <div key={uniqueId}>
                   {row.normal ? (
                     <Field>
-                      <FieldLabel htmlFor={uniqueId}>
-                        {row.libelle}
-                      </FieldLabel>
+                      <FieldLabel htmlFor={uniqueId}>{row.libelle}</FieldLabel>
                       <Input
                         id={uniqueId}
                         name={String(fieldName)}
                         type={row.type}
                         value={
-                          row.type === 'date'
-                            ? formatDateForInput(fieldValue)
+                          row.type === "date" || row.type === "datetime-local"
+                            ? formatDateForInput(fieldValue, row.type)
                             : (fieldValue as string)
                         }
-                        onChange={(e) => 
-                          forms.handleInputChange(fieldName, e.target.value as T[keyof T])
+                        onChange={(e) =>
+                          forms.handleInputChange(
+                            fieldName,
+                            e.target.value as T[keyof T],
+                          )
                         }
                         placeholder={"Entrez " + row.libelle}
                         required
                       />
                     </Field>
                   ) : (
-                    row.type === 'select' && row.items && (
+                    row.type === "select" &&
+                    row.items && (
                       <Field>
                         <FieldLabel htmlFor={uniqueId}>
                           {row.libelle}
@@ -75,35 +85,53 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                         <Select
                           // Extraction de la valeur d'affichage (ID)
                           value={
-                            row.objectMapping && fieldValue && typeof fieldValue === 'object'
-                              ? String((fieldValue as Record<string, unknown>)[row.objectMapping.idKey])
+                            row.objectMapping &&
+                            fieldValue &&
+                            typeof fieldValue === "object"
+                              ? String(
+                                  (fieldValue as Record<string, unknown>)[
+                                    row.objectMapping.idKey
+                                  ],
+                                )
                               : (fieldValue as string)
                           }
                           onValueChange={(selectedId) => {
-                            const selectedOption = row.items && row.items.find((opt) => opt.id === selectedId);
+                            const selectedOption =
+                              row.items &&
+                              row.items.find((opt) => opt.id === selectedId);
                             if (!selectedOption) return;
 
                             if (row.objectMapping) {
                               // Reconstruction de l'objet (ex: profil)
-                              const currentObj = (fieldValue && typeof fieldValue === 'object')
-                                ? (fieldValue as Record<string, unknown>)
-                                : {};
+                              const currentObj =
+                                fieldValue && typeof fieldValue === "object"
+                                  ? (fieldValue as Record<string, unknown>)
+                                  : {};
 
                               const updatedValue = {
                                 ...currentObj,
                                 [row.objectMapping.idKey]: selectedOption.id,
-                                [row.objectMapping.labelKey]: selectedOption.label,
+                                [row.objectMapping.labelKey]:
+                                  selectedOption.label,
                               };
 
-                              forms.handleInputChange(fieldName, updatedValue as T[keyof T]);
+                              forms.handleInputChange(
+                                fieldName,
+                                updatedValue as T[keyof T],
+                              );
                             } else {
                               // Cas string simple
-                              forms.handleInputChange(fieldName, selectedId as T[keyof T]);
+                              forms.handleInputChange(
+                                fieldName,
+                                selectedId as T[keyof T],
+                              );
                             }
                           }}
                         >
                           <SelectTrigger id={uniqueId}>
-                            <SelectValue placeholder={"Choisir " + row.libelle} />
+                            <SelectValue
+                              placeholder={"Choisir " + row.libelle}
+                            />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
