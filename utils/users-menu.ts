@@ -57,7 +57,7 @@ export const UsersItems: PMenu =
                 },
                 {
                     title: "Calendrier",
-                    url: "#cdc",
+                    url: "/view/calendar",
                     dropdown: false,
                     isSubmenu: false,
                     subMenu: [],

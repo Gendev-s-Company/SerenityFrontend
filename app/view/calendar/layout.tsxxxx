@@ -1,0 +1,64 @@
+import { ThemeProvider } from "@/components/calendar/theme/theme-provider";
+import { cn } from "@/lib/utils";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import type { Metadata } from "next";
+import { Inter as FontSans } from "next/font/google";
+import "../../globals.css";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+export const metadata: Metadata = {
+  title: "Shadcn Big Calendar | Drag-and-drop scheduling UI",
+  description:
+    "Open source drag-and-drop calendar built with Next.js, shadcn/ui, and react-big-calendar. Resize events, toggle themes, and explore accessible scheduling patterns.",
+  metadataBase: new URL(siteUrl),
+  keywords: [
+    "shadcn",
+    "react big calendar",
+    "drag and drop calendar",
+    "nextjs calendar",
+    "scheduling ui",
+    "calendar component",
+    "accessible calendar",
+  ],
+  authors: [{ name: "Jonas List", url: "https://jonas-list.vercel.app/" }],
+  creator: "Jonas List",
+  openGraph: {
+    title: "Shadcn Big Calendar | Drag-and-drop scheduling UI",
+    description:
+      "A themed React Big Calendar demo with shadcn/ui components, draggable events, and responsive layouts.",
+    type: "website",
+    images: ["/og-calendar.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shadcn Big Calendar | Drag-and-drop scheduling UI",
+    description:
+      "Explore a styled React Big Calendar with drag-and-drop, event resizing, and light/dark theme support.",
+    images: ["/og-calendar.png"],
+  },
+};
+
+export default function MLaout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+        <TooltipProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </TooltipProvider>
+  );
+}
