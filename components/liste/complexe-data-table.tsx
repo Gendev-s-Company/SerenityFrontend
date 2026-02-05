@@ -21,13 +21,6 @@ import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
 import CreateBox from "../create/create-box";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
 interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[];
   data: TData[];

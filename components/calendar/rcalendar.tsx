@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Plus } from "lucide-react";
 import moment from "moment";
-import { ComponentType, SetStateAction, useEffect, useState } from "react";
+import { ComponentType, SetStateAction, useEffect, useMemo, useState } from "react";
 import type { CalendarProps, View } from "react-big-calendar";
 import { momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
@@ -42,7 +42,7 @@ const Rcalendar = () => {
         return date;
     };
 
-    const presetEvents: CalendarEvent[] = [
+    const presetEvents: CalendarEvent[] = useMemo(() => ([
         {
             title: "Customer onboarding",
             start: createDate(1, 13),
@@ -54,7 +54,7 @@ const Rcalendar = () => {
             start: createDate(0, 9, 30),
             end: createDate(0, 10, 30),
             variant: "primary",
-            color:'#fdef26'
+            color: '#fdef26'
         },
 
         {
@@ -100,17 +100,13 @@ const Rcalendar = () => {
             end: createDate(36, 14, 30),
             variant: "primary",
         },
-    ];
+    ]), [])
 
     const [view, setView] = useState<View>(Views.MONTH);
     const [date, setDate] = useState(new Date());
-    const [events, setEvents] = useState<CalendarEvent[]>([]);
+    const [events, setEvents] = useState<CalendarEvent[]>([...presetEvents]);
     const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
 
-    useEffect(()=>{
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setEvents( [...presetEvents])
-    }, [])
     const eventPropGetter: CalendarProps<CalendarEvent>["eventPropGetter"] = (event) => {
         const variant = event.variant;
         return {
@@ -216,63 +212,63 @@ const Rcalendar = () => {
         //         enableSystem
         //         enableColorScheme//TransitionOnChange
         //     >
-                <div className="container mx-auto py-10 px-3">
-                    {/* <header className="max-w-3xl space-y-3">
+        <div className="container mx-auto py-10 px-3">
+            {/* <header className="max-w-3xl space-y-3">
                         <h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
                             Visualisation emploie du planning
                         </h3>
                     </header> */}
-                    <section className="space-y-4">
-                        <div className="flex flex-wrap items-center gap-3 justify-between">
-                            <p className="text-muted-foreground">
-                                Add a meeting, workshop, or reminder to the demo.
-                            </p>
-                            <Button
-                                aria-label="Create a new calendar event"
-                                onClick={() => setSelectedSlot({ start: new Date(), end: new Date(), slots: [], action: "click" })}
-                            >
-                                <Plus />
-                                Create Event
-                            </Button>
-                        </div>
-
-                        <Dialog open={selectedSlot !== null} onOpenChange={() => setSelectedSlot(null)}>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle className="text-xl font-semibold tracking-tight">
-                                        Create Event
-                                    </DialogTitle>
-                                </DialogHeader>
-                                {selectedSlot && (
-                                    <EventForm
-                                        start={selectedSlot.start}
-                                        end={selectedSlot.end}
-                                        onSubmit={handleCreateEvent}
-                                        onCancel={() => setSelectedSlot(null)}
-                                    />
-                                )}
-                            </DialogContent>
-                        </Dialog>
-                        <DnDCalendar
-                            localizer={localizer}
-                            style={{ height: 600, width: "100%" }}
-                            className="border-border border-rounded-md border-solid border-2 rounded-lg"
-                            selectable
-                            date={date}
-                            onNavigate={handleNavigate}
-                            view={view}
-                            onView={handleViewChange}
-                            resizable
-                            draggableAccessor={() => true}
-                            resizableAccessor={() => true}
-                            events={events}
-                            eventPropGetter={eventPropGetter}
-                            onSelectSlot={handleSelectSlot}
-                            onEventDrop={handleEventDrop}
-                            onEventResize={handleEventResize}
-                        />
-                    </section>
+            <section className="space-y-4">
+                <div className="flex flex-wrap items-center gap-3 justify-between">
+                    <p className="text-muted-foreground">
+                        Add a meeting, workshop, or reminder to the demo.
+                    </p>
+                    <Button
+                        aria-label="Create a new calendar event"
+                        onClick={() => setSelectedSlot({ start: new Date(), end: new Date(), slots: [], action: "click" })}
+                    >
+                        <Plus />
+                        Create Event
+                    </Button>
                 </div>
+
+                <Dialog open={selectedSlot !== null} onOpenChange={() => setSelectedSlot(null)}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="text-xl font-semibold tracking-tight">
+                                Create Event
+                            </DialogTitle>
+                        </DialogHeader>
+                        {selectedSlot && (
+                            <EventForm
+                                start={selectedSlot.start}
+                                end={selectedSlot.end}
+                                onSubmit={handleCreateEvent}
+                                onCancel={() => setSelectedSlot(null)}
+                            />
+                        )}
+                    </DialogContent>
+                </Dialog>
+                <DnDCalendar
+                    localizer={localizer}
+                    style={{ height: 600, width: "100%" }}
+                    className="border-border border-rounded-md border-solid border-2 rounded-lg"
+                    selectable
+                    date={date}
+                    onNavigate={handleNavigate}
+                    view={view}
+                    onView={handleViewChange}
+                    resizable
+                    draggableAccessor={() => true}
+                    resizableAccessor={() => true}
+                    events={events}
+                    eventPropGetter={eventPropGetter}
+                    onSelectSlot={handleSelectSlot}
+                    onEventDrop={handleEventDrop}
+                    onEventResize={handleEventResize}
+                />
+            </section>
+        </div>
 
         //     </ThemeProvider>
         // </TooltipProvider>
