@@ -72,7 +72,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                     return (
                         <div className="flex items-start gap-2">
                             {config.onUpdate && <UpdateBox body={rowData} onUpdate={config.onUpdate} fields={fields} />}
-                            <DeleteBox id={rowData["id" as keyof T] as string} onDelete={() =>config.onDelete && config.onDelete(rowData)} />
+                            <DeleteBox id={rowData["id" as keyof T] as string} onDelete={() => config.onDelete && config.onDelete(rowData)} />
                         </div>
                     )
                 }
@@ -88,9 +88,16 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                         </Link>
                     )
                 }
+                if (config.type === "datetime") {
+                    return <div className="lowercase">{new Date(value as string).toLocaleString()}</div>
 
+                }
+                 if (config.type === "date") {
+                    return <div className="lowercase">{new Date(value as string).toLocaleDateString()}</div>
+
+                }
                 // TEXTE
-                return <div className="lowercase">{value as string}</div>
+                return <div >{value as string}</div>
             },
             enableSorting: isSortingEnabled,
             enableHiding: isHidingEnabled,

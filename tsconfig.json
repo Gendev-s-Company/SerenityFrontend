@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/page.tsxx", "app/view/calendar/layout.tsxxxx"  ],
+, "app/page.tsxx", "app/view/users/work/calendar/layout.tsxxxx"  ],
   "exclude": ["node_modules"]
 }

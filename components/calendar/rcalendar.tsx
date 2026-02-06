@@ -1,12 +1,8 @@
 "use client";
 
-import { startOfToday } from "@/components/calendar/calendar-function";
-import { EventForm } from "@/components/calendar/shadcn-big-calendar/event-form";
+import { Calendarbody, CalendarEvent } from "@/components/calendar/calendar-function";
 import ShadcnBigCalendar from "@/components/calendar/shadcn-big-calendar/shadcn-big-calendar";
-import { ThemeProvider } from "@/components/calendar/theme/theme-provider";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Plus } from "lucide-react";
 import moment from "moment";
 import { ComponentType, SetStateAction, useEffect, useMemo, useState } from "react";
@@ -15,7 +11,7 @@ import { momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import './shadcn-big-calendar/shadcn-big-calendar.css'
-import { DialogTitle } from "@radix-ui/react-dialog";
+import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
 
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(
@@ -23,88 +19,17 @@ const DnDCalendar = withDragAndDrop<CalendarEvent>(
 );
 const localizer = momentLocalizer(moment);
 
-type CalendarEvent = {
-    title: string;
-    start: Date;
-    end: Date;
-    allDay?: boolean;
-    variant?: "primary" | "secondary" | "outline";
-    color?: string
-};
+interface CEventsProps {
+    works: CalendarEvent[]
+}
 
+const Rcalendar = ({ works }: CEventsProps) => {
 
-const Rcalendar = () => {
-
-    const createDate = (dayOffset: number, hours: number, minutes = 0) => {
-        const date = new Date(startOfToday);
-        date.setDate(startOfToday.getDate() + dayOffset);
-        date.setHours(hours, minutes, 0, 0);
-        return date;
-    };
-
-    const presetEvents: CalendarEvent[] = useMemo(() => ([
-        {
-            title: "Customer onboarding",
-            start: createDate(1, 13),
-            end: createDate(1, 14),
-            variant: "primary",
-        },
-        {
-            title: "Product design sync",
-            start: createDate(0, 9, 30),
-            end: createDate(0, 10, 30),
-            variant: "primary",
-            color: '#fdef26'
-        },
-
-        {
-            title: "Deep work block",
-            start: createDate(2, 11),
-            end: createDate(2, 13),
-            variant: "primary",
-        },
-        {
-            title: "Team offsite",
-            start: createDate(-1, 0),
-            end: createDate(1, 0),
-            allDay: true,
-            variant: "primary",
-        },
-        {
-            title: "Retro & planning",
-            start: createDate(3, 15),
-            end: createDate(3, 16, 30),
-            variant: "primary",
-        },
-        {
-            title: "Quarterly roadmap",
-            start: createDate(30, 10),
-            end: createDate(30, 11, 30),
-            variant: "primary",
-        },
-        {
-            title: "Partner demo",
-            start: createDate(32, 14),
-            end: createDate(32, 15),
-            variant: "primary",
-        },
-        {
-            title: "Billing review",
-            start: createDate(34, 9),
-            end: createDate(34, 10),
-            variant: "primary",
-        },
-        {
-            title: "Security tabletop",
-            start: createDate(36, 13),
-            end: createDate(36, 14, 30),
-            variant: "primary",
-        },
-    ]), [])
 
     const [view, setView] = useState<View>(Views.MONTH);
     const [date, setDate] = useState(new Date());
-    const [events, setEvents] = useState<CalendarEvent[]>([...presetEvents]);
+    const [events, setEvents] = useState<CalendarEvent[]>(works);
+
     const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
 
     const eventPropGetter: CalendarProps<CalendarEvent>["eventPropGetter"] = (event) => {
@@ -116,6 +41,9 @@ const Rcalendar = () => {
             }
         };
     };
+    useEffect(() => {
+        setEvents(works);
+    }, [works]);
 
     const handleNavigate = (newDate: Date) => {
         setDate(newDate);
@@ -129,7 +57,7 @@ const Rcalendar = () => {
         setSelectedSlot(slotInfo);
     };
 
-    const handleCreateEvent = (data: { title: string; start: string; end: string; variant: CalendarEvent["variant"] }) => {
+    const handleCreateEvent = (data: Calendarbody) => {
         const startDate = new Date(data.start);
         const endDate = new Date(data.end);
         const allDaySelection =
@@ -205,19 +133,7 @@ const Rcalendar = () => {
     };
 
     return (
-        // <TooltipProvider>
-        //     <ThemeProvider
-        //         attribute="class"
-        //         defaultTheme="system"
-        //         enableSystem
-        //         enableColorScheme//TransitionOnChange
-        //     >
-        <div className="container mx-auto py-10 px-3">
-            {/* <header className="max-w-3xl space-y-3">
-                        <h3 className="scroll-m-20 text-2xl font-bold tracking-tight">
-                            Visualisation emploie du planning
-                        </h3>
-                    </header> */}
+        <div className="container mx-auto py-20 px-5">
             <section className="space-y-4">
                 <div className="flex flex-wrap items-center gap-3 justify-between">
                     <p className="text-muted-foreground">
@@ -231,24 +147,7 @@ const Rcalendar = () => {
                         Create Event
                     </Button>
                 </div>
-
-                <Dialog open={selectedSlot !== null} onOpenChange={() => setSelectedSlot(null)}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-semibold tracking-tight">
-                                Create Event
-                            </DialogTitle>
-                        </DialogHeader>
-                        {selectedSlot && (
-                            <EventForm
-                                start={selectedSlot.start}
-                                end={selectedSlot.end}
-                                onSubmit={handleCreateEvent}
-                                onCancel={() => setSelectedSlot(null)}
-                            />
-                        )}
-                    </DialogContent>
-                </Dialog>
+                <CalendarDialog handleCreateEvent={handleCreateEvent} selectedSlot={selectedSlot} setSelectedSlot={setSelectedSlot} />
                 <DnDCalendar
                     localizer={localizer}
                     style={{ height: 600, width: "100%" }}
@@ -269,9 +168,6 @@ const Rcalendar = () => {
                 />
             </section>
         </div>
-
-        //     </ThemeProvider>
-        // </TooltipProvider>
     );
 };
 

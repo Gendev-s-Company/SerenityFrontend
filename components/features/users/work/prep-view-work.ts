@@ -9,14 +9,14 @@ export const WSCColumnOptions: ColumnConfig<WorkSchedule>[] = [
     {
         key: "starttime",
         header: "Début",
-        type: "text",
+        type: "datetime",
         href: (row) => `/schedule/${row?.scheduleID}`,
         hiding: false,
     },
     {
         key: "endtime",
         header: "Fin",
-        type: "text",
+        type: "datetime",
         href: (row) => `/schedule/${row?.scheduleID}`,
         hiding: false,
     },

@@ -26,7 +26,7 @@ const ModifyPasswordPage = () => {
       throw new Error("Veuillez mettre des mots de passes identique")
     }
     const formData = {
-      userID: forms.getForm.userID,
+      userID: forms.getForm.userID!,
       newPwd: forms.getForm.newPwd,
       oldpwd: forms.getForm.oldpwd,
     }

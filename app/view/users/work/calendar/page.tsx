@@ -1,9 +1,9 @@
-import Rcalendar from '@/components/calendar/rcalendar'
+import Planning from '@/components/features/users/work/planning/planning'
 import React from 'react'
 
 const page = () => {
   return (
-    <div><Rcalendar /></div>
+    <Planning />
     // <div>
     //   coucouuu
     // </div>
