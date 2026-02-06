@@ -10,7 +10,7 @@ import { UserEntity } from '@/types/entity-type/userEntity';
 import { getLocalStorage } from '@/utils/storage';
 
 const ModifyPasswordPage = () => {
-  const user = getLocalStorage() as UserEntity
+  const user = getLocalStorage()!
   const body = {
     userID: user.userID,
     newPwd: "",

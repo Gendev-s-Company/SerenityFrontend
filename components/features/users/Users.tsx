@@ -35,7 +35,6 @@ export default function Users() {
   useEffect(() => {
     getAllProfils()
       .then((data) => {
-        console.log(data);
         setProfilOption(convertListToOption(data))
       })
       .catch((error) => console.error("Error fetching profils:", error));
@@ -57,8 +56,7 @@ export default function Users() {
   }, [refresh, page.pageIndex]);
 
   const onUpdate = async (formData: UserEntity) => {
-    console.log(formData);
-
+    
     await updateUser(formData);
     setRefresh((prev) => prev + 1);
   };

@@ -13,10 +13,12 @@ import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { WSCColumnOptions, WSCNamefield } from "./prep-view-work";
 import { DataTable } from "@/components/liste/complexe-data-table";
+import { getLocalStorage } from "@/utils/storage";
 
 export default function WorkSchedulePage() {
   const [works, setWorks] = useState<WorkSchedule[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
+  
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -25,6 +27,7 @@ export default function WorkSchedulePage() {
     totalElement: 0,
     totalPage: 0,
   });
+  const user = getLocalStorage()!
   useEffect(() => {
     getPaginateworkSC(page.pageIndex, page.pageSize)
       .then((data) => {
@@ -66,7 +69,7 @@ export default function WorkSchedulePage() {
 
   const body: WorkSchedule = {
     scheduleID: null,
-    userID: "USER000001",
+    userID: user.userID!, ///miala ito aveo
     starttime: new Date(),
     endtime: null,
     status:0

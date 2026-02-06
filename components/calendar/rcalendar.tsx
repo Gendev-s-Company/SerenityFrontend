@@ -5,13 +5,14 @@ import ShadcnBigCalendar from "@/components/calendar/shadcn-big-calendar/shadcn-
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import moment from "moment";
-import { ComponentType, SetStateAction, useEffect, useMemo, useState } from "react";
+import { ComponentType, SetStateAction, useEffect, useState } from "react";
 import type { CalendarProps, View } from "react-big-calendar";
 import { momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import './shadcn-big-calendar/shadcn-big-calendar.css'
 import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
+import { FieldConfig } from "@/types/component-type/form-type";
 
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(
@@ -19,12 +20,16 @@ const DnDCalendar = withDragAndDrop<CalendarEvent>(
 );
 const localizer = momentLocalizer(moment);
 
-interface CEventsProps {
-    works: CalendarEvent[]
+interface CEventsProps<T> {
+    works: CalendarEvent[],
+    fields: FieldConfig<T>[],
+    body: T,
+    convertionToCalendar: (body: T) => Calendarbody,
+    saveToDb: (body: T) => void;
+    initForm: (body: T, slot: SlotInfo) => void;
 }
 
-const Rcalendar = ({ works }: CEventsProps) => {
-
+function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, initForm }: CEventsProps<T>) {
 
     const [view, setView] = useState<View>(Views.MONTH);
     const [date, setDate] = useState(new Date());
@@ -44,7 +49,12 @@ const Rcalendar = ({ works }: CEventsProps) => {
     useEffect(() => {
         setEvents(works);
     }, [works]);
-
+    useEffect(() => {
+        if (selectedSlot !== null) {
+            initForm(body, selectedSlot)
+            
+        }
+    }, [body, selectedSlot])
     const handleNavigate = (newDate: Date) => {
         setDate(newDate);
     };
@@ -57,7 +67,7 @@ const Rcalendar = ({ works }: CEventsProps) => {
         setSelectedSlot(slotInfo);
     };
 
-    const handleCreateEvent = (data: Calendarbody) => {
+    const handleCreateEvent = async (body: T, data: Calendarbody) => {
         const startDate = new Date(data.start);
         const endDate = new Date(data.end);
         const allDaySelection =
@@ -75,6 +85,7 @@ const Rcalendar = ({ works }: CEventsProps) => {
             variant: data.variant,
         };
         setEvents((previous) => [...previous, newEvent]);
+        await saveToDb(body)
         setSelectedSlot(null);
     };
 
@@ -131,7 +142,10 @@ const Rcalendar = ({ works }: CEventsProps) => {
         );
         setEvents(updatedEvents);
     };
-
+    const createEvent = () => {
+        const slotInfo: SlotInfo = { start: new Date(), end: new Date(), slots: [], action: "click" }
+        setSelectedSlot(slotInfo)
+    }
     return (
         <div className="container mx-auto py-20 px-5">
             <section className="space-y-4">
@@ -141,13 +155,20 @@ const Rcalendar = ({ works }: CEventsProps) => {
                     </p>
                     <Button
                         aria-label="Create a new calendar event"
-                        onClick={() => setSelectedSlot({ start: new Date(), end: new Date(), slots: [], action: "click" })}
+                        onClick={createEvent}
                     >
                         <Plus />
                         Create Event
                     </Button>
                 </div>
-                <CalendarDialog handleCreateEvent={handleCreateEvent} selectedSlot={selectedSlot} setSelectedSlot={setSelectedSlot} />
+                <CalendarDialog
+                    handleCreateEvent={handleCreateEvent}
+                    selectedSlot={selectedSlot}
+                    setSelectedSlot={setSelectedSlot}
+                    convertionToCalendar={convertionToCalendar}
+                    fields={fields}
+                    body={body}
+                />
                 <DnDCalendar
                     localizer={localizer}
                     style={{ height: 600, width: "100%" }}

@@ -7,6 +7,11 @@ const workPath = "/workschedule";
 export const getAllworkSC = async () => {
   return await getCall<WorkSchedule[]>(workPath );
 }
+
+export const getAllworkSCByAutority = async (userID: string) => {
+  return await getCall<WorkSchedule[]>(`${workPath}/calendar?userId=${userID}`);
+}
+
 export const getPaginateworkSC = async (page:number,size:number) => {
   return await getCall<Page<WorkSchedule>>(`${workPath}/${page}/${size}?field=starttime` );
 }

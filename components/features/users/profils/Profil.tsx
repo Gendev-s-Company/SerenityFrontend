@@ -9,6 +9,7 @@ import { ProfilColumnOptions, ProfilNamefield } from "./prep-view-profil";
 import { PaginationState } from "@tanstack/react-table";
 import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
+import { getLocalStorage } from "@/utils/storage";
 
 export default function Profil() {
   const [profil, setProfil] = useState<ProfilEntity[]>([]);
@@ -21,6 +22,7 @@ export default function Profil() {
     totalElement: 0,
     totalPage: 0
   })
+  const user = getLocalStorage()!
   useEffect(() => {
     getPaginateProfil(page.pageIndex, page.pageSize)
       .then((data) => {
@@ -62,7 +64,7 @@ export default function Profil() {
 
   const body: ProfilEntity = {
     profilID: null,
-    companyid: "COMP000002",
+    companyid: user.profil.companyid,
     name: "",
     authority: 0,
   };
