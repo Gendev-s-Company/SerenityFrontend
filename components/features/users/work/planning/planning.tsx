@@ -13,8 +13,7 @@ import { UserEntity } from '@/types/entity-type/userEntity';
 import { getAllUser, getUserById } from '@/infrastructure/user/userRequest';
 import { FieldConfig, FieldOptions } from '@/types/component-type/form-type';
 import { convertListUsersToOption } from '@/infrastructure/user/userFunction';
-import { Field, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FieldGroup, FieldSet } from '@/components/ui/field';
 
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
@@ -25,6 +24,7 @@ const Planning = () => {
     const [works, setWorks] = useState<CalendarEvent[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
     const [users, setUsers] = useState<FieldOptions[]>([])
+    const [filters, setFilters] = useState<string[]>([])
     const user = getLocalStorage()!
     const body: WorkSchedule = {
         scheduleID: null,
@@ -109,6 +109,9 @@ const Planning = () => {
         body.starttime = slot.start
         body.endtime = slot.end
         setForm(body)
+    }
+    const handleChange = (value:string) => {
+        setFilters( [...filters,value])
     }
     return (
         <div>
