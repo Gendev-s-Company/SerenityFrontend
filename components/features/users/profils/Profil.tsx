@@ -64,7 +64,7 @@ export default function Profil() {
 
   const body: ProfilEntity = {
     profilID: null,
-    companyid: user.profil.companyid,
+    companyid: user?.profil.companyid ? user.profil.companyid:"",
     name: "",
     authority: 0,
   };
