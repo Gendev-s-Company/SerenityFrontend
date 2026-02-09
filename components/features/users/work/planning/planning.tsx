@@ -24,7 +24,7 @@ const Planning = () => {
     const [works, setWorks] = useState<CalendarEvent[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
     const [users, setUsers] = useState<FieldOptions[]>([])
-    const [filters, setFilters] = useState<string[]>([])
+    const [filters, setFilters] = useState<FieldOptions[]>([])
     const user = getLocalStorage()!
     const body: WorkSchedule = {
         scheduleID: null,
@@ -34,22 +34,6 @@ const Planning = () => {
         color: 'black',
         status: 0
     };
-    const skillOptions = [
-        "JavaScript",
-        "TypeScript",
-        "React",
-        "Node.js",
-        "Python",
-        "Java",
-        "C#",
-        "Ruby",
-        "PHP",
-        "Go",
-        "Rust",
-        "Swift",
-        "Kotlin",
-    ];
-    const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
     const [form, setForm] = useState<WorkSchedule>(body)
     useEffect(() => {
         if (user) {
@@ -110,9 +94,6 @@ const Planning = () => {
         body.endtime = slot.end
         setForm(body)
     }
-    const handleChange = (value:string) => {
-        setFilters( [...filters,value])
-    }
     return (
         <div>
             <div className="container py-2 px-5">
@@ -121,10 +102,10 @@ const Planning = () => {
                     <div className="flex items-center gap-3">
                         <div className="w-full max-w-md py-2">
                             <MultiSelect
-                                options={skillOptions}
-                                selected={selectedSkills}
-                                onChange={setSelectedSkills}
-                                placeholder="Select skills..."
+                                setOpts={setFilters}
+                                safidy={filters}
+                                opts={users}
+                                placeholder="Choisir les utilisateurs"
                             />
                         </div>
                             <Button

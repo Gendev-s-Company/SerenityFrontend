@@ -11,11 +11,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
+import { FieldOptions } from "@/types/component-type/form-type";
 
 type MultiSelectProps = {
-  options: string[];
-  selected: string[];
-  onChange: (selected: string[]) => void;
+  opts: FieldOptions[];
+  safidy: FieldOptions[];
+  setOpts: (selected: FieldOptions[]) => void;
   placeholder?: string;
 };
 
@@ -27,9 +28,9 @@ type MultiSelectProps = {
  * @param {string} [placeholder="Select options..."] The placeholder text that is displayed when the user has not yet selected any options.
  */
 export function MultiSelect({
-  options,
-  selected,
-  onChange,
+  opts,
+  safidy,
+  setOpts,
   placeholder = "Select options...",
 }: MultiSelectProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -37,31 +38,34 @@ export function MultiSelect({
   const [inputValue, setInputValue] = React.useState("");
 
   const handleUnselect = (option: string) => {
-    onChange(selected.filter((s) => s !== option));
+    setOpts(safidy.filter((s) => s.id!==option))
+    // onChange(selected.filter((s) => s !== option));
   };
 
-  const selectables = options.filter((option) => !selected.includes(option));
-
+  // const selectables = options.filter((option) => !selected.includes(option));
+  const selectables = opts.filter(
+    (option) => !safidy.some((sel) => sel.id === option.id),
+  );
   return (
     <Command className="overflow-visible bg-transparent">
       <div className="group border border-input text-sm ring-offset-background rounded-xl focus-within:ring-2 focus-within:ring-ringfocus-within:ring-offset-2">
         <div className="flex flex-wrap">
-          {selected.map((option) => {
+          {safidy.map((option) => {
             return (
-              <Badge key={option} variant="secondary">
-                {option}
+              <Badge key={option.id} variant="secondary" className="h-6">
+                {option.label}
                 <button
                   className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      handleUnselect(option);
+                      handleUnselect(option.id);
                     }
                   }}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  onClick={() => handleUnselect(option)}
+                  onClick={() => handleUnselect(option.id)}
                 >
                   <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                 </button>
@@ -75,7 +79,7 @@ export function MultiSelect({
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
             placeholder={placeholder}
-            className="ml-1 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+            className="ml-1 bg-transparent w-full outline-none placeholder:text-muted-foreground flex-1"
           />
         </div>
       </div>
@@ -88,24 +92,24 @@ export function MultiSelect({
                 {selectables.map((option) => {
                   return (
                     <CommandItem
-                      key={option}
+                      key={option.id}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                       }}
                       onSelect={() => {
                         setInputValue("");
-                        onChange([...selected, option]);
+                        setOpts([...safidy, option]);
                       }}
                       className={"cursor-pointer"}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          onChange([...selected, option]);
+                          setOpts([...safidy, option]);
                           setInputValue("");
                         }
                       }}
                     >
-                      {option}
+                      {option.label}
                     </CommandItem>
                   );
                 })}
