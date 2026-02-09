@@ -50,9 +50,9 @@ const Planning = () => {
         setForm(body)
       }
     return (
-        <div>
+        // <div>
             <Rcalendar  initForm={initForm} saveToDb={onCreate} body={form} convertionToCalendar={convertionToCalendar} fields={WSCNamefield} works={works} />
-        </div>
+        // </div>
     )
 }
 

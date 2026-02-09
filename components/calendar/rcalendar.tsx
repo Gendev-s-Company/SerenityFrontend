@@ -1,5 +1,5 @@
 "use client";
-
+import './shadcn-big-calendar/shadcn-big-calendar.css'
 import { Calendarbody, CalendarEvent } from "@/components/calendar/calendar-function";
 import ShadcnBigCalendar from "@/components/calendar/shadcn-big-calendar/shadcn-big-calendar";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import type { CalendarProps, View } from "react-big-calendar";
 import { momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import './shadcn-big-calendar/shadcn-big-calendar.css'
 import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
 import { FieldConfig } from "@/types/component-type/form-type";
 
@@ -52,7 +51,7 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
     useEffect(() => {
         if (selectedSlot !== null) {
             initForm(body, selectedSlot)
-            
+
         }
     }, [body, selectedSlot])
     const handleNavigate = (newDate: Date) => {
@@ -147,8 +146,8 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
         setSelectedSlot(slotInfo)
     }
     return (
-        <div className="container mx-auto py-20 px-5">
-            <section className="space-y-4">
+        <div className="container py-2 px-5">
+            {/* <section> */}
                 <div className="flex flex-wrap items-center gap-3 justify-between">
                     <p className="text-muted-foreground">
                         Add a meeting, workshop, or reminder to the demo.
@@ -169,25 +168,27 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
                     fields={fields}
                     body={body}
                 />
-                <DnDCalendar
-                    localizer={localizer}
-                    style={{ height: 600, width: "100%" }}
-                    className="border-border border-rounded-md border-solid border-2 rounded-lg"
-                    selectable
-                    date={date}
-                    onNavigate={handleNavigate}
-                    view={view}
-                    onView={handleViewChange}
-                    resizable
-                    draggableAccessor={() => true}
-                    resizableAccessor={() => true}
-                    events={events}
-                    eventPropGetter={eventPropGetter}
-                    onSelectSlot={handleSelectSlot}
-                    onEventDrop={handleEventDrop}
-                    onEventResize={handleEventResize}
-                />
-            </section>
+                {/* <div className="h-[700px]"> */}
+                    <DnDCalendar
+                        localizer={localizer}
+                        style={{ height: 600, width: "100%" }}
+                        className="border-border border-rounded-md border-solid border-2 rounded-lg"
+                        selectable
+                        date={date}
+                        onNavigate={handleNavigate}
+                        view={view}
+                        onView={handleViewChange}
+                        resizable
+                        draggableAccessor={() => true}
+                        resizableAccessor={() => true}
+                        events={events}
+                        eventPropGetter={eventPropGetter}
+                        onSelectSlot={handleSelectSlot}
+                        onEventDrop={handleEventDrop}
+                        onEventResize={handleEventResize}
+                    />
+                {/* </div> */}
+            {/* </section> */}
         </div>
     );
 };
