@@ -27,4 +27,5 @@ export const WSCNamefield: FieldConfig<WorkSchedule>[] = [
     { name: "userID", libelle: "UserID :", type: "text", normal: true },
     { name: "starttime", libelle: "Début :", type: "datetime-local", normal: true },
     { name: "endtime", libelle: "Fin :", type: "datetime-local", normal: true },
+    { name: "color", libelle: "Couleur :", type: "color", normal: true },
 ];

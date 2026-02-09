@@ -55,7 +55,6 @@ const [open, setOpen] = useState(false);
               Remplir les champs pour créer un enregistrement
             </DialogDescription>
           </DialogHeader>
-          {/* <div className="w-full max-w-md"> */}
           <div className="no-scrollbar -mx-4 max-h-[50vh] max-w-md overflow-y-auto px-4">
             {/* utilisation de formulaire générique */}
             <Forms forms={forms} fields={fields} />

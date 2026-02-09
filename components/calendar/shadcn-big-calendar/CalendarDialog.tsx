@@ -28,9 +28,12 @@ export default function CalendarDialog<T>({ selectedSlot, setSelectedSlot, handl
         setTimeout(() => setSelectedSlot(null), 500);
         forms.resetForm()
     }
-
+    const cancel = () => {
+        setSelectedSlot(null)
+        forms.resetForm()
+    }
     return (
-        <Dialog open={selectedSlot !== null} onOpenChange={() => setSelectedSlot(null)}>
+        <Dialog open={selectedSlot !== null} onOpenChange={cancel}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold tracking-tight">
@@ -44,13 +47,13 @@ export default function CalendarDialog<T>({ selectedSlot, setSelectedSlot, handl
                     //     onSubmit={handleCreateEvent}
                     //     onCancel={() => setSelectedSlot(null)}
                     // />
-                    <div className="no-scrollbar -mx-4 max-h-[50vh] max-w-md overflow-y-auto px-4">
+                    <div className="no-scrollbar max-h-[60vh] max-w-md overflow-y-auto px-4">
                         {/* utilisation de formulaire générique */}
                         <Forms forms={forms} fields={fields} />
                     </div>
                 )}
                 <DialogFooter>
-                    <Button className="cursor-pointer" onClick={() => setSelectedSlot(null)} variant="outline">Annuler</Button>
+                    <Button className="cursor-pointer" onClick={cancel} variant="outline">Annuler</Button>
                     <Sbutton message="Création réussi!" formAction={submit} />
                 </DialogFooter>
             </DialogContent>
