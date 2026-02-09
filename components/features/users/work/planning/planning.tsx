@@ -25,10 +25,11 @@ const Planning = () => {
     const [refresh, setRefresh] = useState<number>(0);
     const [users, setUsers] = useState<FieldOptions[]>([])
     const [filters, setFilters] = useState<FieldOptions[]>([])
-    const user = getLocalStorage()!
+    const user = getLocalStorage()
+    
     const body: WorkSchedule = {
         scheduleID: null,
-        userID: user.userID!,
+        userID: user?.userID ? user.userID :"",
         starttime: new Date(),
         endtime: null,
         color: 'black',

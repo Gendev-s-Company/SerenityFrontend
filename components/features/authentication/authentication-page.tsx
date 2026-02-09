@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useForm from "@/hooks/use-form";
 import { login } from "@/infrastructure/user/userRequest";
-import { userStorage } from "@/utils/storage";
+import { setAuthStorage, userStorage } from "@/utils/storage";
 import { useRouter } from "next/navigation";
 
 export default function AuthenticationPage() {
@@ -32,7 +32,7 @@ export default function AuthenticationPage() {
   const formAction = async () => {
     console.log("En cours d'authentification");    
     const user =await login(forms.getForm);
-    localStorage.setItem(userStorage, JSON.stringify(user))
+    setAuthStorage(JSON.stringify(user))
     router.push("/view");
   };
 
