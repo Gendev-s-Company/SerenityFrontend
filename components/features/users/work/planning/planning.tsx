@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 
 const Planning = () => {
@@ -33,6 +34,22 @@ const Planning = () => {
         color: 'black',
         status: 0
     };
+    const skillOptions = [
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "Node.js",
+        "Python",
+        "Java",
+        "C#",
+        "Ruby",
+        "PHP",
+        "Go",
+        "Rust",
+        "Swift",
+        "Kotlin",
+    ];
+    const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
     const [form, setForm] = useState<WorkSchedule>(body)
     useEffect(() => {
         if (user) {
@@ -98,10 +115,29 @@ const Planning = () => {
             <div className="container py-2 px-5">
 
                 <form onSubmit={(e) => e.preventDefault()}>
+                    <div className="flex items-center gap-3">
+                        <div className="w-full max-w-md py-2">
+                            <MultiSelect
+                                options={skillOptions}
+                                selected={selectedSkills}
+                                onChange={setSelectedSkills}
+                                placeholder="Select skills..."
+                            />
+                        </div>
+                            <Button
+                            className='min-h-10'
+                            style={{marginTop: '-5px'}}
+                                aria-label="Afficher le filtre"
+                                variant={'outline'}
+                            >
+                                <Search  />
+                                Afficher
+                            </Button>
+                    </div>
                     <FieldGroup>
                         <FieldSet>
                             <div className="grid grid-cols-3 gap-4">
-                                <Field>
+                                {/* <Field>
                                     <Select defaultValue="">
                                         <SelectTrigger id="checkout-exp-month-ts6">
                                             <SelectValue placeholder="Utilisateurs" />
@@ -134,7 +170,7 @@ const Planning = () => {
                                             Afficher
                                         </Button>
                                     </div>
-                                </Field>
+                                </Field> */}
                             </div>
                         </FieldSet>
                     </FieldGroup>
