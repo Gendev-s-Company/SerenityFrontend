@@ -24,6 +24,7 @@ export type Calendarbody = {
     title: string;
     start: string;
     end: string;
+    color?: string,
     variant: CalendarEvent["variant"]
 }
 // export const calendarData: CalendarEvent[] = [

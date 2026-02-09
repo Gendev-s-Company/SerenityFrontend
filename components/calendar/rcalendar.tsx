@@ -35,7 +35,11 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
     const [events, setEvents] = useState<CalendarEvent[]>(works);
 
     const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
+    const minTime = new Date();
+    minTime.setHours(6, 0, 0);
 
+    const maxTime = new Date();
+    maxTime.setHours(18, 0, 0);
     const eventPropGetter: CalendarProps<CalendarEvent>["eventPropGetter"] = (event) => {
         const variant = event.variant;
         return {
@@ -63,6 +67,10 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
     };
 
     const handleSelectSlot = (slotInfo: SlotInfo) => {
+        if (Views.MONTH === view) {
+            slotInfo.start = minTime
+            slotInfo.end = maxTime
+        }
         setSelectedSlot(slotInfo);
     };
 
@@ -142,52 +150,54 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
         setEvents(updatedEvents);
     };
     const createEvent = () => {
-        const slotInfo: SlotInfo = { start: new Date(), end: new Date(), slots: [], action: "click" }
+        const slotInfo: SlotInfo = { start: minTime, end: maxTime, slots: [], action: "click" }
         setSelectedSlot(slotInfo)
     }
     return (
         <div className="container py-2 px-5">
             {/* <section> */}
-                <div className="flex flex-wrap items-center gap-3 justify-between">
-                    <p className="text-muted-foreground">
-                        Add a meeting, workshop, or reminder to the demo.
-                    </p>
-                    <Button
-                        aria-label="Create a new calendar event"
-                        onClick={createEvent}
-                    >
-                        <Plus />
-                        Create Event
-                    </Button>
-                </div>
-                <CalendarDialog
-                    handleCreateEvent={handleCreateEvent}
-                    selectedSlot={selectedSlot}
-                    setSelectedSlot={setSelectedSlot}
-                    convertionToCalendar={convertionToCalendar}
-                    fields={fields}
-                    body={body}
-                />
-                {/* <div className="h-[700px]"> */}
-                    <DnDCalendar
-                        localizer={localizer}
-                        style={{ height: 600, width: "100%" }}
-                        className="border-border border-rounded-md border-solid border-2 rounded-lg"
-                        selectable
-                        date={date}
-                        onNavigate={handleNavigate}
-                        view={view}
-                        onView={handleViewChange}
-                        resizable
-                        draggableAccessor={() => true}
-                        resizableAccessor={() => true}
-                        events={events}
-                        eventPropGetter={eventPropGetter}
-                        onSelectSlot={handleSelectSlot}
-                        onEventDrop={handleEventDrop}
-                        onEventResize={handleEventResize}
-                    />
-                {/* </div> */}
+            <div className="flex flex-wrap items-center gap-3 justify-between">
+                <p className="text-muted-foreground">
+                    Add a meeting, workshop, or reminder to the demo.
+                </p>
+                <Button
+                    aria-label="Create a new calendar event"
+                    onClick={createEvent}
+                >
+                    <Plus />
+                    Create Event
+                </Button>
+            </div>
+            <CalendarDialog
+                handleCreateEvent={handleCreateEvent}
+                selectedSlot={selectedSlot}
+                setSelectedSlot={setSelectedSlot}
+                convertionToCalendar={convertionToCalendar}
+                fields={fields}
+                body={body}
+            />
+            {/* <div className="h-[700px]"> */}
+            <DnDCalendar
+                localizer={localizer}
+                style={{ height: 600, width: "100%" }}
+                className="border-border border-rounded-md border-solid border-2 rounded-lg"
+                selectable
+                date={date}
+                min={minTime}
+                max={maxTime}
+                onNavigate={handleNavigate}
+                view={view}
+                onView={handleViewChange}
+                resizable
+                draggableAccessor={() => true}
+                resizableAccessor={() => true}
+                events={events}
+                eventPropGetter={eventPropGetter}
+                onSelectSlot={handleSelectSlot}
+                onEventDrop={handleEventDrop}
+                onEventResize={handleEventResize}
+            />
+            {/* </div> */}
             {/* </section> */}
         </div>
     );
