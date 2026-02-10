@@ -10,6 +10,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
+import { CompanyEntity } from "@/types/entity-type/companyEntity";
 
 export default function Profil() {
   const [profil, setProfil] = useState<ProfilEntity[]>([]);
@@ -61,14 +62,25 @@ export default function Profil() {
   const columns = useMemo(() => {
     return [...ProfilColumnOptions, btnAction];
   }, []);
-
+  const company:CompanyEntity ={
+    skipValidation:true,
+    companyID:user?.profil?.company.companyID,
+    mail:'',
+    name:'',
+    phone:'',
+    status:0,
+  } 
   const body: ProfilEntity = {
     profilID: null,
-    companyid: user?.profil.companyid ? user.profil.companyid:"",
+    company: company,
     name: "",
     authority: 0,
   };
   const onCreate = async (formData: ProfilEntity) => {
+    console.log(user);
+    
+    console.log(formData);
+    
     await createProfil(formData);
     setRefresh((prev) => prev + 1);
   };

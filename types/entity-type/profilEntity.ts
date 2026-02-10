@@ -1,6 +1,8 @@
+import { CompanyEntity } from "./companyEntity";
+
 export interface ProfilEntity {
     profilID: string|null,
-    companyid: string,
+    company: CompanyEntity,
     name: string,
     authority: number,
 }

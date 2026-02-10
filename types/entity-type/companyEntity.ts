@@ -4,4 +4,5 @@ export interface CompanyEntity {
     phone: string,
     mail: string,
     status: number,
+    skipValidation?: boolean
 }
