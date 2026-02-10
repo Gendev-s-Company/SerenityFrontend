@@ -5,13 +5,14 @@ import ShadcnBigCalendar from "@/components/calendar/shadcn-big-calendar/shadcn-
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import moment from "moment";
-import { ComponentType, SetStateAction, useEffect, useState } from "react";
+import { ComponentType, SetStateAction, useEffect, useMemo, useState } from "react";
 import type { CalendarProps, View } from "react-big-calendar";
 import { momentLocalizer, SlotInfo, Views } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
-import { FieldConfig } from "@/types/component-type/form-type";
+import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
+import { modifyListEvent } from '../features/users/work/planning/planningFunction';
 
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(
@@ -20,6 +21,7 @@ const DnDCalendar = withDragAndDrop<CalendarEvent>(
 const localizer = momentLocalizer(moment);
 
 interface CEventsProps<T> {
+    list: FieldOptions[],
     works: CalendarEvent[],
     fields: FieldConfig<T>[],
     body: T,
@@ -28,7 +30,7 @@ interface CEventsProps<T> {
     initForm: (body: T, slot: SlotInfo) => void;
 }
 
-function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, initForm }: CEventsProps<T>) {
+function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToDb, initForm }: CEventsProps<T>) {
 
     const [view, setView] = useState<View>(Views.MONTH);
     const [date, setDate] = useState(new Date());
@@ -49,9 +51,12 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
             }
         };
     };
+    const eventList = useMemo(() => {
+        return modifyListEvent(works, list);
+    }, [works, list]);
     useEffect(() => {
-        setEvents(works);
-    }, [works]);
+        setEvents(eventList);
+    }, [eventList]);
     useEffect(() => {
         if (selectedSlot !== null) {
             initForm(body, selectedSlot)
@@ -68,8 +73,8 @@ function Rcalendar<T>({ works, fields, body, convertionToCalendar, saveToDb, ini
 
     const handleSelectSlot = (slotInfo: SlotInfo) => {
         if (Views.MONTH === view) {
-            slotInfo.start = minTime
-            slotInfo.end = maxTime
+            slotInfo.start.setHours(6, 0, 0);
+            slotInfo.end.setHours(18, 0, 0);
         }
         setSelectedSlot(slotInfo);
     };

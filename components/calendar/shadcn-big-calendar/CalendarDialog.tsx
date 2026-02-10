@@ -24,6 +24,7 @@ export default function CalendarDialog<T>({ selectedSlot, setSelectedSlot, handl
     
     const submit = async () => {
         const event = convertionToCalendar(forms.getForm)
+        
         await handleCreateEvent(forms.getForm,event)
         setTimeout(() => setSelectedSlot(null), 500);
         forms.resetForm()
