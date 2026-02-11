@@ -12,7 +12,7 @@ import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAnd
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
-import { modifyListEvent } from '../features/users/work/planning/planningFunction';
+import { modifyListEvent } from '../../features/users/work/planning/planningFunction';
 
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(

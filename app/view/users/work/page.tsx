@@ -1,4 +1,4 @@
-import WorkSchedulePage from '@/components/features/users/work/WorkSchedule'
+import WorkSchedulePage from '@/features/users/work/WorkSchedule'
 import React from 'react'
 
 const page = () => {

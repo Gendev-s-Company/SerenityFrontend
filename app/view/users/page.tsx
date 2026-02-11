@@ -1,4 +1,4 @@
-import Users from '@/components/features/users/Users'
+import Users from '@/features/users/Users'
 import React from 'react'
 
 const page = () => {

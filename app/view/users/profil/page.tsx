@@ -1,4 +1,4 @@
-import Profil from '@/components/features/users/profils/Profil'
+import Profil from '@/features/users/profils/Profil'
 import React from 'react'
 
 const page = () => {

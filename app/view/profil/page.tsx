@@ -1,4 +1,4 @@
-import ModifyPasswordPage from '@/components/features/authentication/modify-password-page'
+import ModifyPasswordPage from '@/features/authentication/modify-password-page'
 
 const page = () => {
   return (

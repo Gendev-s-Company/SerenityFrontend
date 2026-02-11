@@ -1,4 +1,4 @@
-import AuthenticationPage from '@/components/features/authentication/authentication-page'
+import AuthenticationPage from '@/features/authentication/authentication-page'
 import React from 'react'
 
 const page = () => {

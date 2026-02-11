@@ -1,4 +1,4 @@
-import Planning from '@/components/features/users/work/planning/planning'
+import Planning from '@/features/users/work/planning/planning'
 import React from 'react'
 
 const page = () => {
