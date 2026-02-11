@@ -23,18 +23,21 @@ import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 
 export default function Users() {
-  const user = getLocalStorage();
-  const [users, setUsers] = useState<UserEntity[]>([]);
-  const [refresh, setRefresh] = useState<number>(0);
-  const [profilOption, setProfilOption] = useState<FieldOptions[]>([]);
+  const user = getLocalStorage();//maka localstorage 
+  const [users, setUsers] = useState<UserEntity[]>([]);//liste utilisateur ni-fetchena avy any am backend
+  const [refresh, setRefresh] = useState<number>(0);//fanaovana auto refresh anle page
+  const [profilOption, setProfilOption] = useState<FieldOptions[]>([]); // Création/update dia liste ana profil en option pour user
+  // parametrage pagination
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
   });
+// nombre total element anaty base
   const [all, setAll] = useState<PageType>({
     totalElement: 0,
     totalPage: 0,
   });
+  // maka anle liste profil zay atao en option
   useEffect(() => {
     if (user && user.profil.company.companyID) {
       getAllProfils(user.profil.company.companyID)
@@ -44,9 +47,10 @@ export default function Users() {
         .catch((error) => console.error("Error fetching profils:", error));
     }
   }, []);
+// maka liste user any anaty base
   useEffect(() => {
     if (user && user.profil.company.companyID) {
-      getPaginateUsers(user.profil.company.companyID,page.pageIndex, page.pageSize)
+      getPaginateUsers(user.profil.company.companyID, page.pageIndex, page.pageSize)
         .then((data) => {
           setUsers(data.content);
           setPage((prevPage) => ({
@@ -82,10 +86,11 @@ export default function Users() {
     onDelete: (row) => onDelete(row.userID),
     onClick: (row) => console.log("Editer", row.userID),
   };
+
   const columns = useMemo(() => {
     return [...UsersColumnOptions, btnAction];
   }, []);
-
+  // création de l'option profil dans la liste de type de field
   const options: FieldConfig<UserEntity> = useMemo(
     () => ({
       name: "profil",
@@ -93,6 +98,7 @@ export default function Users() {
       type: "select",
       normal: false,
       items: profilOption,
+      // metttre l'idkey en le primary key de l'objet, puis labelKey le label que vous voulez afficher
       objectMapping: {
         idKey: "profilID",
         labelKey: "name",
@@ -100,9 +106,11 @@ export default function Users() {
     }),
     [profilOption],
   );
+  // ajout de l'option profil dans la liste de type de field
   const namefield = useMemo(() => {
     return [...UserNamefield.slice(0, 2), options, ...UserNamefield.slice(2)];
   }, [options]);
+  
   const company: CompanyEntity = {
     skipValidation: true,
     companyID: null,

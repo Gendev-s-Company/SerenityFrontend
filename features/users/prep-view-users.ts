@@ -1,7 +1,7 @@
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig } from "@/types/component-type/form-type";
 import { UserEntity } from "@/types/entity-type/userEntity";
-
+// column de la table
 export const UsersColumnOptions: ColumnConfig<UserEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" },
     { key: "userID", header: "userID", sorting: true },
@@ -22,6 +22,7 @@ export const UsersColumnOptions: ColumnConfig<UserEntity>[] = [
     },
     { key: "status", header: "Statut", type: "text", sorting: true },
 ];
+// type field pour le formulaire
 export const UserNamefield: FieldConfig<UserEntity>[] = [
     { name: "name", libelle: "Nom :", type: "text", normal: true },
 
