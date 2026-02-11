@@ -31,7 +31,7 @@ const Planning = () => {
   const [users, setUsers] = useState<FieldOptions[]>([]);
   const [filters, setFilters] = useState<FieldOptions[]>([]);
   const user = getLocalStorage();
-
+  
   const body: WorkSchedule = {
     scheduleID: null,
     userID: user?.userID ? user.userID : "",
@@ -113,6 +113,13 @@ const Planning = () => {
     body.endtime = slot.end;
     setForm(body);
   };
+  const updateFilter = (filters:FieldOptions[]) => {
+    setFilters(filters)
+    if (filters.length<=0) {
+      setRefresh((prev) => prev+1)
+      
+    }
+  }
   return (
     <div>
       <div className="container py-2 px-5">
@@ -120,7 +127,7 @@ const Planning = () => {
           <div className="flex items-center gap-3">
             <div className="w-full max-w-md py-2">
               <MultiSelect
-                setOpts={setFilters}
+                setOpts={updateFilter}
                 safidy={filters}
                 opts={users}
                 placeholder="Choisir les utilisateurs"
