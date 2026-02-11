@@ -4,11 +4,11 @@ import { Page } from "@/types/entity-type/common/Page";
 
 const profilPath = "/profil";
 
-export const getAllProfils = async () => {
-  return await getCall<ProfilEntity[]>(profilPath );
+export const getAllProfils = async (company: string) => {
+  return await getCall<ProfilEntity[]>(profilPath+'/profil?companyId='+company );
 }
-export const getPaginateProfil = async (page:number,size:number) => {
-  return await getCall<Page<ProfilEntity>>(`${profilPath}/${page}/${size}` );
+export const getPaginateProfil = async (company: string,page:number,size:number) => {
+  return await getCall<Page<ProfilEntity>>(`${profilPath}/paginate/${page}/${size}?companyId=${company}` );
 }
 export const getProfilById = async (id: string) => {
     return await getCall<ProfilEntity>(`${profilPath}/${id}`);

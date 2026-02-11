@@ -5,4 +5,5 @@ export interface ProfilEntity {
     company: CompanyEntity,
     name: string,
     authority: number,
+    skipValidation: boolean,
 }

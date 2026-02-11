@@ -1,7 +1,12 @@
 "use client";
 
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { createProfil, deleteProfil, getPaginateProfil, updateProfil } from "@/infrastructure/user/profil/profilRequest";
+import {
+  createProfil,
+  deleteProfil,
+  getPaginateProfil,
+  updateProfil,
+} from "@/infrastructure/user/profil/profilRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { ProfilEntity } from "@/types/entity-type/profilEntity";
 import { useEffect, useMemo, useState } from "react";
@@ -18,26 +23,32 @@ export default function Profil() {
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
-  })
+  });
   const [all, setAll] = useState<PageType>({
     totalElement: 0,
-    totalPage: 0
-  })
-  const user = getLocalStorage()!
+    totalPage: 0,
+  });
+  const user = getLocalStorage()!;
   useEffect(() => {
-    getPaginateProfil(page.pageIndex, page.pageSize)
-      .then((data) => {
-        setProfil(data.content)
-        setPage(prevPage => ({
-          ...prevPage,
-          pageIndex: data.pageable.pageNumber
-        }));
-        setAll({
-          totalElement: data.totalElements,
-          totalPage: data.totalPages
+    if (user && user.profil.company.companyID) {
+      getPaginateProfil(
+        user.profil.company.companyID!,
+        page.pageIndex,
+        page.pageSize,
+      )
+        .then((data) => {
+          setProfil(data.content);
+          setPage((prevPage) => ({
+            ...prevPage,
+            pageIndex: data.pageable.pageNumber,
+          }));
+          setAll({
+            totalElement: data.totalElements,
+            totalPage: data.totalPages,
+          });
         })
-      })
-      .catch((error) => console.error("Error fetching profils:", error));
+        .catch((error) => console.error("Error fetching profils:", error));
+    }
   }, [refresh, page.pageIndex]);
   const onUpdate = async (formData: ProfilEntity) => {
     await updateProfil(formData);
@@ -58,29 +69,30 @@ export default function Profil() {
     onUpdate: (row) => onUpdate(row),
     onDelete: (row) => onDelete(row.profilID),
     onClick: (row) => console.log("Editer", row.profilID),
-  }
+  };
   const columns = useMemo(() => {
     return [...ProfilColumnOptions, btnAction];
   }, []);
-  const company:CompanyEntity ={
-    skipValidation:true,
-    companyID:user?.profil?.company.companyID,
-    mail:'',
-    name:'',
-    phone:'',
-    status:0,
-  } 
+  const company: CompanyEntity = {
+    skipValidation: true,
+    companyID: user?.profil?.company.companyID,
+    mail: "",
+    name: "",
+    phone: "",
+    status: 0,
+  };
   const body: ProfilEntity = {
     profilID: null,
     company: company,
     name: "",
     authority: 0,
+    skipValidation: false,
   };
   const onCreate = async (formData: ProfilEntity) => {
     console.log(user);
-    
+
     console.log(formData);
-    
+
     await createProfil(formData);
     setRefresh((prev) => prev + 1);
   };

@@ -19,44 +19,50 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { UserNamefield, UsersColumnOptions } from "./prep-view-users";
+import { getLocalStorage } from "@/utils/storage";
+import { CompanyEntity } from "@/types/entity-type/companyEntity";
 
 export default function Users() {
+  const user = getLocalStorage();
   const [users, setUsers] = useState<UserEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
-  const [profilOption, setProfilOption] = useState<FieldOptions[]>([])
+  const [profilOption, setProfilOption] = useState<FieldOptions[]>([]);
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
-  })
+  });
   const [all, setAll] = useState<PageType>({
     totalElement: 0,
-    totalPage: 0
-  })
+    totalPage: 0,
+  });
   useEffect(() => {
-    getAllProfils()
-      .then((data) => {
-        setProfilOption(convertListToOption(data))
-      })
-      .catch((error) => console.error("Error fetching profils:", error));
+    if (user && user.profil.company.companyID) {
+      getAllProfils(user.profil.company.companyID)
+        .then((data) => {
+          setProfilOption(convertListToOption(data));
+        })
+        .catch((error) => console.error("Error fetching profils:", error));
+    }
   }, []);
   useEffect(() => {
-    getPaginateUsers(page.pageIndex, page.pageSize)
-      .then((data) => {
-        setUsers(data.content)
-        setPage(prevPage => ({
-          ...prevPage,
-          pageIndex: data.pageable.pageNumber
-        }));
-        setAll({
-          totalElement: data.totalElements,
-          totalPage: data.totalPages
+    if (user && user.profil.company.companyID) {
+      getPaginateUsers(user.profil.company.companyID,page.pageIndex, page.pageSize)
+        .then((data) => {
+          setUsers(data.content);
+          setPage((prevPage) => ({
+            ...prevPage,
+            pageIndex: data.pageable.pageNumber,
+          }));
+          setAll({
+            totalElement: data.totalElements,
+            totalPage: data.totalPages,
+          });
         })
-      })
-      .catch((error) => console.error("Error fetching users:", error));
+        .catch((error) => console.error("Error fetching users:", error));
+    }
   }, [refresh, page.pageIndex]);
 
   const onUpdate = async (formData: UserEntity) => {
-    
     await updateUser(formData);
     setRefresh((prev) => prev + 1);
   };
@@ -80,34 +86,53 @@ export default function Users() {
     return [...UsersColumnOptions, btnAction];
   }, []);
 
-  const options: FieldConfig<UserEntity> = useMemo(() => ({
-    name: "profil",
-    libelle: "Profil :",
-    type: "select",
-    normal: false,
-    items: profilOption,
-    objectMapping: {
-      idKey: "profilID",
-      labelKey: "name"
-    }
-  }), [profilOption]);
+  const options: FieldConfig<UserEntity> = useMemo(
+    () => ({
+      name: "profil",
+      libelle: "Profil :",
+      type: "select",
+      normal: false,
+      items: profilOption,
+      objectMapping: {
+        idKey: "profilID",
+        labelKey: "name",
+      },
+    }),
+    [profilOption],
+  );
   const namefield = useMemo(() => {
-    return [...UserNamefield, options]
-  }, [options])
+    return [...UserNamefield.slice(0, 2), options, ...UserNamefield.slice(2)];
+  }, [options]);
+  const company: CompanyEntity = {
+    skipValidation: true,
+    companyID: null,
+    mail: "",
+    name: "",
+    phone: "",
+    status: 0,
+  };
   const body: UserEntity = {
     userID: null,
     name: "",
-    profil: { profilID: "", companyid: "", name: "", authority: 0 },
+    profil: {
+      skipValidation: true,
+      profilID: "",
+      company: company,
+      name: "",
+      authority: 0,
+    },
     phone: "",
     joinedDate: new Date().toDateString(),
     status: 0,
   };
-  
+
   const onCreate = async (formData: UserEntity) => {
-    const body = formData
+    const body = formData;
     if (formData.joinedDate) {
       // Formate en DD/MM/YYYY
-      body.joinedDate = new Date(formData.joinedDate).toISOString().split('T')[0]
+      body.joinedDate = new Date(formData.joinedDate)
+        .toISOString()
+        .split("T")[0];
     }
     await createUser(body);
     setRefresh((prev) => prev + 1);
