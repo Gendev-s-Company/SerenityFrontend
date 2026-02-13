@@ -1,3 +1,4 @@
+"use client";
 import {
   Sidebar,
   SidebarContent,
@@ -12,8 +13,15 @@ import DropdownMenuComponent from "./dropdown-menu";
 import SubmenuComponent from "./submenu-list";
 import { items } from "@/utils/menu-list";
 import { Home } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export function AppSidebar() {
+  const pathname = usePathname();
+
+  const isActive = (url: string) => pathname === url;
+  const isParentActive = (subMenu: typeof items[0]["subMenu"]) =>
+    subMenu.some(sub => pathname === sub.url);
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -25,34 +33,30 @@ export function AppSidebar() {
             </span>
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <br />
             <SidebarMenu>
-              {items.map((item) => (
-                <div key={item.title}>
-                  {!item.dropdown && !item.isSubmenu && (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
+              {items.map(item => {
+                const active = isActive(item.url) || (item.subMenu && isParentActive(item.subMenu));
+                return (
+                  <div key={item.title}>
+                    {!item.dropdown && !item.isSubmenu && (
+                      <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
                           <a href={item.url} className="scroll-m-20 text-xl font-semibold tracking-tight">
                             <item.icon />
                             <span>{item.title}</span>
                           </a>
-
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )}
-                  {item.dropdown && !item.isSubmenu && (
-                    <DropdownMenuComponent
-                      items={item.subMenu}
-                      title={item.title}
-                      Picon={item.icon}
-                    />
-                  )}
-                  {!item.dropdown && item.isSubmenu && (
-                    <SubmenuComponent Picon={item.icon} items={item.subMenu} title={item.title} />
-                  )}
-
-                </div>
-              ))}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )}
+                    {item.dropdown && !item.isSubmenu && (
+                      <DropdownMenuComponent items={item.subMenu} title={item.title} Picon={item.icon} active={active} />
+                    )}
+                    {!item.dropdown && item.isSubmenu && (
+                      <SubmenuComponent items={item.subMenu} title={item.title} Picon={item.icon} active={active} />
+                    )}
+                  </div>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
