@@ -27,7 +27,7 @@ const AvatarOption = () => {
       setUser(u);
     }
     console.log("userssss", user);
-    console.log("userssss", user.profil.name);
+    // console.log("userssss", user.profil.name);
 
   }, []);
 
