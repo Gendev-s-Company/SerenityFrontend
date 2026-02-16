@@ -4,7 +4,7 @@ import { BedSingle, BookText, Calendar, Gamepad, Hotel, Inbox } from "lucide-rea
 export const HotelItems: PMenu = 
   {
     title: "HOTEL",
-    url: "#",
+    url: "",
     dropdown: false,
     isSubmenu: true,
     subMenu: [
@@ -43,7 +43,7 @@ export const HotelItems: PMenu =
       },
       {
         title: "Activité",
-        url: "#activiter",
+        url: "",
         dropdown: true,
         isSubmenu: false,
         subMenu: [{
@@ -56,7 +56,7 @@ export const HotelItems: PMenu =
           },
           {
             title: "Liste",
-            url: "/view/payment",
+            url: "/view/hotel/activity",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
