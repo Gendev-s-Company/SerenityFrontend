@@ -11,8 +11,8 @@ export const UsersItems: PMenu =
         {
             title: "Gestion des utilisateurs",
             url: "#revvg",
-            dropdown: false,
-            isSubmenu: true,
+            dropdown: true,
+            isSubmenu: false,
             subMenu: [
                 {
                     title: "Sociétés",
@@ -32,7 +32,7 @@ export const UsersItems: PMenu =
                 },
                 {
                     title: "Utilisateurs",
-                    url: "/view/users/",
+                    url: "/view/users",
                     dropdown: false,
                     isSubmenu: false,
                     subMenu: [],

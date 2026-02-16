@@ -31,7 +31,8 @@ interface DataTableProps<TData> {
   rowCount: number; 
   pageCount: number; 
   pagination: PaginationState; 
-  onPaginationChange: OnChangeFn<PaginationState>; 
+  onPaginationChange: OnChangeFn<PaginationState>;
+   loading?: boolean; // loading
 }
 export function DataTable<TData>({
   data,
@@ -43,7 +44,8 @@ export function DataTable<TData>({
   rowCount,
   pageCount,
   pagination,
-  onPaginationChange
+  onPaginationChange,
+  loading = false, // valeur par défaut
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -52,6 +54,7 @@ export function DataTable<TData>({
 
   const [rowSelection, setRowSelection] = React.useState({});
   const columns = generateColumns<TData>(mcolumns, fields);
+  const [showSkeleton, setShowSkeleton] = React.useState(true)
 
   const table = useReactTable({
     data,
@@ -73,6 +76,16 @@ export function DataTable<TData>({
       pagination,
     },
   });
+  React.useEffect(() => {
+  if (!loading) {
+    // garder le skeleton 2 secondes de plus
+    const timer = setTimeout(() => setShowSkeleton(false), 1000)
+    return () => clearTimeout(timer)
+  } else {
+    // si loading = true, afficher immédiatement le skeleton
+    setShowSkeleton(true)
+  }
+  }, [loading])
 
   return (
     <div className="w-full">
@@ -97,7 +110,7 @@ export function DataTable<TData>({
         */}
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Liste table={table} />
+        <Liste table={table} loading={showSkeleton} />
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
