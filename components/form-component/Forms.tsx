@@ -9,7 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
+import { Textarea } from "../ui/textarea";
 
 interface FormsProps<T> {
   forms: UseFormReturn<T>;
@@ -53,7 +54,7 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
 
               return (
                 <div key={uniqueId}>
-                  {row.normal ? (
+                  {row.normal &&
                     <Field>
                       <FieldLabel htmlFor={uniqueId}>{row.libelle}</FieldLabel>
                       <Input
@@ -75,8 +76,26 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                         required
                       />
                     </Field>
-                  ) : (
-                    row.type === "select" &&
+                  }
+                  {row.type === "textarea" && !row.normal &&
+                    <Field>
+                      <FieldLabel htmlFor={uniqueId}>{row.libelle}</FieldLabel>
+                      {/* <FieldDescription>Enter your message below.</FieldDescription> */}
+                      <Textarea
+                        id={uniqueId}
+                        name={String(fieldName)}
+                        value={fieldValue as string}
+                        onChange={(e) =>
+                          forms.handleInputChange(
+                            fieldName,
+                            e.target.value as T[keyof T],
+                          )
+                        }
+                        placeholder={"Entrez " + row.libelle} />
+                    </Field>
+                  }
+
+                  {row.type === "select" && !row.normal &&
                     row.items && (
                       <Field>
                         <FieldLabel htmlFor={uniqueId}>
@@ -86,13 +105,13 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                           // Extraction de la valeur d'affichage (ID)
                           value={
                             row.objectMapping &&
-                            fieldValue &&
-                            typeof fieldValue === "object"
+                              fieldValue &&
+                              typeof fieldValue === "object"
                               ? String(
-                                  (fieldValue as Record<string, unknown>)[
-                                    row.objectMapping.idKey
-                                  ],
-                                )
+                                (fieldValue as Record<string, unknown>)[
+                                row.objectMapping.idKey
+                                ],
+                              )
                               : (fieldValue as string)
                           }
                           onValueChange={(selectedId) => {
@@ -145,7 +164,7 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                         </Select>
                       </Field>
                     )
-                  )}
+                  }
                 </div>
               );
             })}
