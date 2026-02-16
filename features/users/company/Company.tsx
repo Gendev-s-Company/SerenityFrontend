@@ -20,7 +20,10 @@ export default function Company() {
         totalElement: 0,
         totalPage: 0
     })
+  const [loading, setLoading] = useState(true)
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setLoading(true)
         getPaginateCompany(page.pageIndex, page.pageSize)
             .then((data) => {
                 setCompany(data.content)
@@ -32,8 +35,13 @@ export default function Company() {
                     totalElement: data.totalElements,
                     totalPage: data.totalPages
                 })
+                setLoading(false)
             })
-            .catch((error) => console.error("Error fetching company:", error));
+            .catch((error) => {
+                console.error("Error fetching company:", error)
+                setLoading(false)
+            }
+        );
     }, [refresh, page.pageIndex, page.pageSize]);
 
     const onUpdate = async (formData: CompanyEntity) => {
@@ -84,6 +92,7 @@ export default function Company() {
                 onPaginationChange={setPage}
                 pagination={page}
                 columnFilter="name"
+                loading={loading}
             />
         </div>
     );

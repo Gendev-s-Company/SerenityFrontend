@@ -28,8 +28,11 @@ export default function Profil() {
     totalElement: 0,
     totalPage: 0,
   });
+  const [loading, setLoading] = useState(true)
   const user = getLocalStorage()!;
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true)
     if (user && user.profil.company.companyID) {
       getPaginateProfil(
         user.profil.company.companyID!,
@@ -46,8 +49,12 @@ export default function Profil() {
             totalElement: data.totalElements,
             totalPage: data.totalPages,
           });
+          setLoading(false)
         })
-        .catch((error) => console.error("Error fetching profils:", error));
+        .catch((error) => { 
+          console.error("Error fetching profils:", error) 
+          setLoading(false)
+        });
     }
   }, [refresh, page.pageIndex]);
   const onUpdate = async (formData: ProfilEntity) => {
@@ -109,6 +116,7 @@ export default function Profil() {
         rowCount={all.totalElement}
         onPaginationChange={setPage}
         pagination={page}
+        loading={loading}
       />
     </div>
   );

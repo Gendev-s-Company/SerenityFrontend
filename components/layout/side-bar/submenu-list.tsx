@@ -27,7 +27,16 @@ const SubmenuComponent: React.FC<SubmenuProps> = ({ items, title, Picon, active 
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton className={`${active ? "bg-blue-500 text-white" : ""}`}>
+      <SidebarMenuButton
+        //  className={`${active ? "bg-blue-500 text-white" : ""}`}
+        className={`relative flex w-full items-center
+                  px-3 py-2 transition-all duration-200 ease-in-out
+                  ${active
+            ? "text-blue-600 before:absolute before:left-0 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-blue-600"
+            : "text-muted-foreground hover:text-foreground"
+          }
+                `}
+      >
         {Picon && <Picon style={{ width: "15px", height: "15px" }} />}
         {Picon ? <strong>{title}</strong> : title}
       </SidebarMenuButton>
@@ -63,7 +72,14 @@ const SubmenuComponent: React.FC<SubmenuProps> = ({ items, title, Picon, active 
                 <SidebarMenuSubButton asChild>
                   <Link
                     href={row.url}
-                    className={`${subActive ? "bg-blue-500 text-white" : ""}`}
+                    // className={`${subActive ? "bg-blue-500 text-white" : ""}`}
+                    className={`relative flex items-center gap-2
+                          px-3 py-2 transition-all duration-150
+                          ${subActive
+                        ? "!text-blue-600 before:absolute before:left-0 before:top-1/2 before:h-4 before:w-[2px] before:-translate-y-1/2 before:rounded-full before:bg-blue-600"
+                        : "text-muted-foreground hover:text-foreground"
+                      }
+                        `}
                   >
                     {row.icon && <row.icon />}
                     <span>{row.title}</span>

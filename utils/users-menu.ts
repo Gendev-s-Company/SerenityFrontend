@@ -11,8 +11,8 @@ export const UsersItems: PMenu =
         {
             title: "Gestion des utilisateurs",
             url: "#revvg",
-            dropdown: true,
-            isSubmenu: false,
+            dropdown: false,
+            isSubmenu: true,
             subMenu: [
                 {
                     title: "Sociétés",

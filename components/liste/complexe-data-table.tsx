@@ -28,11 +28,11 @@ interface DataTableProps<TData> {
   onCreate: (data: TData) => void;
   body: TData,
   columnFilter: string,
-  rowCount: number; 
-  pageCount: number; 
-  pagination: PaginationState; 
+  rowCount: number;
+  pageCount: number;
+  pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
-   loading?: boolean; // loading
+  loading?: boolean; // loading
 }
 export function DataTable<TData>({
   data,
@@ -45,7 +45,7 @@ export function DataTable<TData>({
   pageCount,
   pagination,
   onPaginationChange,
-  loading = false, // valeur par défaut
+  loading = true, // valeur par défaut
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -59,8 +59,8 @@ export function DataTable<TData>({
   const table = useReactTable({
     data,
     columns,
-    pageCount: pageCount, 
-    manualPagination: true, 
+    pageCount: pageCount,
+    manualPagination: true,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -77,14 +77,18 @@ export function DataTable<TData>({
     },
   });
   React.useEffect(() => {
-  if (!loading) {
-    // garder le skeleton 2 secondes de plus
-    const timer = setTimeout(() => setShowSkeleton(false), 1000)
-    return () => clearTimeout(timer)
-  } else {
-    // si loading = true, afficher immédiatement le skeleton
-    setShowSkeleton(true)
-  }
+    console.log(loading);
+    
+    if (loading) {
+      // garder le skeleton 2 secondes de plus
+      // const timer = setTimeout(() => setShowSkeleton(false), 1000)
+      // return () => clearTimeout(timer)
+      setShowSkeleton(true)
+
+    } else {
+      // si loading = true, afficher immédiatement le skeleton
+      setShowSkeleton(false)
+    }
   }, [loading])
 
   return (
@@ -122,7 +126,7 @@ export function DataTable<TData>({
             Page {table.getState().pagination.pageIndex + 1} sur{" "}
             {table.getPageCount()} ({rowCount} éléments au total)
           </div>
-          <Paginate table={table}/>
+          <Paginate table={table} />
         </div>
       </div>
     </div>

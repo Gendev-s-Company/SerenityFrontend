@@ -36,7 +36,7 @@ const DropdownMenuComponent: React.FC<DropdownMenuProps> = ({ items, title, Pico
                   }
                 `}               
                 >
-              {Picon && <Picon style={{ width: '25px', height: '25px' }} />}
+              {Picon && <Picon style={{ width: '15px', height: '15px' }} />}
               {title}
               <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>

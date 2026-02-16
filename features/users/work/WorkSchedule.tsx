@@ -18,7 +18,8 @@ import { getLocalStorage } from "@/utils/storage";
 export default function WorkSchedulePage() {
   const [works, setWorks] = useState<WorkSchedule[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
-  
+  const [loading, setLoading] = useState(true)
+
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -29,6 +30,8 @@ export default function WorkSchedulePage() {
   });
   const user = getLocalStorage()!
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true)
     getPaginateworkSC(page.pageIndex, page.pageSize)
       .then((data) => {
         setWorks(data.content);
@@ -40,8 +43,12 @@ export default function WorkSchedulePage() {
           totalElement: data.totalElements,
           totalPage: data.totalPages,
         });
+        setLoading(false)
       })
-      .catch((error) => console.error("Error fetching profils:", error));
+      .catch((error) => {
+         console.error("Error fetching profils:", error)
+          setLoading(false)
+       });
   }, [refresh, page.pageIndex]);
   const onUpdate = async (formData: WorkSchedule) => {
     await updateworkSC(formData);
@@ -72,7 +79,7 @@ export default function WorkSchedulePage() {
     userID: user.userID!, ///miala ito aveo
     starttime: new Date(),
     endtime: null,
-    status:0
+    status: 0
   };
   const onCreate = async (formData: WorkSchedule) => {
     await createworkSC(formData);
@@ -91,6 +98,7 @@ export default function WorkSchedulePage() {
         rowCount={all.totalElement}
         onPaginationChange={setPage}
         pagination={page}
+        loading={loading}
       />
     </div>
   );
