@@ -27,6 +27,7 @@ export default function Users() {
   const [users, setUsers] = useState<UserEntity[]>([]);//liste utilisateur ni-fetchena avy any am backend
   const [refresh, setRefresh] = useState<number>(0);//fanaovana auto refresh anle page
   const [profilOption, setProfilOption] = useState<FieldOptions[]>([]); // Création/update dia liste ana profil en option pour user
+  const [loading, setLoading] = useState(true)//loading si data pas encore fetch -> afficher le loader
   // parametrage pagination
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
@@ -49,6 +50,8 @@ export default function Users() {
   }, []);
 // maka liste user any anaty base
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true)
     if (user && user.profil.company.companyID) {
       getPaginateUsers(user.profil.company.companyID, page.pageIndex, page.pageSize)
         .then((data) => {
@@ -61,15 +64,21 @@ export default function Users() {
             totalElement: data.totalElements,
             totalPage: data.totalPages,
           });
+          setLoading(false)
         })
-        .catch((error) => console.error("Error fetching users:", error));
+        .catch((error) => {
+          setLoading(false)
+          console.error("Error fetching users:", error)
+
+        });
     }
   }, [refresh, page.pageIndex]);
-
+// function de update
   const onUpdate = async (formData: UserEntity) => {
     await updateUser(formData);
     setRefresh((prev) => prev + 1);
   };
+  // function de delete
   const onDelete = async (id: string | null) => {
     if (id !== null) {
       await deleteUser(id);
@@ -133,7 +142,7 @@ export default function Users() {
     joinedDate: new Date().toDateString(),
     status: 0,
   };
-
+// function de création
   const onCreate = async (formData: UserEntity) => {
     const body = formData;
     if (formData.joinedDate) {
@@ -147,6 +156,7 @@ export default function Users() {
   };
   return (
     <div className="container mx-auto py-10 px-3">
+      
       <DataTable
         body={body}
         onCreate={onCreate}
@@ -158,6 +168,7 @@ export default function Users() {
         rowCount={all.totalElement}
         onPaginationChange={setPage}
         pagination={page}
+        loading={loading}
       />
     </div>
   );
