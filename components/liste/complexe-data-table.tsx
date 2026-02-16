@@ -20,16 +20,16 @@ import { FieldConfig } from "@/types/component-type/form-type";
 import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
 import CreateBox from "../create/create-box";
-
+// interface utilisé pour le datatable
 interface DataTableProps<TData> {
-  mcolumns: ColumnConfig<TData>[];
-  data: TData[];
+  mcolumns: ColumnConfig<TData>[]; // colonnes à afficher
+  data: TData[]; // données à afficher
   fields: FieldConfig<TData>[];
-  onCreate: (data: TData) => void;
-  body: TData,
-  columnFilter: string,
-  rowCount: number;
-  pageCount: number;
+  onCreate: (data: TData) => void; // function à appeler pour la création d'entity
+  body: TData, // body à utiliser pour la création
+  columnFilter: string,//colonne à utiliser pour le champs filtre
+  rowCount: number; //nombre total d'enregistrement dans la base
+  pageCount: number;//nombre total de page dans la base
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   loading?: boolean; // loading
@@ -113,6 +113,7 @@ export function DataTable<TData>({
           fin input filter
         */}
       </div>
+      {/* affichage de la liste */}
       <div className="overflow-hidden rounded-md border">
         <Liste table={table} loading={showSkeleton} />
       </div>
@@ -126,6 +127,7 @@ export function DataTable<TData>({
             Page {table.getState().pagination.pageIndex + 1} sur{" "}
             {table.getPageCount()} ({rowCount} éléments au total)
           </div>
+          {/* pagination */}
           <Paginate table={table} />
         </div>
       </div>
