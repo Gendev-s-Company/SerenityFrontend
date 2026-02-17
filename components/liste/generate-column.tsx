@@ -42,7 +42,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                 return (
                     <Button
                         variant="ghost"
-                        className={config.type === "amount" ? "w-full justify-end" : ""}
+                        className={config.type === "amount" ? "w-full justify-end" : "text-center"}
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         {config.header}

@@ -5,7 +5,7 @@ export interface ActivityPriceEntity {
     activity: ActivityEntity,
     hourPrice: number,
     price: number,
-    datechanged:Date,
+    dateChanged:Date,
     status: number,
     skipValidation: boolean,
 }

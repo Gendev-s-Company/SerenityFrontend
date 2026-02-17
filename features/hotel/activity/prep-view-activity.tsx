@@ -5,7 +5,7 @@ import { ActivityEntity } from "@/types/entity-type/activityEntity";
 export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" ,href: (row) => `/activities/${row.activityID}`},
     { key: "activityID", header: "activityID", sorting: true },
-    { key: "company.companyID", header: "CompanyID", type:'text', sorting: true },
+    { key: "company.name", header: "Société", type:'text', sorting: true },
     {
         key: "name",
         header: "Nom",
@@ -18,5 +18,5 @@ export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
 ];
 export const ActivityNamefield: FieldConfig<ActivityEntity>[] = [
     { name: "name", libelle: "Nom:", type: "text", normal: true },
-    { name: "description", libelle: "description :", type: "text", normal: true },
+    { name: "description", libelle: "description :", type: "textarea", normal: false },
 ];
