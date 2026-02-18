@@ -9,7 +9,7 @@ export interface ActivityOrderEntity {
     price: number,
     duration: number,
     dateOrder: string,
-
+    skipValidation: boolean,
 
 
 }

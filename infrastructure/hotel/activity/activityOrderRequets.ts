@@ -12,6 +12,10 @@ export const getPaginateActivityOrder = async (page:number,size:number) => {
   return await getCall<Page<ActivityOrderEntity>>(`${activityOrderPath}/byActivity/${page}/${size}`);
 }
 
+export const getPaginateActivityOrderByCompany = async (page:number,size:number,companyId:string) => {
+  return await getCall<Page<ActivityOrderEntity>>(`${activityOrderPath}/all/${page}/${size}?companyId=${companyId}`);
+}
+
 export const getFindAllByCompany = async (id: string) => {
     return await getCall<ActivityOrderEntity[]>(`${activityOrderPath}/byActivity?companyId=${id}`);
 }

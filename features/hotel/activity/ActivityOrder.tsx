@@ -1,14 +1,16 @@
 "use client";
 
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { convertListToOption } from "@/infrastructure/user/profil/profilFunction";
+import { convertListToOption } from "@/infrastructure/hotel/customer/customerFunction";
+import { convertListToOptionActivity } from "@/infrastructure/hotel/activity/activityFunction";
 import { 
     getPaginateActivityOrder, 
     getFindAllByCompany, 
     getPaginateModelByCustomerr, 
     createActivityOrder,
     updateActivityOrder,
-    deleteActivityOrder} 
+    deleteActivityOrder,
+    getPaginateActivityOrderByCompany} 
 from "@/infrastructure/hotel/activity/activityOrderRequets";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
@@ -22,6 +24,8 @@ import { ActivityOrderEntity } from "@/types/entity-type/activityorderEntity";
 import { ActivityEntity } from "@/types/entity-type/activityEntity";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
 import { ActivityOrderfield, ActivityOrderColumnOptions } from "./prep-view-activityOrder";
+import { getAllCustomer } from "@/infrastructure/hotel/customer/customerRequest";
+import { getAllActivity } from "@/infrastructure/hotel/activity/activityRequest";
 
 
 export default function ActivitiesOrder() {
@@ -41,19 +45,35 @@ export default function ActivitiesOrder() {
   });
 
   const [activityOption, setActivityOption] = useState<FieldOptions[]>([]);
-  const [CustomerOption, setCustomerOption] = useState<FieldOptions[]>([]);
+  const [customerOption, setCustomerOption] = useState<FieldOptions[]>([]);
 
 
   ////Liste activity
   useEffect(() => {
       if (user && user.profil.company.companyID) {
+          getAllCustomer()
+              .then((data) => {
+                  setCustomerOption(convertListToOption(data));
+              })
+              .catch((error) => console.error("Error fetching activity:", error));
         }
-    }, []);
+  }, []);
+
+  useEffect(() => {
+      if (user && user.profil.company.companyID) {
+          getAllActivity(user.profil.company.companyID)
+              .then((data) => {
+                  setActivityOption(convertListToOptionActivity(data));
+              })
+              .catch((error) => console.error("Error fetching activity:", error));
+        }
+  }, []);
+
 
   useEffect(() => {
     setLoading(true)
     if (user && user.profil.company.companyID) {
-      getPaginateActivityOrder(page.pageIndex, page.pageSize)
+      getPaginateActivityOrderByCompany(page.pageIndex, page.pageSize, user.profil.company.companyID)
         .then((data) => {
           setActivitieso(data.content);
           setPage((prevPage) => ({
@@ -118,15 +138,16 @@ export default function ActivitiesOrder() {
     },
     name: "",
     description: "",
+    status: 0,
     skipValidation: true,
   };
 
   const customer: CustomerEntity = {
-    skipValidation: true,
     customerID: "",
     name: "",
     phone: "",
     mail: "",
+    skipValidation: true,
   };
 
   const body: ActivityOrderEntity = {
@@ -136,6 +157,7 @@ export default function ActivitiesOrder() {
     dateOrder: new Date().toDateString(),
     price: 0,
     duration: 0,
+    skipValidation: true,
   };
 
 
@@ -143,26 +165,40 @@ export default function ActivitiesOrder() {
       return [...ActivityOrderColumnOptions, btnAction];
     }, []);
 
-    // création de l'option profil dans la liste de type de field
-    // const options: FieldConfig<UserEntity> = useMemo(
-    //   () => ({
-    //     name: "profil",
-    //     libelle: "Profil :",
-    //     type: "select",
-    //     normal: false,
-    //     items: profilOption,
-    //     // metttre l'idkey en le primary key de l'objet, puis labelKey le label que vous voulez afficher
-    //     objectMapping: {
-    //       idKey: "profilID",
-    //       labelKey: "name",
-    //     },
-    //   }),
-    //   [profilOption],
-    // );
-    // // ajout de l'option profil dans la liste de type de field
-    // const namefield = useMemo(() => {
-    //   return [...UserNamefield.slice(0, 2), options, ...UserNamefield.slice(2)];
-    // }, [options]);
+    const options: FieldConfig<ActivityOrderEntity> = useMemo(
+      () => ({
+        name: "activity",
+        libelle: "Activité :",
+        type: "select",
+        normal: false,
+        items: activityOption,
+        objectMapping: {
+          idKey: "activityID",
+          labelKey: "name",
+        },
+      }),
+      [activityOption],
+    );
+
+    const optionsCustomer: FieldConfig<ActivityOrderEntity> = useMemo(
+      () => ({
+        name: "customer",
+        libelle: "Client :",
+        type: "select",
+        normal: false,
+        items: customerOption,
+        objectMapping: {
+          idKey: "customerID",
+          labelKey: "name",
+        },
+      }),
+      [customerOption],
+    );
+
+
+    const namefield = useMemo(() => {
+      return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
+    }, [options, optionsCustomer]);
 
   return (
     <div className="container mx-auto py-10 px-3">
@@ -172,8 +208,8 @@ export default function ActivitiesOrder() {
         onCreate={onCreate}
         data={activitieso}
         mcolumns={columns}
-        fields={ActivityOrderfield}
-        columnFilter="name"
+        fields={namefield}
+        columnFilter="acorderID"
         pageCount={all.totalPage}
         rowCount={all.totalElement}
         onPaginationChange={setPage}
