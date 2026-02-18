@@ -15,11 +15,12 @@ import Link from "next/link";
 import { avatarDropdownOption } from "@/utils/dropdown-options/dropdown-option";
 import { getLocalStorage } from "@/utils/storage";
 import page from "@/app/view/users/work/calendar/page";
+import { UserEntity } from "@/types/entity-type/userEntity";
 
 
 const AvatarOption = () => {
 
-  const [user, setUser] = React.useState<any>(null);
+  const [user, setUser] = React.useState<UserEntity>();
 
   React.useEffect(() => {
     const u = getLocalStorage();    

@@ -2,11 +2,16 @@ import { ActivityOrderEntity} from "@/types/entity-type/activityorderEntity";
 import { deleteCall, getCall, postCall, putCall } from "../../api";
 import { Page } from "@/types/entity-type/common/Page";
 
-const activityOrderPath = "/hotel";
+const activityOrderPath = "hotel/activityorder";
+
+// export const getPaginateActivityOrder = async (page:number,size:number,id:string) => {
+//   return await getCall<Page<ActivityOrderEntity>>(`${activityOrderPath}/byActivity/${page}/${size}?activityId=${id}`);
+// }
 
 export const getPaginateActivityOrder = async (page:number,size:number) => {
   return await getCall<Page<ActivityOrderEntity>>(`${activityOrderPath}/byActivity/${page}/${size}`);
 }
+
 export const getFindAllByCompany = async (id: string) => {
     return await getCall<ActivityOrderEntity[]>(`${activityOrderPath}/byActivity?companyId=${id}`);
 }

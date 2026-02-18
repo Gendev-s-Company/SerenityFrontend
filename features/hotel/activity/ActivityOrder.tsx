@@ -28,7 +28,6 @@ export default function ActivitiesOrder() {
   const user = getLocalStorage();//maka localstorage 
   const [activitieso, setActivitieso] = useState<ActivityOrderEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
-
   const [loading, setLoading] = useState(true)
 
   const [page, setPage] = useState<PaginationState>({
@@ -41,6 +40,15 @@ export default function ActivitiesOrder() {
     totalPage: 0,
   });
 
+  const [activityOption, setActivityOption] = useState<FieldOptions[]>([]);
+  const [CustomerOption, setCustomerOption] = useState<FieldOptions[]>([]);
+
+
+  ////Liste activity
+  useEffect(() => {
+      if (user && user.profil.company.companyID) {
+        }
+    }, []);
 
   useEffect(() => {
     setLoading(true)

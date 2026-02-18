@@ -77,12 +77,8 @@ export function DataTable<TData>({
     },
   });
   React.useEffect(() => {
-    console.log(loading);
-    
     if (loading) {
       // garder le skeleton 2 secondes de plus
-      // const timer = setTimeout(() => setShowSkeleton(false), 1000)
-      // return () => clearTimeout(timer)
       setShowSkeleton(true)
 
     } else {

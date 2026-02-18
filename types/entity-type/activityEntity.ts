@@ -5,6 +5,6 @@ export interface ActivityEntity {
     company: CompanyEntity,
     name: string,
     description: string,
+    status: number,
     skipValidation: boolean,
-
 }

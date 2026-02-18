@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/layout/side-bar/app-sidebar";
 import Header from "@/components/layout/header/header";
 import { Separator } from "@/components/ui/separator";
 import { Suspense } from "react";
+import Footer from "@/components/layout/footer/footer";
 
 
 
@@ -19,17 +20,18 @@ export default function MainLayout({
     children: React.ReactNode;
 }>) {
     return (
-        
-                <SidebarProvider>
-                    <AppSidebar />
-                    <SidebarInset>
-                        <main>
-                            <Header />
-                            <Separator />
-                            <Suspense fallback={<div>Loading...</div>} />
-                            {children}
-                        </main>
-                    </SidebarInset>
-                </SidebarProvider>
+
+        <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+                <main>
+                    <Header />
+                    <Separator />
+                    <Suspense fallback={<div>Loading...</div>} />
+                    {children}
+                    <Footer />
+                </main>
+            </SidebarInset>
+        </SidebarProvider>
     );
 }

@@ -1,7 +1,8 @@
+import ActivitiesOrder from "@/features/hotel/activity/ActivityOrder";
 
 const page = () => {
   return (
-    <div>page</div>
+    <div><ActivitiesOrder /></div>
   )
 }
 
