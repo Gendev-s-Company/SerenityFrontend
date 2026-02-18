@@ -103,7 +103,7 @@ export default function ActivityPrice() {
         activity: activity,
         hourPrice: 0,
         price: 0,
-        datechanged: new Date(),
+        dateChanged: new Date(),
         status:0,
         skipValidation: false,
     };
