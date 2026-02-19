@@ -8,6 +8,7 @@ export const ActivityOrderColumnOptions: ColumnConfig<ActivityOrderEntity>[] = [
     { key: "acOrderID", header: "AcOrderID", type: "text", sorting: true },
     { key: "activity.name", header: "Activité", type: "text", sorting: true },
     { key: "activity.description", header: "Description", type: "text", sorting: true },
+    { key: "customer.name", header: "Client", type: "text", sorting: true },
     { key: "price", header: "Prix", amountType: {currency:'MGA', lang:'fr'}, sorting: true },
     { key: "duration", header: "Durée", type: "text", sorting: true },
     { key: "dateOrder", header: "Date de commande", type: "datetime", sorting: true },

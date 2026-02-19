@@ -97,6 +97,12 @@ export default function ActivitiesOrder() {
 
   const onCreate = async (formData: ActivityOrderEntity) => {
       const body = formData;
+      if (formData.dateOrder) {
+        body.dateOrder = new Date(formData.dateOrder).toISOString(); 
+      }
+    console.log("BOdyyyy :: ", body);
+
+
       await createActivityOrder(body);
       setRefresh((prev) => prev + 1);
   };
@@ -127,7 +133,8 @@ export default function ActivitiesOrder() {
 
 
   const activity: ActivityEntity = {
-    activityID: "",
+    skipValidation: true,
+    activityID: null,
     company: {
       skipValidation: true,
       companyID: null,
@@ -139,19 +146,18 @@ export default function ActivitiesOrder() {
     name: "",
     description: "",
     status: 0,
-    skipValidation: true,
   };
 
   const customer: CustomerEntity = {
-    customerID: "",
+    skipValidation: true,
+    customerID: null,
     name: "",
     phone: "",
     mail: "",
-    skipValidation: true,
   };
 
   const body: ActivityOrderEntity = {
-    acOrderID: "",
+    acOrderID: null,
     activity: activity,
     customer: customer,
     dateOrder: new Date().toDateString(),
@@ -209,7 +215,7 @@ export default function ActivitiesOrder() {
         data={activitieso}
         mcolumns={columns}
         fields={namefield}
-        columnFilter="acorderID"
+        columnFilter="acOrderID"
         pageCount={all.totalPage}
         rowCount={all.totalElement}
         onPaginationChange={setPage}
