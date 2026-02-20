@@ -28,3 +28,8 @@ export const updateActivityPrice = async (activityPrice: ActivityPriceEntity) =>
 export const deleteActivityPrice = async (id: string) => {
     return await deleteCall<ActivityPriceEntity>(`${activityPricePath}/${id}`);
 }
+
+
+export const getActivityLastPriceById = async (id: string) => {
+    return await getCall<ActivityPriceEntity>(`${activityPricePath}/lastPrice?activityid=${id}`);
+}

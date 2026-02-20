@@ -13,8 +13,11 @@ import { useSearchParams } from "next/navigation";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { getLocalStorage } from "@/utils/storage";
 
-export default function ActivityPrice() {
- const activityID = useSearchParams().get("activityID");
+interface ActivityPriceProps {
+  activityId: string;
+}
+export default function ActivityPrice({ activityId }: ActivityPriceProps) {
+ const activityID = activityId;
     const [activityPrice, setActivityPrice] = useState<ActivityPriceEntity[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
     const [page, setPage] = useState<PaginationState>({
