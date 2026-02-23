@@ -183,7 +183,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
               {selectedFile && selectedFile.length > 0 && (
                 <div className="flex items-center gap-2 p-2 border rounded bg-slate-50 text-sm">
                   <ImageIcon className="h-4 w-4 text-blue-500" />
-                  <span className="truncate max-w-[300px]">{selectedFile[0].name}</span>
+                  <span className="truncate max-w-[300px]">{selectedFile.length > 1 ? selectedFile.length + ' sélectionnées': selectedFile[0].name}</span>
                 </div>
               )}
             </div>
@@ -202,7 +202,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
                 ) : (
                   <>
                     <Upload className="mr-2 h-4 w-4" />
-                    {"Envoyer l'image"}
+                    {"Envoyer les images"}
                   </>
                 )}
               </Button>
@@ -270,6 +270,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
                       </CardContent>
                     </Card>
                   ))}
+                  {displayPhotos.length<=0 && "Aucune photo détecter"}
                 </div>
               </CarouselItem>
             </CarouselContent>

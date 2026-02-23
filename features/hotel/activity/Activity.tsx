@@ -108,6 +108,7 @@ export default function Activity() {
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <h2 className="text-xl font-semibold">{"Liste des activités de l'établissement"}</h2>
         <DataTable
           body={body}
           onCreate={onCreate}
