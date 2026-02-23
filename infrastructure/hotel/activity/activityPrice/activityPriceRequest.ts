@@ -9,7 +9,7 @@ export const getAllActivityPrice = async (activity:string) => {
 }
 
 export const getPaginateActivityPrices = async (activity:string,page:number,size:number) => {
-  return await getCall<Page<ActivityPriceEntity>>(`${activityPricePath}/byActivity/${page}/${size}?activityid=${activity}` );
+  return await getCall<Page<ActivityPriceEntity>>(`${activityPricePath}/byActivity/${page}/${size}?activityid=${activity}&field=dateChanged&sort=desc` );
 }
 
 

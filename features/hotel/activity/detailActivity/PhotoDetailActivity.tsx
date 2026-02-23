@@ -22,8 +22,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createPhoto, deleteActivityPhoto, getAllphoto } from "@/infrastructure/hotel/activity/activityDetail/activityDetailRequest";
-import { ActivityPhotoEntity, ActivityPhotoInsertEntity } from "@/types/entity-type/activityPhotoEntity"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { ActivityPhotoEntity } from "@/types/entity-type/activityPhotoEntity"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 // import { AlertDialog, AlertDialogAction } from "@radix-ui/react-alert-dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,  } from "@/components/ui/alert-dialog"
 
@@ -48,6 +48,8 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
     setLoading(true);
     try {
       const response = await getAllphoto(activityId, page, size);
+      console.log(response.content);
+      
       setPhotos(response.content);
     } catch (error) {
       console.error("Erreur chargement photos:", error);
@@ -71,9 +73,9 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
   const displayPhotos = useMemo(() => {
     return photos.map(photo => ({
       ...photo,
-      src: photo.files?.data
+      src: photo?.files?.data
         ? convertToBase64(photo.files.data, photo.files.type)
-        : photo.path
+        : photo?.path
     }));
   }, [photos]);
 
@@ -199,7 +201,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
                 ) : (
                   <>
                     <Upload className="mr-2 h-4 w-4" />
-                    Envoyer l'image
+                    {"Envoyer l'image"}
                   </>
                 )}
               </Button>
@@ -242,7 +244,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
                               <AlertDialogHeader>
                                 <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Cette action est irréversible. La photo sera définitivement supprimée de l'activité.
+                                  {"Cette action est irréversible. La photo sera définitivement supprimée de l'activité."}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
