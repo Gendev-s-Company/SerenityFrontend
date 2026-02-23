@@ -25,7 +25,8 @@ import { createPhoto, deleteActivityPhoto, getAllphoto } from "@/infrastructure/
 import { ActivityPhotoEntity } from "@/types/entity-type/activityPhotoEntity"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 // import { AlertDialog, AlertDialogAction } from "@radix-ui/react-alert-dialog"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,  } from "@/components/ui/alert-dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
+import CarouselLoading from "@/components/loader/CarouselLoading"
 
 interface PhotoDetailActivityProps {
   activityId: string;
@@ -49,7 +50,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
     try {
       const response = await getAllphoto(activityId, page, size);
       console.log(response.content);
-      
+
       setPhotos(response.content);
     } catch (error) {
       console.error("Erreur chargement photos:", error);
@@ -83,10 +84,10 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     const res = []
-    
+
     if (files) {
       console.log(files);
-      
+
       setSelectedFile(
         [...files
         ]
@@ -98,10 +99,10 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
     if (!selectedFile) return;
 
     setIsUploading(true);
-    
+
     const formData = new FormData();
     console.log(selectedFile);
-    
+
     selectedFile.map((row) => {
 
       formData.append("uploadFile[]", row);
@@ -115,8 +116,8 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
       console.log("Fichier ajouté :", formData.getAll("uploadFile[]"));
       console.log("ID ajouté :", formData.get("activityID"));
 
-    await  createPhoto(formData);
-    setRefresh((prev) => prev + 1);
+      await createPhoto(formData);
+      setRefresh((prev) => prev + 1);
 
 
       setTimeout(() => {
@@ -213,7 +214,8 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
 
       {loading ? (
         <div className="h-[400px] flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          {/* <Loader2 className="h-8 w-8 animate-spin text-primary" /> */}
+          <CarouselLoading />
         </div>
       ) : (
         <>
