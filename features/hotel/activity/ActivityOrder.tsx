@@ -4,9 +4,6 @@ import { DataTable } from "@/components/liste/complexe-data-table";
 import { convertListToOption } from "@/infrastructure/hotel/customer/customerFunction";
 import { convertListToOptionActivity } from "@/infrastructure/hotel/activity/activityFunction";
 import {
-  getPaginateActivityOrder,
-  getFindAllByCompany,
-  getPaginateModelByCustomerr,
   createActivityOrder,
   updateActivityOrder,
   deleteActivityOrder,
@@ -20,13 +17,13 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { getLocalStorage } from "@/utils/storage";
-import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { ActivityOrderEntity } from "@/types/entity-type/activityorderEntity";
 import { ActivityEntity } from "@/types/entity-type/activityEntity";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
 import { ActivityOrderfield, ActivityOrderColumnOptions } from "./prep-view-activityOrder";
 import { getAllCustomer } from "@/infrastructure/hotel/customer/customerRequest";
 import { getAllActivity } from "@/infrastructure/hotel/activity/activityRequest";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
 export default function ActivitiesOrder() {
@@ -34,7 +31,8 @@ export default function ActivitiesOrder() {
   const [activitieso, setActivitieso] = useState<ActivityOrderEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
   const [loading, setLoading] = useState(true)
-
+  // tabs
+  const [trigger, setTrigger] = useState<string>('-1')
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -48,6 +46,10 @@ export default function ActivitiesOrder() {
   const [activityOption, setActivityOption] = useState<FieldOptions[]>([]);
   const [customerOption, setCustomerOption] = useState<FieldOptions[]>([]);
 
+  // function for tabs
+  const listTriggers = [{ id: '-1', label: 'Tous' }, { id: '1', label: 'Payés' }, { id: '0', label: 'Non payés' },]
+
+  // end function for tabs
 
   ////Liste activity
   useEffect(() => {
@@ -75,7 +77,7 @@ export default function ActivitiesOrder() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     if (user && user.profil.company.companyID) {
-      getPaginateActivityOrderByCompany(page.pageIndex, page.pageSize, user.profil.company.companyID)
+      getPaginateActivityOrderByCompany(page.pageIndex, page.pageSize, user.profil.company.companyID, trigger)
         .then((data) => {
           setActivitieso(data.content);
           setPage((prevPage) => ({
@@ -94,7 +96,7 @@ export default function ActivitiesOrder() {
 
         });
     }
-  }, [refresh, page.pageIndex]);
+  }, [refresh, page.pageIndex, trigger]);
 
 
   const onCreate = async (formData: ActivityOrderEntity) => {
@@ -213,6 +215,12 @@ export default function ActivitiesOrder() {
     <div className="container mx-auto py-10 px-3">
 
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <Tabs value={trigger} onValueChange={(trigger) => setTrigger(trigger)}>
+          <TabsList variant={'line'}>
+            {listTriggers.map((row) => <TabsTrigger key={row.id} value={row.id} className={'cursor-pointer'}>{row.label}</TabsTrigger>)}
+          </TabsList>
+        </Tabs>
+        <h2 className="text-xl font-semibold">Liste des commandes enregistrées</h2>
         <DataTable
           body={body}
           onCreate={onCreate}
