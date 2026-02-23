@@ -7,6 +7,7 @@ import { ColumnConfig } from "@/types/component-type/column-config"
 import DeleteBox from "../delete/delete-box"
 import UpdateBox from "../update/update-box"
 import { FieldConfig } from "@/types/component-type/form-type"
+import { getCurrency } from "@/utils/Util"
 export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConfig<T>[]): ColumnDef<T>[] {
 
     return configs.map((config) => {
@@ -54,16 +55,15 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                 // const value = row.getValue(config.key)
                 const value = getValue();
                 const rowData = row.original
-
+                if (config.cell) {
+                    return config.cell(rowData);
+                }
 
                 // MONTANT (MGA)
-                if (config.type === "amount" && config.amountType) {
+                if (config.type === "amount") {
                     const amount = parseFloat(value as string)
-                    const formatted = new Intl.NumberFormat(config.amountType.lang, {
-                        style: "currency",
-                        currency: config.amountType.currency,
-                    }).format(amount)
-
+                    const formatted = getCurrency(amount)
+                    
                     return <div className="text-right font-medium">{formatted}</div>
                 }
 
@@ -92,7 +92,7 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                     return <div className="lowercase">{new Date(value as string).toLocaleString()}</div>
 
                 }
-                 if (config.type === "date") {
+                if (config.type === "date") {
                     return <div className="lowercase">{new Date(value as string).toLocaleDateString()}</div>
 
                 }

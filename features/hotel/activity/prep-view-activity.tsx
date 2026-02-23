@@ -12,7 +12,8 @@ export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
         type: "link",
         hiding: false,
         sorting: true,
-        href: (row) => `/view/hotel/activity/activityPrice?activityID=${row.activityID}`,
+        // href: (row) => `/view/hotel/activity/activityPrice?activityID=${row.activityID}`,
+        href: (row) => `/view/hotel/activity/detail?activityID=${row.activityID}`,
     },
     { key: "description", header: "description", type: "text", sorting: true },
 ];

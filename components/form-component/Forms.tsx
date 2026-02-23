@@ -49,7 +49,16 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
           <FieldGroup>
             {fields?.map((row, index) => {
               const fieldName = row.name as keyof T;
-              const fieldValue = forms.getForm[fieldName];
+              let fieldValue = forms.getForm[fieldName];
+              // console.log(fieldName);
+              if (row.type === "select" && !row.normal &&
+                row.items && typeof fieldValue!=="object") {
+                  
+                  fieldValue = typeof fieldValue=== "number" ? fieldValue.toString() : fieldValue
+
+
+              }
+
               const uniqueId = `field-${String(fieldName)}-${index}`;
 
               return (

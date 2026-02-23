@@ -33,7 +33,7 @@ export default function Users() {
     pageIndex: 0,
     pageSize: pageSize,
   });
-// nombre total element anaty base
+  // nombre total element anaty base
   const [all, setAll] = useState<PageType>({
     totalElement: 0,
     totalPage: 0,
@@ -48,7 +48,7 @@ export default function Users() {
         .catch((error) => console.error("Error fetching profils:", error));
     }
   }, []);
-// maka liste user any anaty base
+  // maka liste user any anaty base
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
@@ -73,7 +73,7 @@ export default function Users() {
         });
     }
   }, [refresh, page.pageIndex]);
-// function de update
+  // function de update
   const onUpdate = async (formData: UserEntity) => {
     await updateUser(formData);
     setRefresh((prev) => prev + 1);
@@ -119,7 +119,7 @@ export default function Users() {
   const namefield = useMemo(() => {
     return [...UserNamefield.slice(0, 2), options, ...UserNamefield.slice(2)];
   }, [options]);
-  
+
   const company: CompanyEntity = {
     skipValidation: true,
     companyID: null,
@@ -142,7 +142,7 @@ export default function Users() {
     joinedDate: new Date().toDateString(),
     status: 0,
   };
-// function de création
+  // function de création
   const onCreate = async (formData: UserEntity) => {
     const body = formData;
     if (formData.joinedDate) {
@@ -156,20 +156,23 @@ export default function Users() {
   };
   return (
     <div className="container mx-auto py-10 px-3">
-      
-      <DataTable
-        body={body}
-        onCreate={onCreate}
-        data={users}
-        mcolumns={columns}
-        fields={namefield}
-        columnFilter="name"
-        pageCount={all.totalPage}
-        rowCount={all.totalElement}
-        onPaginationChange={setPage}
-        pagination={page}
-        loading={loading}
-      />
+
+      <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <h2 className="text-xl font-semibold">{"Liste des personnes enregistrés dans l'établissement"}</h2>
+        <DataTable
+          body={body}
+          onCreate={onCreate}
+          data={users}
+          mcolumns={columns}
+          fields={namefield}
+          columnFilter="name"
+          pageCount={all.totalPage}
+          rowCount={all.totalElement}
+          onPaginationChange={setPage}
+          pagination={page}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }
