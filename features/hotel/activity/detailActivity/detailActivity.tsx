@@ -7,6 +7,7 @@ import { getActivityLastPriceById } from '@/infrastructure/hotel/activity/activi
 import { ActivityPriceEntity } from '@/types/entity-type/activityPriceEntity';
 import PhotoDetailActivity from './PhotoDetailActivity';
 import ActivityPrice from '../activityPrice/ActivityPrice';
+import { getCurrency } from '@/utils/Util';
 
 export default function DetailActivity() {
     const activityID = useSearchParams().get('activityID');
@@ -47,7 +48,7 @@ export default function DetailActivity() {
                     <h2 className="text-xl font-semibold">{activity?.name}</h2>
                     <h1>En savoir plus? Voici quelques informations à propos de cet activité</h1>
                     <p>{activity?.description}</p>
-                    <p>Dernier prix : {lastPrice ? `${lastPrice.price} MGA /${lastPrice.hourPrice}h` : 'N/A'}</p>
+                    <p>Dernier prix : {lastPrice ? `${getCurrency('fr', 'MGA',lastPrice.price) } pour ${lastPrice.hourPrice}h` : 'N/A'}</p>
                 </div>
             </div>
             <div className='p-3'><PhotoDetailActivity activityId={activityID || ""} /></div>

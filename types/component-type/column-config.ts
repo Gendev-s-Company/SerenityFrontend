@@ -16,4 +16,6 @@ export interface ColumnConfig<T> {
   onDelete?: (data:T)=>void;
   onUpdate?:(data:T)=>void;
   href?: (data: T) => string; 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cell?: (data: T) => React.ReactNode;
 }
