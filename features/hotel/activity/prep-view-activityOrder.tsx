@@ -14,14 +14,14 @@ export const ActivityOrderColumnOptions: ColumnConfig<ActivityOrderEntity>[] = [
   { key: "activity.name", header: "Activité", type: "text", sorting: true },
   // { key: "activity.description", header: "Description", type: "text", sorting: true },
   { key: "customer.name", header: "Client", type: "text", sorting: true },
-  { key: "price", header: "Prix unitaire", type: 'amount', amountType: { currency: 'MGA', lang: 'fr' }, sorting: true },
+  { key: "price", header: "Prix unitaire", type: 'amount', sorting: true },
   {
     key: "duration", header: "Durée", type: "text", sorting: true,
     cell: (row) => <> {row.duration} h</>
   },
   {
     key: "total", header: "Prix total", type: "text", sorting: true,
-    cell: (row) => <> {getCurrency('fr', 'MGA', row.price * row.duration)} MGA</>
+    cell: (row) => <div className="text-right font-medium"> {getCurrency(row?.totalPrice ? row.totalPrice : 0)}</div>
   },
   {
     key: "state", header: "Statut", type: "text", sorting: true, cell: (row) => {

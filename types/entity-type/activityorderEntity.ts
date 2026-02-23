@@ -1,4 +1,3 @@
-import { CompanyEntity } from "./companyEntity";
 import { ActivityEntity } from "./activityEntity";
 import { CustomerEntity } from "./customerEntity";
 
@@ -11,6 +10,7 @@ export interface ActivityOrderEntity {
     dateOrder: string,
     state:string,
     skipValidation: boolean,
+    totalPrice?: number,
 
 
 }

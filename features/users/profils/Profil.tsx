@@ -51,8 +51,8 @@ export default function Profil() {
           });
           setLoading(false)
         })
-        .catch((error) => { 
-          console.error("Error fetching profils:", error) 
+        .catch((error) => {
+          console.error("Error fetching profils:", error)
           setLoading(false)
         });
     }
@@ -105,19 +105,21 @@ export default function Profil() {
   };
   return (
     <div className="container mx-auto py-10 px-3">
-      <DataTable
-        body={body}
-        onCreate={onCreate}
-        data={profil}
-        mcolumns={columns}
-        fields={ProfilNamefield}
-        columnFilter="name"
-        pageCount={all.totalPage}
-        rowCount={all.totalElement}
-        onPaginationChange={setPage}
-        pagination={page}
-        loading={loading}
-      />
+      <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <DataTable
+          body={body}
+          onCreate={onCreate}
+          data={profil}
+          mcolumns={columns}
+          fields={ProfilNamefield}
+          columnFilter="name"
+          pageCount={all.totalPage}
+          rowCount={all.totalElement}
+          onPaginationChange={setPage}
+          pagination={page}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }

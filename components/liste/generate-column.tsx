@@ -60,10 +60,10 @@ export function generateColumns<T>(configs: ColumnConfig<T>[], fields: FieldConf
                 }
 
                 // MONTANT (MGA)
-                if (config.type === "amount" && config.amountType) {
+                if (config.type === "amount") {
                     const amount = parseFloat(value as string)
-                    const formatted = getCurrency(config.amountType.lang,config.amountType.currency, amount)
-
+                    const formatted = getCurrency(amount)
+                    
                     return <div className="text-right font-medium">{formatted}</div>
                 }
 

@@ -48,7 +48,7 @@ export default function DetailActivity() {
                     <h2 className="text-xl font-semibold">{activity?.name}</h2>
                     <h1>En savoir plus? Voici quelques informations à propos de cet activité</h1>
                     <p>{activity?.description}</p>
-                    <p>Dernier prix : {lastPrice ? `${getCurrency('fr', 'MGA',lastPrice.price) } pour ${lastPrice.hourPrice}h` : 'N/A'}</p>
+                    <p>Dernier prix : <span className="text-right font-medium"> {lastPrice ? `${getCurrency(lastPrice.price) } pour ${lastPrice.hourPrice}h` : 'N/A'} </span></p>
                 </div>
             </div>
             <div className='p-3'><PhotoDetailActivity activityId={activityID || ""} /></div>

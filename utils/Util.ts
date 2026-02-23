@@ -1,5 +1,6 @@
 
-export function getCurrency (lang: string, currency:string, amount: number){
+
+export function getCurrency (amount: number,lang: string='fr', currency:string='MGA'){
     return new Intl.NumberFormat(lang, {
     style: "currency",
     currency: currency,

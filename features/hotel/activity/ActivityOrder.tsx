@@ -3,15 +3,16 @@
 import { DataTable } from "@/components/liste/complexe-data-table";
 import { convertListToOption } from "@/infrastructure/hotel/customer/customerFunction";
 import { convertListToOptionActivity } from "@/infrastructure/hotel/activity/activityFunction";
-import { 
-    getPaginateActivityOrder, 
-    getFindAllByCompany, 
-    getPaginateModelByCustomerr, 
-    createActivityOrder,
-    updateActivityOrder,
-    deleteActivityOrder,
-    getPaginateActivityOrderByCompany} 
-from "@/infrastructure/hotel/activity/activityOrderRequets";
+import {
+  getPaginateActivityOrder,
+  getFindAllByCompany,
+  getPaginateModelByCustomerr,
+  createActivityOrder,
+  updateActivityOrder,
+  deleteActivityOrder,
+  getPaginateActivityOrderByCompany
+}
+  from "@/infrastructure/hotel/activity/activityOrderRequets";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { PageType } from "@/types/component-type/PageType";
@@ -50,23 +51,23 @@ export default function ActivitiesOrder() {
 
   ////Liste activity
   useEffect(() => {
-      if (user && user.profil.company.companyID) {
-          getAllCustomer()
-              .then((data) => {
-                  setCustomerOption(convertListToOption(data));
-              })
-              .catch((error) => console.error("Error fetching activity:", error));
-        }
+    if (user && user.profil.company.companyID) {
+      getAllCustomer()
+        .then((data) => {
+          setCustomerOption(convertListToOption(data));
+        })
+        .catch((error) => console.error("Error fetching activity:", error));
+    }
   }, []);
 
   useEffect(() => {
-      if (user && user.profil.company.companyID) {
-          getAllActivity(user.profil.company.companyID)
-              .then((data) => {
-                  setActivityOption(convertListToOptionActivity(data));
-              })
-              .catch((error) => console.error("Error fetching activity:", error));
-        }
+    if (user && user.profil.company.companyID) {
+      getAllActivity(user.profil.company.companyID)
+        .then((data) => {
+          setActivityOption(convertListToOptionActivity(data));
+        })
+        .catch((error) => console.error("Error fetching activity:", error));
+    }
   }, []);
 
 
@@ -97,14 +98,14 @@ export default function ActivitiesOrder() {
 
 
   const onCreate = async (formData: ActivityOrderEntity) => {
-      const body = formData;
-      if (formData.dateOrder) {
-        body.dateOrder = new Date(formData.dateOrder).toISOString(); 
-      }
-      console.log(body);
-      
-      await createActivityOrder(body);
-      setRefresh((prev) => prev + 1);
+    const body = formData;
+    if (formData.dateOrder) {
+      body.dateOrder = new Date(formData.dateOrder).toISOString();
+    }
+    console.log(body);
+
+    await createActivityOrder(body);
+    setRefresh((prev) => prev + 1);
   };
 
 
@@ -122,14 +123,14 @@ export default function ActivitiesOrder() {
 
 
   const btnAction: ColumnConfig<ActivityOrderEntity> = {
-      key: "action_btn",
-      header: "Action",
-      type: "button",
-      hiding: false,
-      onUpdate: (row) => onUpdate(row),
-      onDelete: (row) => onDelete(row.acOrderID),
-      onClick: (row) => console.log("Editer", row.acOrderID),
-    };
+    key: "action_btn",
+    header: "Action",
+    type: "button",
+    hiding: false,
+    onUpdate: (row) => onUpdate(row),
+    onDelete: (row) => onDelete(row.acOrderID),
+    onClick: (row) => console.log("Editer", row.acOrderID),
+  };
 
 
   const activity: ActivityEntity = {
@@ -163,67 +164,69 @@ export default function ActivitiesOrder() {
     dateOrder: new Date().toDateString(),
     price: 0,
     duration: 0,
-    state:'0',
+    state: '0',
     skipValidation: true,
   };
 
 
   const columns = useMemo(() => {
-      return [...ActivityOrderColumnOptions, btnAction];
-    }, []);
+    return [...ActivityOrderColumnOptions, btnAction];
+  }, []);
 
-    const options: FieldConfig<ActivityOrderEntity> = useMemo(
-      () => ({
-        name: "activity",
-        libelle: "Activité :",
-        type: "select",
-        normal: false,
-        items: activityOption,
-        objectMapping: {
-          idKey: "activityID",
-          labelKey: "name",
-        },
-      }),
-      [activityOption],
-    );
+  const options: FieldConfig<ActivityOrderEntity> = useMemo(
+    () => ({
+      name: "activity",
+      libelle: "Activité :",
+      type: "select",
+      normal: false,
+      items: activityOption,
+      objectMapping: {
+        idKey: "activityID",
+        labelKey: "name",
+      },
+    }),
+    [activityOption],
+  );
 
-    const optionsCustomer: FieldConfig<ActivityOrderEntity> = useMemo(
-      () => ({
-        name: "customer",
-        libelle: "Client :",
-        type: "select",
-        normal: false,
-        items: customerOption,
-        objectMapping: {
-          idKey: "customerID",
-          labelKey: "name",
-        },
-      }),
-      [customerOption],
-    );
+  const optionsCustomer: FieldConfig<ActivityOrderEntity> = useMemo(
+    () => ({
+      name: "customer",
+      libelle: "Client :",
+      type: "select",
+      normal: false,
+      items: customerOption,
+      objectMapping: {
+        idKey: "customerID",
+        labelKey: "name",
+      },
+    }),
+    [customerOption],
+  );
 
 
-    const namefield = useMemo(() => {
-      return [options, optionsCustomer,...ActivityOrderfield];
-      // return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
-    }, [options, optionsCustomer]);
+  const namefield = useMemo(() => {
+    return [options, optionsCustomer, ...ActivityOrderfield];
+    // return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
+  }, [options, optionsCustomer]);
 
   return (
     <div className="container mx-auto py-10 px-3">
-      
-      <DataTable
-        body={body}
-        onCreate={onCreate}
-        data={activitieso}
-        mcolumns={columns}
-        fields={namefield}
-        columnFilter="acOrderID"
-        pageCount={all.totalPage}
-        rowCount={all.totalElement}
-        onPaginationChange={setPage}
-        pagination={page}
-        loading={loading}
-      />
+
+      <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <DataTable
+          body={body}
+          onCreate={onCreate}
+          data={activitieso}
+          mcolumns={columns}
+          fields={namefield}
+          columnFilter="acOrderID"
+          pageCount={all.totalPage}
+          rowCount={all.totalElement}
+          onPaginationChange={setPage}
+          pagination={page}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 

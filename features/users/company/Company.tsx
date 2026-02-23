@@ -20,7 +20,7 @@ export default function Company() {
         totalElement: 0,
         totalPage: 0
     })
-  const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true)
@@ -41,7 +41,7 @@ export default function Company() {
                 console.error("Error fetching company:", error)
                 setLoading(false)
             }
-        );
+            );
     }, [refresh, page.pageIndex, page.pageSize]);
 
     const onUpdate = async (formData: CompanyEntity) => {
@@ -81,19 +81,21 @@ export default function Company() {
     };
     return (
         <div className="container mx-auto py-10 px-3">
-            <DataTable
-                body={body}
-                onCreate={onCreate}
-                data={company}
-                mcolumns={columns}
-                fields={CompanyNamefield}
-                pageCount={all.totalPage}
-                rowCount={all.totalElement}
-                onPaginationChange={setPage}
-                pagination={page}
-                columnFilter="name"
-                loading={loading}
-            />
+            <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+                <DataTable
+                    body={body}
+                    onCreate={onCreate}
+                    data={company}
+                    mcolumns={columns}
+                    fields={CompanyNamefield}
+                    pageCount={all.totalPage}
+                    rowCount={all.totalElement}
+                    onPaginationChange={setPage}
+                    pagination={page}
+                    columnFilter="name"
+                    loading={loading}
+                />
+            </div>
         </div>
     );
 }

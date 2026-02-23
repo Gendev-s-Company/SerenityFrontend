@@ -7,7 +7,7 @@ export const ActivityPriceColumnOptions: ColumnConfig<ActivityPriceEntity>[] = [
     { key: "priceID", header: "priceID", sorting: true },
     { key: "activity.name", header: "Activité", type:'text', sorting: true },
     { key: "hourPrice", header: "Heure", type: "text", sorting: true },
-    { key: "price", header: "Prix", type: "amount", sorting: true, amountType:{currency:'MGA', lang:'fr'} },
+    { key: "price", header: "Prix", type: "amount", sorting: true },
     { key: "dateChanged", header: "Date du prix", type: "date", sorting: true  },
 
 ];
