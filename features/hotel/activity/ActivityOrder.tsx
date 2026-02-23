@@ -71,6 +71,7 @@ export default function ActivitiesOrder() {
 
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     if (user && user.profil.company.companyID) {
       getPaginateActivityOrderByCompany(page.pageIndex, page.pageSize, user.profil.company.companyID)
@@ -100,9 +101,8 @@ export default function ActivitiesOrder() {
       if (formData.dateOrder) {
         body.dateOrder = new Date(formData.dateOrder).toISOString(); 
       }
-    console.log("BOdyyyy :: ", body);
-
-
+      console.log(body);
+      
       await createActivityOrder(body);
       setRefresh((prev) => prev + 1);
   };
@@ -163,6 +163,7 @@ export default function ActivitiesOrder() {
     dateOrder: new Date().toDateString(),
     price: 0,
     duration: 0,
+    state:'0',
     skipValidation: true,
   };
 
@@ -203,7 +204,8 @@ export default function ActivitiesOrder() {
 
 
     const namefield = useMemo(() => {
-      return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
+      return [options, optionsCustomer,...ActivityOrderfield];
+      // return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
     }, [options, optionsCustomer]);
 
   return (
