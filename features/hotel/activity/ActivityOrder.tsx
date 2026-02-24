@@ -3,13 +3,13 @@
 import { DataTable } from "@/components/liste/complexe-data-table";
 import { convertListToOption } from "@/infrastructure/hotel/customer/customerFunction";
 import { convertListToOptionActivity } from "@/infrastructure/hotel/activity/activityFunction";
+
 import {
   createActivityOrder,
   updateActivityOrder,
   deleteActivityOrder,
-  getPaginateActivityOrderByCompany
-}
-  from "@/infrastructure/hotel/activity/activityOrderRequets";
+  getPaginateActivityOrderByCompany,
+} from "@/infrastructure/hotel/activity/activityOrderRequets";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { PageType } from "@/types/component-type/PageType";
@@ -20,19 +20,22 @@ import { getLocalStorage } from "@/utils/storage";
 import { ActivityOrderEntity } from "@/types/entity-type/activityorderEntity";
 import { ActivityEntity } from "@/types/entity-type/activityEntity";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
-import { ActivityOrderfield, ActivityOrderColumnOptions } from "./prep-view-activityOrder";
+import {
+  ActivityOrderfield,
+  ActivityOrderColumnOptions,
+} from "./prep-view-activityOrder";
 import { getAllCustomer } from "@/infrastructure/hotel/customer/customerRequest";
 import { getAllActivity } from "@/infrastructure/hotel/activity/activityRequest";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { dateToBackend } from "@/utils/Util";
 
 export default function ActivitiesOrder() {
-  const user = getLocalStorage();//maka localstorage 
+  const user = getLocalStorage(); //maka localstorage
   const [activitieso, setActivitieso] = useState<ActivityOrderEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   // tabs
-  const [trigger, setTrigger] = useState<string>('-1')
+  const [trigger, setTrigger] = useState<string>("-1");
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -47,7 +50,11 @@ export default function ActivitiesOrder() {
   const [customerOption, setCustomerOption] = useState<FieldOptions[]>([]);
 
   // function for tabs
-  const listTriggers = [{ id: '-1', label: 'Tous' }, { id: '1', label: 'Payés' }, { id: '0', label: 'Non payés' },]
+  const listTriggers = [
+    { id: "-1", label: "Tous" },
+    { id: "1", label: "Payés" },
+    { id: "0", label: "Non payés" },
+  ];
 
   // end function for tabs
 
@@ -72,12 +79,16 @@ export default function ActivitiesOrder() {
     }
   }, []);
 
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true)
+    setLoading(true);
     if (user && user.profil.company.companyID) {
-      getPaginateActivityOrderByCompany(page.pageIndex, page.pageSize, user.profil.company.companyID, trigger)
+      getPaginateActivityOrderByCompany(
+        page.pageIndex,
+        page.pageSize,
+        user.profil.company.companyID,
+        trigger,
+      )
         .then((data) => {
           setActivitieso(data.content);
           setPage((prevPage) => ({
@@ -88,28 +99,27 @@ export default function ActivitiesOrder() {
             totalElement: data.totalElements,
             totalPage: data.totalPages,
           });
-          setLoading(false)
+          setLoading(false);
         })
         .catch((error) => {
-          setLoading(false)
-          console.error("Error fetching users:", error)
-
+          setLoading(false);
+          console.error("Error fetching users:", error);
         });
     }
   }, [refresh, page.pageIndex, trigger]);
 
-
   const onCreate = async (formData: ActivityOrderEntity) => {
     const body = formData;
     if (formData.dateOrder) {
-      body.dateOrder = new Date(formData.dateOrder).toISOString();
+      console.log(body);
+
+      body.dateOrder = dateToBackend(formData.dateOrder);
     }
     console.log(body);
 
     await createActivityOrder(body);
     setRefresh((prev) => prev + 1);
   };
-
 
   const onUpdate = async (formData: ActivityOrderEntity) => {
     await updateActivityOrder(formData);
@@ -123,7 +133,6 @@ export default function ActivitiesOrder() {
     }
   };
 
-
   const btnAction: ColumnConfig<ActivityOrderEntity> = {
     key: "action_btn",
     header: "Action",
@@ -133,7 +142,6 @@ export default function ActivitiesOrder() {
     onDelete: (row) => onDelete(row.acOrderID),
     onClick: (row) => console.log("Editer", row.acOrderID),
   };
-
 
   const activity: ActivityEntity = {
     skipValidation: true,
@@ -163,13 +171,12 @@ export default function ActivitiesOrder() {
     acOrderID: null,
     activity: activity,
     customer: customer,
-    dateOrder: new Date().toDateString(),
+    dateOrder: new Date().toISOString(),
     price: 0,
     duration: 0,
-    state: '0',
+    state: "0",
     skipValidation: true,
   };
-
 
   const columns = useMemo(() => {
     return [...ActivityOrderColumnOptions, btnAction];
@@ -205,7 +212,6 @@ export default function ActivitiesOrder() {
     [customerOption],
   );
 
-
   const namefield = useMemo(() => {
     return [options, optionsCustomer, ...ActivityOrderfield];
     // return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
@@ -213,14 +219,23 @@ export default function ActivitiesOrder() {
 
   return (
     <div className="container mx-auto py-10 px-3">
-
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
         <Tabs value={trigger} onValueChange={(trigger) => setTrigger(trigger)}>
-          <TabsList variant={'line'}>
-            {listTriggers.map((row) => <TabsTrigger key={row.id} value={row.id} className={'cursor-pointer'}>{row.label}</TabsTrigger>)}
+          <TabsList variant={"line"}>
+            {listTriggers.map((row) => (
+              <TabsTrigger
+                key={row.id}
+                value={row.id}
+                className={"cursor-pointer"}
+              >
+                {row.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </Tabs>
-        <h2 className="text-xl font-semibold">Liste des commandes enregistrées</h2>
+        <h2 className="text-xl font-semibold">
+          Liste des commandes enregistrées
+        </h2>
         <DataTable
           body={body}
           onCreate={onCreate}
@@ -237,5 +252,4 @@ export default function ActivitiesOrder() {
       </div>
     </div>
   );
-
 }

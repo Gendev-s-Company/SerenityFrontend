@@ -32,7 +32,7 @@ const DropdownMenuComponent: React.FC<DropdownMenuProps> = ({ items, title, Pico
                   ${
                     active
                       ? "text-blue-600 before:absolute before:left-0 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-blue-600"
-                      : "text-muted-foreground hover:text-foreground"
+                      : ""
                   }
                 `}               
                 >

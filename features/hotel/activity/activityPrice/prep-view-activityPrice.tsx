@@ -12,7 +12,7 @@ export const ActivityPriceColumnOptions: ColumnConfig<ActivityPriceEntity>[] = [
 
 ];
 export const ActivityPriceNamefield: FieldConfig<ActivityPriceEntity>[] = [
-    { name: "hourPrice", libelle: "prix par heure:", type: "number", normal: true },
+    { name: "hourPrice", libelle: "Durée (h):", type: "number", normal: true },
     { name: "price", libelle: "prix :", type:"number", normal: true },
     { name: "dateChanged", libelle: "date :", type:"date", normal: true },
 
