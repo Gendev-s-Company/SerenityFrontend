@@ -15,12 +15,28 @@ export const HotelItems: PMenu =
       isSubmenu: false,
       subMenu: [
         {
-          title: "Situation des chambres",
+          title: "Type des chambres",
+          url: "/view/hotel/room/roomType",
+          dropdown: false,
+          isSubmenu: false,
+          subMenu: [],
+          icon: BedSingle,
+        },
+        {
+          title: "Liste des chambres",
           url: "#situation",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
           icon: BedSingle,
+        },
+                {
+          title: "Client",
+          url: "/view/hotel/customer",
+          dropdown: false,
+          isSubmenu: false,
+          subMenu: [],
+          icon: Calendar,
         },
         {
           title: "Réservation",
