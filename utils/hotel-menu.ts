@@ -16,7 +16,8 @@ export const HotelItems: PMenu =
       subMenu: [
         {
           title: "Situation des chambres",
-          url: "#situation",
+          // url: "#situation",
+          url: "/view/hotel/room/detail",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
