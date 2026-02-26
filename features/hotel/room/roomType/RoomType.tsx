@@ -95,6 +95,7 @@ const onDelete = async (id: string | null) => {
       name: "",
       description: "",
       status: 0,
+      skipValidation: false,
     };
 
     const onCreate = async (formData: RoomTypeEntity) => {

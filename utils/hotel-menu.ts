@@ -24,7 +24,7 @@ export const HotelItems: PMenu =
         },
         {
           title: "Liste des chambres",
-          url: "#situation",
+          url: "/view/hotel/room",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
