@@ -5,6 +5,9 @@ import PhotoDetailRoom from './PhotoDetailRoom';
 // import ActivityPrice from '../activityPrice/ActivityPrice';
 import { getRoomyById } from '@/infrastructure/hotel/room/roomDetail/roomRequest';
 import { RoomEntity } from '@/types/entity-type/roomEntity';
+import { RoomPriceEntity } from '@/types/entity-type/roomPriceEntity';
+import { getRoomLastPriceById } from '@/infrastructure/hotel/room/roomPrice/roomPriceRequest';
+import RoomPrice from './roomPrice/roomPrice';
 
 export default function DetailRoom() {
     // const roomID = useSearchParams().get('activityID');
@@ -13,7 +16,7 @@ export default function DetailRoom() {
 
 // ###############################################################################################################
 
-    // const [lastPrice, setLastPrice] = useState<ActivityPriceEntity | null>(null);
+    const [lastPrice, setLastPrice] = useState<RoomPriceEntity | null>(null);
 
     const [room, setRoom] = useState<RoomEntity | null>(null);
     getRoomyById
@@ -32,38 +35,38 @@ export default function DetailRoom() {
 
 
     // useEffect(() => {
-    //     if (activityID) {
-    //         getActivityLastPriceById(activityID).then((data) => {
+    //     if (roomID) {
+    //         getRoomLastPriceById(roomID).then((data) => {
     //             setLastPrice(data);
     //         })
     //             .catch((error) => {
     //                 console.error("Error fetching activity details:", error);
     //             });
     //     }
-    // }, [activityID, refresh]);
+    // }, [roomID, refresh]);
 
 // ###############################################################################################################
 
 
-    return (
-        <>
-            <div className="w-full max-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-                <div className="mb-6">
-                    <h2 className="text-xl font-semibold">{room?.name}</h2>
-                    <h1>En savoir plus? Voici quelques informations à propos de cet activité</h1>
+  return (
+    <>
+        <div className="w-full max-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+            <div className="mb-6">
+                <h2 className="text-xl font-semibold">{room?.name}</h2>
+                <h1 className="text-lg font-medium">En savoir plus ? Voici quelques informations &agrave; propos de cette activit&eacute;</h1>
+                
+                <div className="mt-4 space-y-2">
                     <p>{room?.description}</p>
-                    <p>{room?.type.name} : {room?.type.description}</p>
-                    <p>Nombre de personne : {room?.peoples}</p>
-                    <p>Nombre de lit : {room?.bed}</p>
-
-                    {/* <p>Dernier prix : <span className="text-right font-medium"> {lastPrice ? `${getCurrency(lastPrice.price) } pour ${lastPrice.hourPrice}h` : 'N/A'} </span></p> */}
+                    <p><span className="font-semibold">{room?.type.name} :</span> {room?.type.description}</p>
+                    <p>Nombre de personnes : {room?.peoples}</p>
+                    <p>Nombre de lits : {room?.bed}</p>
                 </div>
             </div>
-            <div className='p-3'><PhotoDetailRoom roomId={roomID || ""} /></div>
-            <div className="w-full max-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-                <h2 className="text-xl font-semibold">Historique de prix</h2>
-                {/* <ActivityPrice refresh={refresh} setRefresh={setRefresh} activityId={activityID || ""} /> */}
-            </div>
-        </>
-    );
+        </div>
+        <div className="w-full max-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+            <h2 className="text-xl font-semibold">Historique des prix</h2>
+            <RoomPrice refresh={refresh} setRefresh={setRefresh} roomId={roomID || ""} />
+        </div>
+    </>
+);
 }

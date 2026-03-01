@@ -8,8 +8,8 @@ export const getAllphoto = async (id: string,page:number,size:number) => {
     return await getCall<Page<RoomPhotoEntity>>(`${roomPhotoPath}/byRoom/${page}/${size}?roomid=${id}`);
 }
 
-export const createPhoto = async (room: unknown) => {
-    return await postCallImage<unknown>(`${roomPhotoPath}/save`, room);
+export const createPhoto = async (activity: unknown) => {
+    return await postCallImage<unknown>(`${roomPhotoPath}/save`, activity);
 }
 
 export const deleteRoomPhoto = async (id: string) => {
