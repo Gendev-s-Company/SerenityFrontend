@@ -63,6 +63,8 @@ export default function DetailRoom() {
                 </div>
             </div>
         </div>
+        <div className='p-3'><PhotoDetailRoom roomId={roomID || ""} /></div>
+        
         <div className="w-full max-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
             <h2 className="text-xl font-semibold">Historique des prix</h2>
             <RoomPrice refresh={refresh} setRefresh={setRefresh} roomId={roomID || ""} />

@@ -108,7 +108,7 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
 
     formData.append("uploadFile[]", row);
     })
-    formData.append("roomId", roomId);
+    formData.append("activityID", roomId);
 
 
 

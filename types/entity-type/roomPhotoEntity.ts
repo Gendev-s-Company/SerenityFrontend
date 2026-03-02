@@ -16,6 +16,6 @@ export interface FileData {
 
 
 export interface RoomPhotoInsertEntity {
-    activityId: string;
+    roomID: string;
     uploadFile: FileData[];
 }

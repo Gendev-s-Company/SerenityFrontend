@@ -5,7 +5,7 @@ import { RoomPhotoEntity } from "@/types/entity-type/roomPhotoEntity";
 const roomPhotoPath="/hotel/room/photo"
 
 export const getAllphoto = async (id: string,page:number,size:number) => {
-    return await getCall<Page<RoomPhotoEntity>>(`${roomPhotoPath}/byRoom/${page}/${size}?roomid=${id}`);
+    return await getCall<Page<RoomPhotoEntity>>(`${roomPhotoPath}/byroom/${page}/${size}?roomid=${id}`);
 }
 
 export const createPhoto = async (activity: unknown) => {
