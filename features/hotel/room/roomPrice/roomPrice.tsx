@@ -95,9 +95,10 @@ export default function RoomPrice({ roomId, refresh, setRefresh }: RoomPriceProp
     roomID: roomID,
     nightPrice: 0,
     hourPrice: 0,
-    dateChanged: new Date(),
+    datechanged: new Date(),
     accountRate: 0,
     skipValidation: false,
+    status: 0
   };
 
   const onCreate = async (formData: RoomPriceEntity) => {
