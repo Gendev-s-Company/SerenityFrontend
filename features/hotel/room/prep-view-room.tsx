@@ -23,7 +23,7 @@ export const RoomColumnOptions: ColumnConfig<RoomEntity>[] = [
 ];
 export const RoomNamefield: FieldConfig<RoomEntity>[] = [
     { name: "name", libelle: "Nom de la chambre:", type: "text", normal: true },
-    { name: "description", libelle: "description :", type: "textarea", normal: true },
+    { name: "description", libelle: "description :", type: "textarea", normal: false },
     { name: "peoples", libelle: "Nombre de personne :", type: "number", normal: true },
     { name: "bed", libelle: "Nombre de lit :", type: "number", normal: true },
     { name: "state", libelle: "Etat :", type: "select", normal: false, items: stateOption  },
