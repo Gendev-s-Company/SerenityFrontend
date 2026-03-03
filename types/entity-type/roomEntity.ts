@@ -1,3 +1,5 @@
+import { RoomPhotoEntity } from "./roomPhotoEntity";
+import { RoomPriceEntity } from "./roomPriceEntity";
 import { RoomTypeEntity } from "./roomTypeEntity";
 
 export interface RoomEntity {
@@ -10,4 +12,6 @@ export interface RoomEntity {
     state: number,
     status: number,
     skipValidation: boolean,
+    photos:RoomPhotoEntity[],
+    roomPrice:RoomPriceEntity |null,
 }

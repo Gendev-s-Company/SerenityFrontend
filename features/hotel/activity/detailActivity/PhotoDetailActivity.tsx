@@ -270,7 +270,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
                       </CardContent>
                     </Card>
                   ))}
-                  {displayPhotos.length<=0 && "Aucune photo détecter"}
+                  {displayPhotos.length<=0 && "Aucune photo détectée"}
                 </div>
               </CarouselItem>
             </CarouselContent>

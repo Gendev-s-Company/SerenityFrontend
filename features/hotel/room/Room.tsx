@@ -13,6 +13,8 @@ import { RoomTypeEntity } from "@/types/entity-type/roomTypeEntity";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeRequest";
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
+import CreateBox from "@/components/create/create-box";
+import Tooltips from "@/components/tooltips/tooltips";
 
 export default function Room() {
     const user = getLocalStorage()!;
@@ -135,6 +137,8 @@ export default function Room() {
       state:0,
       status: 0,
       skipValidation: false,
+      photos:[],
+      roomPrice:null,
     };
 
     const onCreate = async (formData: RoomEntity) => {
