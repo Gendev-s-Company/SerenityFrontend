@@ -1,9 +1,10 @@
 import { CompanyEntity } from "./companyEntity";
 
 export interface RoomTypeEntity {
-    typeID: string,
+    typeID:string |null,
     company: CompanyEntity,
     name: string,
-    description: string,
+    description: string| null,
+    status: number,
     skipValidation: boolean,
 }

@@ -20,4 +20,5 @@ export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
 export const ActivityNamefield: FieldConfig<ActivityEntity>[] = [
     { name: "name", libelle: "Nom:", type: "text", normal: true },
     { name: "description", libelle: "description :", type: "textarea", normal: false },
+      
 ];

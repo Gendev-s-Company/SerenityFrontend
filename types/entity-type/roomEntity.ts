@@ -1,14 +1,17 @@
+import { RoomPhotoEntity } from "./roomPhotoEntity";
+import { RoomPriceEntity } from "./roomPriceEntity";
 import { RoomTypeEntity } from "./roomTypeEntity";
 
 export interface RoomEntity {
-    roomID: string,
-    name: string,
-    description: string,
+    roomID: string|null,
+    name: string|null,
+    description: string|null,
     type: RoomTypeEntity,
     peoples: number,
     bed: number,
     state: number,
-    photos: any[],
-    roomPrice: any,
+    status: number,
     skipValidation: boolean,
+    photos:RoomPhotoEntity[],
+    roomPrice:RoomPriceEntity |null,
 }
