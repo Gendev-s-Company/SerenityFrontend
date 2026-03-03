@@ -1,6 +1,5 @@
-import DetailRoom from '@/features/hotel/room/detailRoom/detailRoom'
-import React from 'react'
-
+"use client";
+import DetailRoom from "@/features/hotel/room/detailRoom";
 const page = () => {
   return (
     <div className="p-5">

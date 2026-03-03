@@ -1,25 +1,21 @@
-
 export interface RoomPhotoEntity {
     content: never[];
-    photoID: string,
-    roomID:string,
-    path: string,
+    photoID: string;
+    roomID: string;
+    path: string;
     files: FileData;
 }
 
-export interface FileData {
-//   name: string;
-//   type: string;
-//   size: number;
-//   lastModified: number;
 
+export interface FileData {
     id: string;
     type: string;
     nameFile: string;
     data: number[];
 }
 
+
 export interface RoomPhotoInsertEntity {
-    photoID: string;
+    roomID: string;
     uploadFile: FileData[];
 }
