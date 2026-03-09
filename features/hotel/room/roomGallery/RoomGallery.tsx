@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { PaginationState } from "@tanstack/react-table"
 import { pageSize } from "@/utils/PaginationUtility"
 import { PageType } from "@/types/component-type/PageType"
-import { getPaginateRooms } from "@/infrastructure/hotel/room/roomRequest"
+import { deleteRoom, getPaginateRooms } from "@/infrastructure/hotel/room/roomRequest"
 import { getLocalStorage } from "@/utils/storage"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { Card, CardContent } from "@/components/ui/card"
@@ -27,7 +27,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from "@/components/ui/alert-dialog"
-
+import { useRouter } from "next/navigation"
+import UpdateBox from "@/components/update/update-box"
+import { RoomNamefield } from "../prep-view-room"
 const mockPhotos = [
   { photoID: 1, path: "/file.svg" },
   { photoID: 2, path: "/globe.svg" },
@@ -36,13 +38,13 @@ const mockPhotos = [
   { photoID: 5, path: "/window.svg" },
 ]
 
-
 export function RoomGallery() {
 
   const user = getLocalStorage()!
+  const router = useRouter()
 
   const [rooms, setRoom] = useState<RoomEntity[]>([])
-  const [refresh] = useState<number>(0)
+  const [refresh,setRefresh] = useState<number>(0)
 
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
@@ -84,6 +86,13 @@ export function RoomGallery() {
     })
   }
 
+  const onDelete = async (id: string | null) => {
+    if (id !== null) {
+      await deleteRoom(id);
+      setRefresh((prev) => prev + 1);
+    }
+  };
+
   // Chargement des chambres
   useEffect(() => {
     if (user && user.profil.company.companyID) {
@@ -113,7 +122,7 @@ return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
         {rooms.map((room) => {
-          const photos = mockPhotos
+          const photos = room.photos
           if (!room.roomID) return null
 
           const currentPage = photoPages[room.roomID] ?? 0
@@ -149,13 +158,17 @@ return (
 
                   <DropdownMenuContent align="end">
                     {/* VOIR DETAIL */}
-                    <button className="flex items-center px-2 py-1.5 text-sm w-full hover:bg-muted rounded-sm">
-                      <Info className="mr-2 h-4 w-4"/>
+                    <button
+                      onClick={() => router.push(`/view/hotel/room/detail?roomID=${room.roomID}`)}
+                      className="flex items-center px-2 py-1.5 text-sm w-full hover:bg-muted rounded-sm"
+                    >
+                      <Info className="mr-2 h-4 w-4" />
                       Voir détail
                     </button>
 
                     {/* MODIFIER */}
-                      <button className="flex items-center px-2 py-1.5 text-sm w-full text-blue-600 hover:bg-blue-50 rounded-sm">
+                      <button
+                        className="flex items-center px-2 py-1.5 text-sm w-full text-blue-600 hover:bg-blue-50 rounded-sm">
                         <Edit2 className="mr-2 h-4 w-4" />
                         Modifier
                       </button>
@@ -163,7 +176,8 @@ return (
                     {/* SUPPRIMER */}
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <button className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">
+                        <button 
+                          className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">
                           <Trash2 className="mr-2 h-4 w-4" />
                           Supprimer
                         </button>
@@ -182,9 +196,11 @@ return (
                           <AlertDialogCancel>
                             Annuler
                           </AlertDialogCancel>
-                          <AlertDialogAction>
-                            Supprimer
-                          </AlertDialogAction>
+                            <AlertDialogAction
+                              onClick={() => onDelete(room.roomID!)}
+                            >
+                              Supprimer
+                            </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
@@ -197,90 +213,89 @@ return (
               <div className="mb-6 flex gap-3">
                 {room.roomPrice?.nightPrice && (
                   <div className="bg-indigo-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md">
-                    Nuit : {room.roomPrice.nightPrice.toLocaleString()} Ariary
+                    Prix/Nuit : {room.roomPrice.nightPrice.toLocaleString()} Ariary
                   </div>
                 )}
 
                 {room.roomPrice?.hourPrice && (
                   <div className="bg-amber-400 text-white font-semibold px-3 py-1 rounded-lg shadow-md">
-                    Heure : {room.roomPrice.hourPrice.toLocaleString()} Ariary
+                    Prix/Heure : {room.roomPrice.hourPrice.toLocaleString()} Ariary
                   </div>
                 )}
               </div>
 
                 {/* CARROUSEL PHOTOS */}
-                <div className="flex-1">
-                  {displayPhotos.length > 0 ? (
+              <div className="flex-1 relative group">
+
+                {displayPhotos.length > 0 ? (
+                  <>
                     <Carousel className="w-full">
                       <CarouselContent>
                         <CarouselItem>
                           <div className="grid grid-cols-2 gap-4">
-                  
+                
                             {displayPhotos.map((photo) => (
                               <Card
                                 key={photo.photoID}
-                                className="h-[250px] overflow-hidden border-2 hover:border-primary/50 transition-colors relative group"
+                                className="aspect-[4/3] overflow-hidden border-2 hover:border-primary/50 transition-colors relative group"
                               >
                                 <CardContent className="p-0 h-full relative">
-                            
-                                  {/* MENU ACTIONS SUR PHOTO */}
-                                  <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <DropdownMenu>
-                                      <DropdownMenuTrigger asChild>
-                                        <Button
-                                          variant="secondary"
-                                          size="icon"
-                                          className="h-8 w-8 shadow-md hover:bg-white"
-                                        >
-                                          <MoreVertical className="h-4 w-4" />
-                                        </Button>
-                                      </DropdownMenuTrigger>
-                            
-                                      <DropdownMenuContent align="end">    
-                                        {/* MODIFIER */}
-                                        <button className="flex items-center px-2 py-1.5 text-sm w-full text-blue-600 hover:bg-blue-50 rounded-sm">
-                                          <Edit2 className="mr-2 h-4 w-4" />
-                                          Modifier
-                                        </button>
-                            
-                                        {/* SUPPRIMER */}
-                                        <AlertDialog>
-                                          <AlertDialogTrigger asChild>
-                                            <button className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">
-                                              <Trash2 className="mr-2 h-4 w-4" />
-                                              Supprimer
-                                            </button>
-                                          </AlertDialogTrigger>
-                            
-                                          <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                              <AlertDialogTitle>
-                                                Êtes-vous sûr ?
-                                              </AlertDialogTitle>
-                                              <AlertDialogDescription>
-                                                Cette action est irréversible.
-                                              </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                              <AlertDialogCancel>
-                                                Annuler
-                                              </AlertDialogCancel>
-                                              <AlertDialogAction>
-                                                Supprimer
-                                              </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                          </AlertDialogContent>
-                                        </AlertDialog>
-                            
-                                      </DropdownMenuContent>
-                                    </DropdownMenu>
-                                  </div>
-                            
-                                  <img
-                                    src={photo.path}
-                                    alt="Room"
-                                    className="object-cover w-full h-full"
-                                  />
+
+                              {/* MENU ACTIONS SUR PHOTO */}
+                              <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="secondary"
+                            size="icon"
+                            className="h-8 w-8 shadow-md hover:bg-white"
+                                    >
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+
+                                  <DropdownMenuContent align="end">
+                                    <button className="flex items-center px-2 py-1.5 text-sm w-full text-blue-600 hover:bg-blue-50 rounded-sm">
+                                      <Edit2 className="mr-2 h-4 w-4" />
+                                      Modifier
+                                    </button>
+
+                                    <AlertDialog>
+                                      <AlertDialogTrigger asChild>
+                                    <button className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Supprimer
+                                    </button>
+                                      </AlertDialogTrigger>
+
+                                      <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Êtes-vous sûr ?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Cette action est irréversible.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>
+                                  Annuler
+                                </AlertDialogCancel>
+                                <AlertDialogAction>
+                                  Supprimer
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                                      </AlertDialogContent>
+                                    </AlertDialog>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+
+                              <img
+                                src={photo.path}
+                                alt="Room"
+                                className="object-cover w-full h-full"
+                              />
 
                                 </CardContent>
                               </Card>
@@ -290,16 +305,44 @@ return (
                         </CarouselItem>
                       </CarouselContent>
                     </Carousel>
-                  ) : (
-                    <div className="flex items-center justify-center h-[250px] border border-dashed rounded-lg text-gray-400 font-medium">
-                      Aucune photo à afficher
-                    </div>
-                  )}
-                </div>
-
+                          
+                    {/* FLECHE GAUCHE */}
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition"
+                      onClick={() =>
+                        handlePhotoPage(room.roomID!, "prev", photos.length)
+                      }
+                      disabled={currentPage === 0}
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </Button>
+                    
+                    {/* FLECHE DROITE */}
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition"
+                      onClick={() =>
+                        handlePhotoPage(room.roomID!, "next", photos.length)
+                      }
+                      disabled={currentPage === totalPages - 1}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </Button>
+                    
+                  </>
+                ) : (
+                  <div className="flex items-center justify-center h-[250px] border border-dashed rounded-lg text-gray-400 font-medium">
+                    Aucune photo à afficher
+                  </div>
+                )}
+              </div>
+              
               {/* PAGINATION PAR CHAMBRE */}
               <div className="flex justify-center items-center mt-6 gap-4 pt-4 border-t">
-                <Button
+                {/* <Button
                   variant="outline"
                   size="icon"
                   onClick={() =>
@@ -308,13 +351,13 @@ return (
                   disabled={currentPage === 0}
                 >
                   <ChevronLeft className="h-4 w-4" />
-                </Button>
+                </Button> */}
 
                 <span className="text-sm font-medium bg-white px-3 py-1 rounded-full border shadow-sm">
-                  {currentPage + 1} / {totalPages}
+                   Page {currentPage + 1}
                 </span>
 
-                <Button
+                {/* <Button
                   variant="outline"
                   size="icon"
                   onClick={() =>
@@ -323,7 +366,7 @@ return (
                   disabled={currentPage === totalPages - 1}
                 >
                   <ChevronRight className="h-4 w-4" />
-                </Button>
+                </Button> */}
               </div>
 
             </div>
