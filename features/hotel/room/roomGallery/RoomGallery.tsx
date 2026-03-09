@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { PaginationState } from "@tanstack/react-table"
 import { pageSize } from "@/utils/PaginationUtility"
 import { PageType } from "@/types/component-type/PageType"
-import { deleteRoom, getPaginateRooms } from "@/infrastructure/hotel/room/roomRequest"
+import { deleteRoom, getPaginateRooms, updateRoom } from "@/infrastructure/hotel/room/roomRequest"
 import { getLocalStorage } from "@/utils/storage"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { Card, CardContent } from "@/components/ui/card"
@@ -85,7 +85,11 @@ export function RoomGallery() {
       }
     })
   }
-
+    const onUpdate = async (formData: RoomEntity) => {
+      await updateRoom(formData);
+      setRefresh((prev) => prev + 1);
+    };
+    
   const onDelete = async (id: string | null) => {
     if (id !== null) {
       await deleteRoom(id);
@@ -139,74 +143,61 @@ return (
               className="border rounded-xl p-6 bg-slate-50/50 shadow-sm flex flex-col"
             >
 
-              {/* TITRE + DROPDOWN */}
+              {/*DROPDOWN MENU*/}
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">
-                  {room.name}
-                </h2>
+                <h2 className="text-xl font-semibold">{room.name}</h2>              
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-1"
-                    >
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                <div className="grid grid-cols-[auto_auto] gap-2 items-center">
+                  {/* UpdateBox en grid à côté du bouton */}
+                  <UpdateBox body={room} onUpdate={onUpdate} fields={RoomNamefield} />
 
-                  <DropdownMenuContent align="end">
-                    {/* VOIR DETAIL */}
-                    <button
-                      onClick={() => router.push(`/view/hotel/room/detail?roomID=${room.roomID}`)}
-                      className="flex items-center px-2 py-1.5 text-sm w-full hover:bg-muted rounded-sm"
-                    >
-                      <Info className="mr-2 h-4 w-4" />
-                      Voir détail
-                    </button>
+                  {/* Bouton Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 w-8 p-1">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>              
 
-                    {/* MODIFIER */}
+                    <DropdownMenuContent align="end">
+                      {/* VOIR DETAIL */}
                       <button
-                        className="flex items-center px-2 py-1.5 text-sm w-full text-blue-600 hover:bg-blue-50 rounded-sm">
-                        <Edit2 className="mr-2 h-4 w-4" />
-                        Modifier
-                      </button>
+                        onClick={() => router.push(`/view/hotel/room/detail?roomID=${room.roomID}`)}
+                        className="flex items-center px-2 py-1.5 text-sm w-full hover:bg-muted rounded-sm"
+                      >
+                        <Info className="mr-2 h-4 w-4" />
+                        Voir détail
+                      </button>             
 
-                    {/* SUPPRIMER */}
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <button 
-                          className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Supprimer
-                        </button>
-                      </AlertDialogTrigger>
+                      {/* SUPPRIMER */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button
+                            className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Supprimer
+                          </button>
+                        </AlertDialogTrigger>             
 
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Êtes-vous sûr ?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Cette action est irréversible.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>
-                            Annuler
-                          </AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => onDelete(room.roomID!)}
-                            >
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Cette action est irréversible.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => onDelete(room.roomID!)}>
                               Supprimer
                             </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </DropdownMenuContent>
+                  </DropdownMenu>    
+                </div>
               </div>
 
               {/* BADGES PRIX */}
