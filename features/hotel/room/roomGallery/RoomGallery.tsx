@@ -1,7 +1,7 @@
 "use client"
 
 import { RoomEntity } from "@/types/entity-type/roomEntity"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { PaginationState } from "@tanstack/react-table"
 import { pageSize } from "@/utils/PaginationUtility"
 import { PageType } from "@/types/component-type/PageType"
@@ -30,6 +30,10 @@ import {
 import { useRouter } from "next/navigation"
 import UpdateBox from "@/components/update/update-box"
 import { RoomNamefield } from "../prep-view-room"
+import { FieldConfig, FieldOptions } from "@/types/component-type/form-type"
+import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeRequest"
+import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
+
 const mockPhotos = [
   { photoID: 1, path: "/file.svg" },
   { photoID: 2, path: "/globe.svg" },
@@ -42,6 +46,7 @@ export function RoomGallery() {
 
   const user = getLocalStorage()!
   const router = useRouter()
+  const [roomTypeOption, setRoomTypeOption] = useState<FieldOptions[]>([]);
 
   const [rooms, setRoom] = useState<RoomEntity[]>([])
   const [refresh,setRefresh] = useState<number>(0)
@@ -85,7 +90,7 @@ export function RoomGallery() {
       }
     })
   }
-    const onUpdate = async (formData: RoomEntity) => {
+  const onUpdate = async (formData: RoomEntity) => {
       await updateRoom(formData);
       setRefresh((prev) => prev + 1);
     };
@@ -96,6 +101,35 @@ export function RoomGallery() {
       setRefresh((prev) => prev + 1);
     }
   };
+
+  const roomTypeOptions: FieldConfig<RoomEntity> = useMemo(
+    () => ({
+      name: "type",
+      libelle: "Type de chambre :",
+      type: "select",
+      normal: false,
+      items: roomTypeOption,
+      objectMapping: {
+        idKey: "typeID",
+        labelKey: "name",
+      },
+    }),
+    [roomTypeOption],
+  );
+  const namefield = useMemo(() => {
+      return [roomTypeOptions,  ...RoomNamefield];
+  }, [roomTypeOptions]);
+
+    useEffect(() => {
+      if (user && user.profil.company.companyID) {
+        getAllRoomType(user.profil.company.companyID)
+          .then((data) => {
+            setRoomTypeOption(convertListToOption(data));
+          })
+          .catch((error) => console.error("Error fetching roomType:", error));
+      }
+    }, []);
+    
 
   // Chargement des chambres
   useEffect(() => {
@@ -149,7 +183,7 @@ return (
 
                 <div className="grid grid-cols-[auto_auto] gap-2 items-center">
                   {/* UpdateBox en grid à côté du bouton */}
-                  <UpdateBox body={room} onUpdate={onUpdate} fields={RoomNamefield} />
+                  <UpdateBox body={room} onUpdate={onUpdate} fields={namefield} />
 
                   {/* Bouton Dropdown */}
                   <DropdownMenu>
