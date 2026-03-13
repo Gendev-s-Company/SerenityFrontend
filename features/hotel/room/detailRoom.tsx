@@ -11,8 +11,8 @@ import RoomPrice from './roomPrice/roomPrice';
 import { Button } from '@/components/ui/button';
 
 export default function DetailRoom() {
-    // const roomID = useSearchParams().get('activityID');
-    const roomID = 'ROOM000001';
+    const roomID = useSearchParams().get('roomID');
+    // const roomID = 'ROOM000001';
     const [refresh, setRefresh] = useState<number>(0);
 
 // ###############################################################################################################
