@@ -1,45 +1,92 @@
-import { Input } from '@/components/ui/input'
-import { Label } from '@radix-ui/react-label'
-import React from 'react'
+import Forms from '@/components/form-component/Forms'
+import { Field, FieldLabel } from '@/components/ui/field'
+import { MultiSelect } from '@/components/ui/multi-select'
+import { Switch } from '@/components/ui/switch'
+import { CustomerNamefield } from '@/features/hotel/customer/prep-view-customer'
+import useForm from '@/hooks/use-form'
+import { getAllCustomer } from '@/infrastructure/hotel/customer/customerRequest'
+import { FieldOptions } from '@/types/component-type/form-type'
+import { CompanyEntity } from '@/types/entity-type/companyEntity'
+import { CustomerEntity } from '@/types/entity-type/customerEntity'
+import { getLocalStorage } from '@/utils/storage'
+import React, { useEffect, useState } from 'react'
 
 const CustomerChoice = () => {
+    const [filters, setFilters] = useState<FieldOptions[]>([]);
+    const [customer, setCustomer] = useState<FieldOptions[]>([]);
+    const [toogle, setToogle] = useState<boolean>(false)
+    const user = getLocalStorage()!;
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (user && user?.profil?.company?.companyID) {
+            getAllCustomer(user.profil.company.companyID)
+                .then((data) => {
+                    setCustomer(convertListCustomersToOption(data))
+                })
+                .catch((error) => console.log(error)
+                )
+        }
+    }, []);
+    const updateFilter = (filters: FieldOptions[]) => {
+        setFilters(filters)
+        console.log(filters);
+    }
+    const company: CompanyEntity = {
+        skipValidation: true,
+        companyID: user?.profil?.company.companyID,
+        mail: "",
+        name: "",
+        phone: "",
+        status: 0,
+    };
+
+    const body: CustomerEntity = {
+        customerID: null,
+        company: company,
+        name: "",
+        phone: "",
+        mail: "",
+        cin: "",
+        address: "",
+        status: 0,
+        skipValidation: true,
+    };
+    const forms = useForm(body)
     return (
         <div>
-            <form>
-                <div className="flex flex-col gap-6">
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Choisir un client</Label>
-                        </div>
-                        <Input id="password" type="text" name='oldpwd'
-
-                            // value={forms.getForm && forms.getForm['oldpwd'] as string}
-                            // onChange={(e) => forms.handleInputChange('oldpwd', e.target.value)}
-                            required />
-                    </div>
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Nouveau mot de passe</Label>
-                        </div>
-                        <Input id="password" type="password" name='newPwd'
-                            // value={forms.getForm && forms.getForm['newPwd'] as string}
-                            // onChange={(e) => forms.handleInputChange('newPwd', e.target.value)}
-                            required />
-                    </div>
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Confirmer mot de passe</Label>
-                        </div>
-                        <Input id="password" type="password" name='confirmpwd'
-                            // value={forms.getForm && forms.getForm['confirmpwd'] as string}
-                            // onChange={(e) => forms.handleInputChange('confirmpwd', e.target.value)}
-                            required />
-                    </div>
-
+            {/* <form> */}
+                <Field orientation="horizontal">
+                    <Switch checked={toogle} onCheckedChange={setToogle} id="switch-size-default" />
+                    <FieldLabel htmlFor="switch-size-default">Créé un nouveau client ?</FieldLabel>
+                </Field>
+                <div className="flex flex-col gap-6 p-3">
+                    <MultiSelect
+                        setOpts={updateFilter}
+                        safidy={filters}
+                        opts={customer}
+                        multi={false}
+                        placeholder="Choisir les utilisateurs"
+                        disable={toogle}
+                    />
                 </div>
-            </form>
+                {toogle &&
+                    <Forms forms={forms} fields={CustomerNamefield} />
+                }
+            {/* </form> */}
         </div>
     )
 }
 
 export default CustomerChoice
+
+
+export const convertListCustomersToOption = (list: CustomerEntity[]): FieldOptions[] => {
+    const result: FieldOptions[] = []
+    list?.map((row) => {
+        if (row.customerID) {
+            result.push({ id: row.customerID, label: row.name })
+        }
+    }
+    )
+    return result;
+}

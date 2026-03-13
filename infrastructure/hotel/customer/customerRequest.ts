@@ -4,8 +4,8 @@ import { Page } from "@/types/entity-type/common/Page";
 
 const customerPath = "/customer";
 
-export const getAllCustomer = async () => {
-  return await getCall<CustomerEntity[]>(customerPath);
+export const getAllCustomer = async (company:string) => {
+  return await getCall<CustomerEntity[]>(`${customerPath}?company=${company}`);
 }
 export const getPaginateCustomers = async (company:string,page:number,size:number) => {
   return await getCall<Page<CustomerEntity>>(`${customerPath}/all/${page}/${size}?company=${company}` );

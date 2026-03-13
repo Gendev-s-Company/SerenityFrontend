@@ -101,9 +101,6 @@ export default function Customer(){
     };
 
     const onCreate = async (formData: CustomerEntity) => {
-      console.log(user);
-    
-      console.log(formData);
 
       await createCustomer(formData);
       setRefresh((prev) => prev + 1);
