@@ -161,8 +161,54 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          {/* ... contenu du dialog ... */}
-        </DialogContent>
+            <DialogHeader>
+              <DialogTitle>Ajouter une photo</DialogTitle>
+              <DialogDescription>
+                Sélectionnez une image pour cette activité.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="picture">Image</Label>
+                <Input
+                  id="picture"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="cursor-pointer"
+                />
+              </div>
+
+              {selectedFile && selectedFile.length > 0 && (
+                <div className="flex items-center gap-2 p-2 border rounded bg-slate-50 text-sm">
+                  <ImageIcon className="h-4 w-4 text-blue-500" />
+                  <span className="truncate max-w-[300px]">{selectedFile.length > 1 ? selectedFile.length + ' sélectionnées': selectedFile[0].name}</span>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter>
+              <Button
+                onClick={handleUpload}
+                disabled={!selectedFile || isUploading}
+                className="w-full"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Téléchargement...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="mr-2 h-4 w-4" />
+                    {"Envoyer les images"}
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
       </Dialog>
     </div>
 
