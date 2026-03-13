@@ -9,10 +9,11 @@ import { RoomPriceEntity } from '@/types/entity-type/roomPriceEntity';
 import { getRoomLastPriceById } from '@/infrastructure/hotel/room/roomPrice/roomPriceRequest';
 import RoomPrice from './roomPrice/roomPrice';
 import { Button } from '@/components/ui/button';
+import { getCurrency } from '@/utils/Util';
 
 export default function DetailRoom() {
-    // const roomID = useSearchParams().get('activityID');
-    const roomID = 'ROOM000001';
+    const roomID = useSearchParams().get('roomID');
+    // const roomID = 'ROOM000001';
     const [refresh, setRefresh] = useState<number>(0);
 
 // ###############################################################################################################
@@ -20,7 +21,6 @@ export default function DetailRoom() {
     const [lastPrice, setLastPrice] = useState<RoomPriceEntity | null>(null);
 
     const [room, setRoom] = useState<RoomEntity | null>(null);
-    getRoomyById
     
 
     useEffect(() => {
@@ -78,7 +78,7 @@ export default function DetailRoom() {
 
                 {/* Right Side: Details & Stats */}
                 <div className="space-y-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600">Détails de l'hébergement</h3>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-indigo-600">{"Détails de l'hébergement"}</h3>
                 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="col-span-2 p-4 rounded-xl border border-slate-100 bg-indigo-50/30">
@@ -102,13 +102,13 @@ export default function DetailRoom() {
                 <div className="flex flex-wrap gap-3 mt-4">
                     {room?.roomPrice?.nightPrice && (
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
-                        🌙 {room.roomPrice.nightPrice.toLocaleString()} Ar / Nuit
+                        🌙 {getCurrency(room.roomPrice.nightPrice)} / Nuit
                     </span>
                     )}
                     
                     {room?.roomPrice?.hourPrice && (
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
-                        ⚡ {room.roomPrice.hourPrice.toLocaleString()} Ar / Heure
+                        ⚡ {getCurrency(room.roomPrice.hourPrice)} / Heure
                     </span>
                     )}
                 </div>
