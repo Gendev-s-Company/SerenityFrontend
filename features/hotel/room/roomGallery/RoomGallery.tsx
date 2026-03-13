@@ -33,6 +33,7 @@ import { RoomNamefield } from "../prep-view-room"
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type"
 import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeRequest"
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
+import { getCurrency } from "@/utils/Util"
 
 const mockPhotos = [
   { photoID: 1, path: "/file.svg" },
@@ -60,6 +61,13 @@ export function RoomGallery() {
     totalElement: 0,
     totalPage: 0,
   })
+  const convertToBase64 = (buffer: number[], type: string) => {
+    if (!buffer || buffer.length === 0) return "";
+    const uint8Array = new Uint8Array(buffer);
+    let binary = "";
+    uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
+    return `data:${type};base64,${buffer}`;
+  };
 
   const [loading, setLoading] = useState(true)
 
@@ -238,13 +246,13 @@ return (
               <div className="mb-6 flex gap-3">
                 {room.roomPrice?.nightPrice && (
                   <div className="bg-indigo-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md">
-                    Prix/Nuit : {room.roomPrice.nightPrice.toLocaleString()} Ariary
+                    Prix/Nuit : {getCurrency(room.roomPrice.nightPrice)}
                   </div>
                 )}
 
                 {room.roomPrice?.hourPrice && (
                   <div className="bg-amber-400 text-white font-semibold px-3 py-1 rounded-lg shadow-md">
-                    Prix/Heure : {room.roomPrice.hourPrice.toLocaleString()} Ariary
+                    Prix/Heure : {getCurrency(room.roomPrice.hourPrice)}
                   </div>
                 )}
               </div>
@@ -317,7 +325,7 @@ return (
                               </div>
 
                               <img
-                                src={photo.path}
+                                src={convertToBase64(photo.files.data, photo.files.type)}
                                 alt="Room"
                                 className="object-cover w-full h-full"
                               />
