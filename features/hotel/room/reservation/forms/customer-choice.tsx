@@ -1,3 +1,4 @@
+import Sbutton from '@/components/button/Sbutton'
 import Forms from '@/components/form-component/Forms'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { MultiSelect } from '@/components/ui/multi-select'
@@ -52,26 +53,33 @@ const CustomerChoice = () => {
         skipValidation: true,
     };
     const forms = useForm(body)
+    const submit = () => {
+        console.log(forms.getForm);
+        
+    }
     return (
         <div>
             {/* <form> */}
-                <Field orientation="horizontal">
-                    <Switch checked={toogle} onCheckedChange={setToogle} id="switch-size-default" />
-                    <FieldLabel htmlFor="switch-size-default">Créé un nouveau client ?</FieldLabel>
-                </Field>
-                <div className="flex flex-col gap-6 p-3">
-                    <MultiSelect
-                        setOpts={updateFilter}
-                        safidy={filters}
-                        opts={customer}
-                        multi={false}
-                        placeholder="Choisir les utilisateurs"
-                        disable={toogle}
-                    />
-                </div>
-                {toogle &&
+            <Field orientation="horizontal">
+                <Switch checked={toogle} onCheckedChange={setToogle} id="switch-size-default" />
+                <FieldLabel htmlFor="switch-size-default">Créé un nouveau client ?</FieldLabel>
+            </Field>
+            <div className="flex flex-col gap-6 p-3">
+                <MultiSelect
+                    setOpts={updateFilter}
+                    safidy={filters}
+                    opts={customer}
+                    multi={false}
+                    placeholder="Choisir les utilisateurs"
+                    disable={toogle}
+                />
+            </div>
+            {toogle &&
+                <>
                     <Forms forms={forms} fields={CustomerNamefield} />
-                }
+                    <Sbutton message="Création réussi!" formAction={submit} />
+                </>
+            }
             {/* </form> */}
         </div>
     )
