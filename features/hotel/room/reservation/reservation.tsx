@@ -16,16 +16,13 @@ import {
 } from "@/components/ui/collapsible"
 import RoomChoice from './forms/room-choice'
 import RoomAccount from './forms/room-account'
+import { ReservationEntity } from '@/types/entity-type/reservationEntity'
 
 const Reservation = () => {
-  const step = 2
-  const [progress, setProgress] = useState<number>(0)
-  const [percent, setPercent] = useState<number>(0)
-  const updatePercent = (step: number, progression: number) => {
-    const result = (progression * 100) / (step+1)
-    setPercent(result)
-  }
-  const body = {
+  const step = 3
+  const [progress, setProgress] = useState<number>(1);
+  const percent = Number(((progress / step) * 100).toFixed(2));
+  const body:ReservationEntity = {
     roomID:"",
     starttime:"",
     endtime:"",
@@ -33,7 +30,10 @@ const Reservation = () => {
     accountRated:"",
     accountPaid:"",
     AccountPaimentDeadline:"",
-    userID:""
+    userID:"",
+    state:"1",
+    status:0,
+    skipValidation: true,
   }
   const [forms, setForms] = useState(body)
   const handleForms =  (name: string, value: string) => {
@@ -42,31 +42,30 @@ const Reservation = () => {
             [name]: value,
         });
     };
-  const next = () => {
-    if (progress < step ) {
-      setProgress((prev) => prev + 1) 
-      updatePercent(step, progress + 1)
-    }
+ const next = () => {
+  if (progress < step) {
+    setProgress((prev) => prev + 1);
   }
-  const previous = () => {
-    if (progress > 0) {
-      setProgress((prev) => prev - 1)
-      updatePercent(step, progress - 1)
-    }
+};
+
+const previous = () => {
+  if (progress > 1) {
+    setProgress((prev) => prev - 1);
   }
+};
 
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
         <Collapsible
-          open={progress === 0}
+          open={progress === 1}
         >
           <CollapsibleContent>
-            <CustomerChoice handleForms={handleForms} />
+            <CustomerChoice handleForms={handleForms} init={forms} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible
-          open={progress === 1}
+          open={progress === 2}
           className="flex items-start gap-2"
         >
           <CollapsibleContent>
@@ -74,7 +73,7 @@ const Reservation = () => {
           </CollapsibleContent>
         </Collapsible>
         <Collapsible
-          open={progress === 2}
+          open={progress === 3}
           className="flex items-start gap-2"
         >
           <CollapsibleContent>
@@ -89,12 +88,13 @@ const Reservation = () => {
           size="icon"
           className="rounded-full cursor-pointer"
           onClick={previous}
+          disabled={progress === 1}
         >
           <ArrowLeft />
         </Button>
         <Progress value={percent} className="w-full max-w-sm">
-          <ProgressLabel>Progression du formulaire</ProgressLabel>
-          <ProgressValue />
+          <ProgressLabel>Progression du formulaire : {progress}/{step} </ProgressLabel>
+          {/* <ProgressValue /> */}
         </Progress>
         {/* {progress}/{step} */}
         {step === progress ?

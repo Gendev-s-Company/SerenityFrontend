@@ -9,33 +9,45 @@ import { createCustomer, getAllCustomer } from '@/infrastructure/hotel/customer/
 import { FieldOptions } from '@/types/component-type/form-type'
 import { CompanyEntity } from '@/types/entity-type/companyEntity'
 import { CustomerEntity } from '@/types/entity-type/customerEntity'
+import { ReservationEntity } from '@/types/entity-type/reservationEntity'
 import { getLocalStorage } from '@/utils/storage'
 import React, { useEffect, useState } from 'react'
 
+
+
 interface Form {
+    init: ReservationEntity,
     handleForms: (name:string, value:string) => void;
 }
 
-const CustomerChoice = ({handleForms}:Form) => {
+const CustomerChoice = ({handleForms, init}:Form) => {
     const [filters, setFilters] = useState<FieldOptions[]>([]);
     const [customer, setCustomer] = useState<FieldOptions[]>([]);
     const [toogle, setToogle] = useState<boolean>(false)
     const user = getLocalStorage()!;
+    
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         if (user && user?.profil?.company?.companyID) {
             getAllCustomer(user.profil.company.companyID)
                 .then((data) => {
-                    setCustomer(convertListCustomersToOption(data))
+                    const list = convertListCustomersToOption(data)
+                    setCustomer(list)
+                    const choosed = list.find(c => c.id === init.customerID)
+                    if (choosed) setFilters([choosed])
+                    
                 })
                 .catch((error) => console.log(error)
                 )
         }
     }, []);
+    // useEffect(() => {
+    //     const choosed = customer.find(c => c.id === init.customerID)
+        
+    // }, [])
     const updateFilter = (filters: FieldOptions[]) => {
         setFilters(filters)
         const value = filters.length > 0 ? filters[0].id : ""
-        console.log(value);
         handleForms("customerID", value)
     }
     
