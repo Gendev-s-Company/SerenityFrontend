@@ -1,4 +1,5 @@
 import { FieldOptions } from "@/types/component-type/form-type";
+import { RoomEntity } from "@/types/entity-type/roomEntity";
 import { RoomTypeEntity } from "@/types/entity-type/roomTypeEntity";
 
 export const convertListToOption = (list: RoomTypeEntity[]): FieldOptions[] => {
