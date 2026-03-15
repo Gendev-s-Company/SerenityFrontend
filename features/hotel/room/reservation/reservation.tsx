@@ -25,9 +25,26 @@ const Reservation = () => {
     const result = (progression * 100) / (step+1)
     setPercent(result)
   }
+  const body = {
+    roomID:"",
+    starttime:"",
+    endtime:"",
+    customerID:"",
+    accountRated:"",
+    accountPaid:"",
+    AccountPaimentDeadline:"",
+    userID:""
+  }
+  const [forms, setForms] = useState(body)
+  const handleForms =  (name: string, value: string) => {
+        setForms({
+            ...forms,
+            [name]: value,
+        });
+    };
   const next = () => {
     if (progress < step ) {
-      setProgress((prev) => prev + 1)
+      setProgress((prev) => prev + 1) 
       updatePercent(step, progress + 1)
     }
   }
@@ -37,6 +54,7 @@ const Reservation = () => {
       updatePercent(step, progress - 1)
     }
   }
+
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
@@ -44,7 +62,7 @@ const Reservation = () => {
           open={progress === 0}
         >
           <CollapsibleContent>
-            <CustomerChoice />
+            <CustomerChoice handleForms={handleForms} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible
@@ -52,7 +70,7 @@ const Reservation = () => {
           className="flex items-start gap-2"
         >
           <CollapsibleContent>
-            <RoomChoice />
+            <RoomChoice handleForms={handleForms} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible
@@ -60,10 +78,11 @@ const Reservation = () => {
           className="flex items-start gap-2"
         >
           <CollapsibleContent>
-            <RoomAccount />
+            <RoomAccount handleForms={handleForms} />
           </CollapsibleContent>
         </Collapsible>
       </div>
+      {/* next and previous step */}
       <div className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
         <Button
           variant="default"

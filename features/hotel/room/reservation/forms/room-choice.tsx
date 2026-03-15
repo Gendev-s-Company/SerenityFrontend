@@ -1,6 +1,9 @@
 import React from 'react'
+interface Form {
+    handleForms: (name:string, value:string) => void;
+}
 
-const RoomChoice = () => {
+const RoomChoice = ({handleForms}:Form) => {
   return (
     <div>RoomChoice</div>
   )

@@ -5,14 +5,18 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { Switch } from '@/components/ui/switch'
 import { CustomerNamefield } from '@/features/hotel/customer/prep-view-customer'
 import useForm from '@/hooks/use-form'
-import { getAllCustomer } from '@/infrastructure/hotel/customer/customerRequest'
+import { createCustomer, getAllCustomer } from '@/infrastructure/hotel/customer/customerRequest'
 import { FieldOptions } from '@/types/component-type/form-type'
 import { CompanyEntity } from '@/types/entity-type/companyEntity'
 import { CustomerEntity } from '@/types/entity-type/customerEntity'
 import { getLocalStorage } from '@/utils/storage'
 import React, { useEffect, useState } from 'react'
 
-const CustomerChoice = () => {
+interface Form {
+    handleForms: (name:string, value:string) => void;
+}
+
+const CustomerChoice = ({handleForms}:Form) => {
     const [filters, setFilters] = useState<FieldOptions[]>([]);
     const [customer, setCustomer] = useState<FieldOptions[]>([]);
     const [toogle, setToogle] = useState<boolean>(false)
@@ -30,8 +34,11 @@ const CustomerChoice = () => {
     }, []);
     const updateFilter = (filters: FieldOptions[]) => {
         setFilters(filters)
-        console.log(filters);
+        const value = filters.length > 0 ? filters[0].id : ""
+        console.log(value);
+        handleForms("customerID", value)
     }
+    
     const company: CompanyEntity = {
         skipValidation: true,
         companyID: user?.profil?.company.companyID,
@@ -53,15 +60,23 @@ const CustomerChoice = () => {
         skipValidation: true,
     };
     const forms = useForm(body)
-    const submit = () => {
+    const handleForm = (open:boolean) => {
+        setToogle(open)
+        forms.resetForm()
+    }
+    const submit = async () => {
         console.log(forms.getForm);
+        const created = await createCustomer(forms.getForm);
+        updateFilter(convertListCustomersToOption([created]))
+        handleForm(false)
+        
         
     }
     return (
         <div>
             {/* <form> */}
             <Field orientation="horizontal">
-                <Switch checked={toogle} onCheckedChange={setToogle} id="switch-size-default" />
+                <Switch checked={toogle} onCheckedChange={handleForm} id="switch-size-default" />
                 <FieldLabel htmlFor="switch-size-default">Créé un nouveau client ?</FieldLabel>
             </Field>
             <div className="flex flex-col gap-6 p-3">
@@ -75,10 +90,13 @@ const CustomerChoice = () => {
                 />
             </div>
             {toogle &&
-                <>
+                <div>
                     <Forms forms={forms} fields={CustomerNamefield} />
+                    <div className='p-4'>
                     <Sbutton message="Création réussi!" formAction={submit} />
-                </>
+
+                    </div>
+                </div>
             }
             {/* </form> */}
         </div>
