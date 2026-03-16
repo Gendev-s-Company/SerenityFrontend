@@ -17,15 +17,15 @@ import React, { useEffect, useState } from 'react'
 
 interface Form {
     init: ReservationEntity,
-    handleForms: (name:string, value:string) => void;
+    handleForms: (name: string, value: string) => void;
 }
 
-const CustomerChoice = ({handleForms, init}:Form) => {
+const CustomerChoice = ({ handleForms, init }: Form) => {
     const [filters, setFilters] = useState<FieldOptions[]>([]);
     const [customer, setCustomer] = useState<FieldOptions[]>([]);
     const [toogle, setToogle] = useState<boolean>(false)
     const user = getLocalStorage()!;
-    
+
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         if (user && user?.profil?.company?.companyID) {
@@ -35,7 +35,7 @@ const CustomerChoice = ({handleForms, init}:Form) => {
                     setCustomer(list)
                     const choosed = list.find(c => c.id === init.customerID)
                     if (choosed) setFilters([choosed])
-                    
+
                 })
                 .catch((error) => console.log(error)
                 )
@@ -43,14 +43,14 @@ const CustomerChoice = ({handleForms, init}:Form) => {
     }, []);
     // useEffect(() => {
     //     const choosed = customer.find(c => c.id === init.customerID)
-        
+
     // }, [])
     const updateFilter = (filters: FieldOptions[]) => {
         setFilters(filters)
         const value = filters.length > 0 ? filters[0].id : ""
         handleForms("customerID", value)
     }
-    
+
     const company: CompanyEntity = {
         skipValidation: true,
         companyID: user?.profil?.company.companyID,
@@ -72,7 +72,7 @@ const CustomerChoice = ({handleForms, init}:Form) => {
         skipValidation: true,
     };
     const forms = useForm(body)
-    const handleForm = (open:boolean) => {
+    const handleForm = (open: boolean) => {
         setToogle(open)
         forms.resetForm()
     }
@@ -81,13 +81,16 @@ const CustomerChoice = ({handleForms, init}:Form) => {
         const created = await createCustomer(forms.getForm);
         updateFilter(convertListCustomersToOption([created]))
         handleForm(false)
-        
-        
+
+
     }
     return (
         <div>
             {/* <form> */}
-            <Field orientation="horizontal">
+            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                Choix du client
+            </h3>
+            <Field orientation="horizontal" className='p-2'>
                 <Switch checked={toogle} onCheckedChange={handleForm} id="switch-size-default" />
                 <FieldLabel htmlFor="switch-size-default">Créé un nouveau client ?</FieldLabel>
             </Field>
@@ -105,7 +108,7 @@ const CustomerChoice = ({handleForms, init}:Form) => {
                 <div>
                     <Forms forms={forms} fields={CustomerNamefield} />
                     <div className='p-4'>
-                    <Sbutton message="Création réussi!" formAction={submit} />
+                        <Sbutton message="Création réussi!" formAction={submit} />
 
                     </div>
                 </div>

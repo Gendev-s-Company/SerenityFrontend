@@ -17,9 +17,7 @@ interface FormsProps<T> {
   fields?: FieldConfig<T>[];
 }
 
-export default function Forms<T>({ forms, fields }: FormsProps<T>) {
-  // Formate la date pour l'input HTML (format YYYY-MM-DD)
-  const formatDateForInput = (value: unknown, type: string): string => {
+export const formatDateForInput = (value: unknown, type: string): string => {
     if (!value) return "";
     const d = new Date(value as string | number | Date);
     if (isNaN(d.getTime())) return "";
@@ -41,6 +39,9 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
 
     return `${year}-${month}-${day}`;
   };
+export default function Forms<T>({ forms, fields }: FormsProps<T>) {
+  // Formate la date pour l'input HTML (format YYYY-MM-DD)
+  
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>

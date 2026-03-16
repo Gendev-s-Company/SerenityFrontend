@@ -22,37 +22,37 @@ const Reservation = () => {
   const step = 3
   const [progress, setProgress] = useState<number>(1);
   const percent = Number(((progress / step) * 100).toFixed(2));
-  const body:ReservationEntity = {
-    roomID:"",
-    starttime:"",
-    endtime:"",
-    customerID:"",
-    accountRated:"",
-    accountPaid:"",
-    AccountPaimentDeadline:"",
-    userID:"",
-    state:"1",
-    status:0,
+  const body: ReservationEntity = {
+    roomID: "",
+    starttime: "",
+    endtime: "",
+    customerID: "",
+    accountRated: "",
+    accountPaid: "",
+    AccountPaimentDeadline: "",
+    userID: "",
+    state: "1",
+    status: 0,
     skipValidation: true,
   }
   const [forms, setForms] = useState(body)
-  const handleForms =  (name: string, value: string) => {
-        setForms({
-            ...forms,
-            [name]: value,
-        });
-    };
- const next = () => {
-  if (progress < step) {
-    setProgress((prev) => prev + 1);
-  }
-};
+  const handleForms = (name: string, value: string) => {
+    setForms((prev) => ({
+      ...prev,       
+      [name]: value,
+    }));
+  };
+  const next = () => {
+    if (progress < step) {
+      setProgress((prev) => prev + 1);
+    }
+  };
 
-const previous = () => {
-  if (progress > 1) {
-    setProgress((prev) => prev - 1);
-  }
-};
+  const previous = () => {
+    if (progress > 1) {
+      setProgress((prev) => prev - 1);
+    }
+  };
 
   return (
     <div className="container mx-auto py-10 px-3">
@@ -69,7 +69,7 @@ const previous = () => {
           className="flex items-start gap-2"
         >
           <CollapsibleContent>
-            <RoomChoice handleForms={handleForms} />
+            <RoomChoice handleForms={handleForms} init={forms} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible
@@ -77,7 +77,7 @@ const previous = () => {
           className="flex items-start gap-2"
         >
           <CollapsibleContent>
-            <RoomAccount handleForms={handleForms} />
+            <RoomAccount handleForms={handleForms} init={forms} />
           </CollapsibleContent>
         </Collapsible>
       </div>

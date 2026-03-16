@@ -27,3 +27,16 @@ export const updateRoom = async (room: RoomEntity) => {
 export const deleteRoom = async (id: string) => {
     return await deleteCall<RoomEntity>(`${roomPath}/${id}`);
 }
+
+// hotel/room/avalaible?company=COMP000001&start=2026-03-11T00:00:00&end=2026-03-14T23:59:59&state=2&state=3&status=0&type=detail
+
+
+export const getAllRoomAvalaible = async (company: string,state: number[] = [], start:string, end:string) => {
+    let param = ''
+    state.map((row) => {
+        param += '&state='+row
+    })
+
+  return await getCall<RoomEntity[]>(`${roomPath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
+}
+
