@@ -14,6 +14,7 @@ export interface ReservationEntity {
     state: string,
     status: number,
     skipValidation: boolean,
+    price: string,
     room?: RoomEntity,
     user?: UserEntity,
     customer?: CustomerEntity

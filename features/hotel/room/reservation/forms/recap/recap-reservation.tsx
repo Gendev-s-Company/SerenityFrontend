@@ -18,9 +18,9 @@ const RecapResa = ({ room, init }: Recap) => {
                     <Badge fontVariant="secondary" className='p-2'>Featured</Badge>
                 </CardAction>
                 <CardTitle className='p-2'>
-                    <h1 className='scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance'>
+                    <h1 className='scroll-m-20 text-center text-3xl font-extrabold tracking-tight text-balance'>
                         {/* {room?.name} */}
-                        Récapitulation
+                        Récapitulation de la réservation
                     </h1>
                 </CardTitle>
                 <CardDescription>
@@ -48,8 +48,8 @@ const RecapResa = ({ room, init }: Recap) => {
                     </div>
                 </CardDescription>
             </CardHeader>
-            <CardFooter>
-                <div className="flex flex-wrap gap-3 mt-4">
+            <CardFooter >
+                <div className="flex flex-wrap gap-10 mt-4">
                     {room?.roomPrice?.nightPrice && (
                         <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
                             🌙 {getCurrency(room.roomPrice.nightPrice)} / Nuit

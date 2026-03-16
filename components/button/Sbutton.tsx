@@ -38,6 +38,8 @@ export default function Sbutton({
       } catch (error:unknown) {
         const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue";
         // affichage de message si erreur
+        console.log(error);
+        
         toast.error(errorMessage, { position: "top-right" })
       }
 
