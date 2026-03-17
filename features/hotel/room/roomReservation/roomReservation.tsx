@@ -39,20 +39,22 @@ export default function RoomReservationsPage() {
     { id: "1", label: "Non validé" },
   ];
 
-  const [startDate, setStartDate] = useState<string>("13/03/2026");
+  const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
-
-const formatToISO = (dateString: any) => {
+  const formatToISO = (dateString: any) => {
   if (!dateString) return "";
-  return `${dateString}T10:00:00`;
-};
-
+  return `${dateString}T00:00:00`;
+  };
 
 
   // Fetch des données
   useEffect(() => {
     setLoading(true);
+    console.log("START DATE === ", startDate);
+    console.log("END DATE === ", endDate);
+
+
     if (user?.profil?.company?.companyID) {
       getPaginateAllReservation(
         page.pageIndex,
@@ -83,24 +85,61 @@ const formatToISO = (dateString: any) => {
     setEndDate("");
   }, [trigger]);
 
-  const onUpdate = async (formData: RoomReservationEntity) => {
-    await updateReservation(formData);
+
+
+  const onUpdateAnnuler = async (formData: RoomReservationEntity) => {
+    await updateReservation(formData, "1");
+    // setStartDate("");
+    // setEndDate("");
     setRefresh((prev) => prev + 1);
   };
 
-  const btnAction: ColumnConfig<RoomReservationEntity> = {
-    key: "action_btn",
-    header: "Action",
-    type: "button",
-    hiding: false,
-    onUpdate: (row) => {
-      if (row.state === 7) {
-        onUpdate(row);
-      } else {
-        console.log("Consultation :", row.reservationID);
-      }
-    },
+  const onUpdateReserver = async (formData: RoomReservationEntity) => {
+    await updateReservation(formData, "2");
+    // setStartDate("");
+    // setEndDate("");
+    setRefresh((prev) => prev + 1);
   };
+
+const btnAction: ColumnConfig<RoomReservationEntity> = {
+  key: "action_btn",
+  header: "Action",
+  hiding: false,
+  cell: (row: RoomReservationEntity) => {
+    console.log("TRIGGER === ", trigger);
+    console.log("STATE === ", row.state);
+
+    if (row.state === 7) {
+
+      console.log("TEST MANDEHA");
+      return (
+        <div className="flex gap-2">
+          <button
+            onClick={(e) => {onUpdateAnnuler(row)}}
+            type="button"
+            className="px-3 py-1 bg-amber-100 rounded-md hover:bg-amber-500 text-sm font-medium transition-colors"
+          >
+            ANNULER
+          </button>
+          
+          <button
+            onClick={(e) => {onUpdateReserver(row)}}
+            type="button"
+            className="px-3 py-1 bg-emerald-100 rounded-md hover:bg-emerald-500 text-sm font-medium transition-colors"
+          >
+            RESERVER
+          </button>
+        </div>
+      );
+    }
+    return null;
+  },
+  // onUpdate: (row) => {
+  //   if (row.state !== 7) {
+  //     console.log("Mode Consultation pour l'ID :", row.reservationID);
+  //   }
+  // }
+};
 
 
   const emptyReservation: Partial<RoomReservationEntity> = {
@@ -125,11 +164,64 @@ const formatToISO = (dateString: any) => {
     throw new Error("Function not implemented.");
   }
 
+
+  const handleSearch = async () => {
+  const pad = (num: number) => String(num).padStart(2, '0');
+  const now = new Date();
+  
+  const firstDayOfYear = new Date(now.getFullYear(), 0, 1);
+  const formattedStartDate = `${firstDayOfYear.getFullYear()}-${pad(firstDayOfYear.getMonth() + 1)}-${pad(firstDayOfYear.getDate())}T00:00:00`;
+  const formattedEndDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T23:59:59`;
+
+  let finalStart = startDate === "" ? formattedStartDate : `${startDate}T00:00:00`;
+  let finalEnd = endDate === "" ? formattedEndDate : `${endDate}T23:59:59`;
+
+    setLoading(true);
+    if (user?.profil?.company?.companyID) {
+      getPaginateAllReservation(
+        page.pageIndex,
+        page.pageSize,
+        user.profil.company.companyID,
+        trigger,
+        finalStart,
+        finalEnd
+      )
+        .then((data) => {
+          setReservations(data.content);
+          setPaginationInfo({
+            totalElement: data.totalElements,
+            totalPage: data.totalPages,
+          });
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.error("Error fetching reservations:", error);
+        });
+    }
+
+};
+
+const reset = async () => {
+  setEndDate("");
+  setStartDate("");
+  setRefresh((prev) => prev + 1);
+}
+
+
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full max-w-6xl mx-auto p-5 relative border rounded-xl bg-slate-50/50 shadow-sm">
         
-        <Tabs value={trigger} onValueChange={(trigger) => setTrigger(trigger)}>
+        <Tabs 
+        // value={trigger} onValueChange={(trigger) => setTrigger(trigger)}
+        value={trigger} 
+        onValueChange={(newTrigger) => {
+          setTrigger(newTrigger);
+          setStartDate(""); 
+          setEndDate("");          
+        }}
+        >
           <TabsList variant={"line"}>
             {listTriggers.map((row) => (
               <TabsTrigger
@@ -144,24 +236,49 @@ const formatToISO = (dateString: any) => {
         </Tabs>
 
         <div className="mt-6">
-          <div className="flex items-center gap-6">
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-slate-500 mb-1.5 ml-1">Début</label>
+          <div className="flex flex-col md:flex-row md:items-center w-full bg-white p-4 rounded-xl shadow-sm border border-slate-100 gap-4">
+            
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <label className="text-sm font-bold text-slate-600 uppercase tracking-tight min-w-[50px]">
+                Début
+              </label>
               <input 
                 type="date" 
-                className="w-64 px-4 py-2.5 border rounded-lg text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                value={startDate}
+                className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
-            
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-slate-500 mb-1.5 ml-1">Fin</label>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <label className="text-sm font-bold text-slate-600 uppercase tracking-tight min-w-[50px]">
+                Fin
+              </label>
               <input 
                 type="date" 
-                className="w-64 px-4 py-2.5 border rounded-lg text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                value={endDate}
+                className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
+            <div className="md:ml-auto w-full md:w-auto">
+              <button 
+                onClick={handleSearch}
+                type="button"
+                className="px-3 py-1 bg-black-600 hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
+              >
+                Rechercher
+              </button>
+            {/* </div> */}
+            {/* <div className="md:ml-auto w-full md:w-auto"> */}
+              <button 
+                onClick={reset}
+                type="button"
+                className="px-3 py-1 bg-black-600 hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+
           </div>
         </div>
 
