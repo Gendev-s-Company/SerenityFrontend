@@ -15,13 +15,17 @@ import { CustomerEntity } from "@/types/entity-type/customerEntity";
 import { ReservationEntity } from "@/types/entity-type/reservationEntity";
 import { getLocalStorage } from "@/utils/storage";
 import React, { useEffect, useState } from "react";
+import { ReservationFieldValidator } from "../reservation";
 
 interface Form {
   init: ReservationEntity;
   handleForms: (name: string, value: string) => void;
+  validators: ReservationFieldValidator[],
+  setValidator: (values: ReservationFieldValidator[]) => void;
+  setClient: (values: string) => void;
 }
 
-const CustomerChoice = ({ handleForms, init }: Form) => {
+const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient }: Form) => {
   const [filters, setFilters] = useState<FieldOptions[]>([]);
   const [customer, setCustomer] = useState<FieldOptions[]>([]);
   const [toogle, setToogle] = useState<boolean>(false);
@@ -47,7 +51,12 @@ const CustomerChoice = ({ handleForms, init }: Form) => {
   const updateFilter = (filters: FieldOptions[]) => {
     setFilters(filters);
     const value = filters.length > 0 ? filters[0].id : "";
+    const name = filters.length > 0 ? filters[0].label : ""
+    setClient(name)
     handleForms("customerID", value);
+
+    setValidator([])
+
     if (user && user.userID) {
       handleForms("userID", user.userID);
     }
@@ -83,6 +92,12 @@ const CustomerChoice = ({ handleForms, init }: Form) => {
     updateFilter(convertListCustomersToOption([created]));
     handleForm(false);
   };
+  const getValidator = (name: string) => {
+    if (validators.length > 0) {
+      return validators.find((p) => p.field === name)
+    }
+    return null;
+  }
   return (
     <div>
       {/* <form> */}
@@ -100,14 +115,17 @@ const CustomerChoice = ({ handleForms, init }: Form) => {
         </FieldLabel>
       </Field>
       <div className="flex flex-col gap-6 p-3">
-        <MultiSelect
-          setOpts={updateFilter}
-          safidy={filters}
-          opts={customer}
-          multi={false}
-          placeholder="Choisir les utilisateurs"
-          disable={toogle}
-        />
+        <Field data-invalid={getValidator('customerID') ? true : false}>
+          <FieldLabel htmlFor={'end'}>{getValidator('customerID') ? getValidator('customerID')?.message : 'Client: '}</FieldLabel>
+          <MultiSelect
+            setOpts={updateFilter}
+            safidy={filters}
+            opts={customer}
+            multi={false}
+            placeholder="Choisir le client"
+            disable={toogle}
+          />
+        </Field>
       </div>
       {toogle && (
         <div>

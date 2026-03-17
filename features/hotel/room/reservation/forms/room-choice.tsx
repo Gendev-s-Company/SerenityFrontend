@@ -9,16 +9,19 @@ import { ReservationEntity } from '@/types/entity-type/reservationEntity';
 import { RoomEntity } from '@/types/entity-type/roomEntity';
 import { getLocalStorage } from '@/utils/storage';
 import React, { useEffect, useState } from 'react'
+import { ReservationFieldValidator } from '../reservation';
 
 interface Form {
   init: ReservationEntity,
   handleForms: (name: string, value: string) => void;
+  validators: ReservationFieldValidator[],
+  setValidator: (values: ReservationFieldValidator[]) => void;
 }
 interface RoomChoice {
   starttime: string,
   endtime: string,
 }
-const RoomChoice = ({ handleForms, init }: Form) => {
+const RoomChoice = ({ handleForms, init, validators, setValidator }: Form) => {
   const [filters, setFilters] = useState<FieldOptions[]>([]);
   const [rooms, setRooms] = useState<FieldOptions[]>([]);
   const user = getLocalStorage()!;
@@ -47,7 +50,14 @@ const RoomChoice = ({ handleForms, init }: Form) => {
     setFilters(filters)
     const value = filters.length > 0 ? filters[0].id : ""
     handleForms("roomID", value)
+    setValidator([])
 
+  }
+  const getValidator = (name: string) => {
+    if (validators.length > 0) {
+      return validators.find((p) => p.field === name)
+    }
+    return null;
   }
   return (
     <div>
@@ -57,8 +67,8 @@ const RoomChoice = ({ handleForms, init }: Form) => {
       </h3>
 
       <div className="flex flex-row gap-6 p-3">
-        <Field>
-          <FieldLabel htmlFor={'start'}>{'Date début: '}</FieldLabel>
+        <Field data-invalid={getValidator('starttime') ? true : false}>
+          <FieldLabel htmlFor={'start'}>{getValidator('starttime') ? getValidator('starttime')?.message : 'Date début: '}</FieldLabel>
           <Input
             id={'start'}
             name={'starttime'}
@@ -70,13 +80,14 @@ const RoomChoice = ({ handleForms, init }: Form) => {
                 e.target.value,
               )
               handleForms("starttime", forms.getForm.starttime)
+              setValidator([])
             }
             }
             required
           />
         </Field>
-        <Field>
-          <FieldLabel htmlFor={'end'}>{'Date fin: '}</FieldLabel>
+        <Field data-invalid={getValidator('endtime') ? true : false}>
+          <FieldLabel htmlFor={'end'}>{getValidator('endtime') ? getValidator('endtime')?.message : 'Date fin: '}</FieldLabel>
           <Input
             id={'end'}
             name={'endtime'}
@@ -88,6 +99,7 @@ const RoomChoice = ({ handleForms, init }: Form) => {
                 e.target.value,
               )
               handleForms("endtime", forms.getForm.endtime)
+              setValidator([])
 
             }
             }
@@ -96,14 +108,18 @@ const RoomChoice = ({ handleForms, init }: Form) => {
         </Field>
       </div>
       <div className="flex flex-col gap-6 p-3">
-        <MultiSelect
-          setOpts={updateFilter}
-          safidy={filters}
-          opts={rooms}
-          multi={false}
-          placeholder="Choisir la chambre voulue"
-          disable={isDisable}
-        />
+        <Field data-invalid={getValidator('roomID') ? true : false}>
+          <FieldLabel htmlFor={'S'}>{getValidator('roomID') ? getValidator('roomID')?.message : 'Choisir la chambre voulu: '}</FieldLabel>
+          <MultiSelect
+            setOpts={updateFilter}
+            safidy={filters}
+            opts={rooms}
+            multi={false}
+            placeholder="Choisir la chambre voulue"
+            disable={isDisable}
+          />
+        </Field>
+
       </div>
     </div>
   )

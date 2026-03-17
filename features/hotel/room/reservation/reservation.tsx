@@ -24,13 +24,14 @@ const Reservation = () => {
   const step = 3;
   const [progress, setProgress] = useState<number>(1);
   const percent = Number(((progress / step) * 100).toFixed(2));
+  const [client, setClient] = useState<string>("")
   const body: ReservationEntity = {
     roomID: "",
     starttime: "",
     endtime: "",
     customerID: "",
     accountRated: "",
-    price:"",
+    price: "",
     accountPaid: "0",
     AccountPaimentDeadline: "",
     userID: "",
@@ -39,15 +40,47 @@ const Reservation = () => {
     skipValidation: true,
   };
   const [forms, setForms] = useState(body);
+  const [roomValidator, setRoomValidator] = useState<ReservationFieldValidator[]>([])
+  const [customerValidator, setCustomerValidator] = useState<ReservationFieldValidator[]>([])
   const handleForms = (name: string, value: string) => {
     setForms((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+  const validateRoomChoice = () => {
+    const list_validator: ReservationFieldValidator[] = []
+    if (forms.starttime === "") list_validator.push({ field: 'starttime', isValid: false, message: 'Veuillez remplir ce champs' })
+    const endValidate: ReservationFieldValidator = { field: 'endtime', isValid: false, message: 'Veuillez remplir ce champs' }
+    if (forms.endtime === "") list_validator.push(endValidate)
+    else if (new Date(forms.endtime) <= new Date(forms.starttime)) {
+      endValidate.message = 'La date de fin ne doit pas etre antérieur à la date de début'
+      list_validator.push(endValidate)
+    }
+    if (forms.roomID === "") list_validator.push({ field: 'roomID', isValid: false, message: 'Veuillez remplir ce champs' })
+    setRoomValidator(list_validator)
+    return list_validator
+  }
+  const validateCustomerChoice = () => {
+    const list_validator: ReservationFieldValidator[] = []
+    if (forms.customerID === "") list_validator.push({ field: 'customerID', isValid: false, message: 'Veuillez remplir ce champs' })
+    setCustomerValidator(list_validator)
+    return list_validator
+  }
+
   const next = () => {
     if (progress < step) {
-      setProgress((prev) => prev + 1);
+      let error = 0
+      if (progress === 2) {
+        const resValidator = validateRoomChoice()
+        error = resValidator.length
+      }else if (progress ===1) {
+        const resValidator = validateCustomerChoice()
+        error = resValidator.length
+      }
+      if (error === 0) {
+        setProgress((prev) => prev + 1);
+      }
     }
   };
 
@@ -57,27 +90,28 @@ const Reservation = () => {
     }
   };
   const submit = async () => {
-    
+
     await createReservation(forms)
     setForms(body)
     setProgress(1)
   };
+
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
         <Collapsible open={progress === 1}>
           <CollapsibleContent>
-            <CustomerChoice handleForms={handleForms} init={forms} />
+            <CustomerChoice setClient={setClient} handleForms={handleForms} init={forms} validators={customerValidator} setValidator={setCustomerValidator} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible open={progress === 2} >
           <CollapsibleContent>
-            <RoomChoice handleForms={handleForms} init={forms} />
+            <RoomChoice handleForms={handleForms} init={forms} validators={roomValidator} setValidator={setRoomValidator} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible open={progress === 3}>
           <CollapsibleContent>
-            <RoomAccount handleForms={handleForms} init={forms} />
+            <RoomAccount client={client} handleForms={handleForms} init={forms} />
           </CollapsibleContent>
         </Collapsible>
       </div>
@@ -117,3 +151,9 @@ const Reservation = () => {
 };
 
 export default Reservation;
+
+export interface ReservationFieldValidator {
+  field: string,
+  isValid: boolean,
+  message: string
+}

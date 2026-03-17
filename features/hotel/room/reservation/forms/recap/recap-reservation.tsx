@@ -8,9 +8,10 @@ import React from 'react'
 
 interface Recap {
     room: RoomEntity | null,
-    init: ReservationEntity
+    init: ReservationEntity,
+    client: string
 }
-const RecapResa = ({ room, init }: Recap) => {
+const RecapResa = ({ room, init, client }: Recap) => {
     return (
         <Card className="relative mx-auto w-full min-w-md pt-0">
             <CardHeader>
@@ -26,9 +27,10 @@ const RecapResa = ({ room, init }: Recap) => {
                 <CardDescription>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2 p-4 rounded-xl border border-slate-100 bg-indigo-50/30">
-                            <span className="block text-xs font-semibold text-indigo-400 uppercase">Détail: </span>
-                            <span className="font-bold text-slate-800">{room?.name}</span>
-                            <p className="text-sm text-slate-500 mt-1">{room?.description}</p>
+                            <span className="block text-xs font-semibold text-indigo-400 uppercase">Détail de la réservation: </span>
+                            <span className="block font-bold text-slate-800">Client: {client}</span>
+                            <span className="font-bold text-slate-800">Chambre: {room?.name}</span>
+                            <p className="text-sm text-slate-500 mt-1">Description: {room?.description}</p>
                         </div>
 
                         <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50">

@@ -26,9 +26,10 @@ import { finalisationResa } from "@/infrastructure/hotel/room/reservation/reserv
 interface Form {
   init: ReservationEntity;
   handleForms: (name: string, value: string) => void;
+  client: string
 }
 
-const RoomAccount = ({ handleForms, init }: Form) => {
+const RoomAccount = ({ handleForms, init, client }: Form) => {
   // maka information momba anle room
   const [room, setRoom] = useState<RoomEntity | null>(null);
   const [toogle, setToogle] = useState<boolean>(false);
@@ -74,7 +75,7 @@ const RoomAccount = ({ handleForms, init }: Form) => {
 
   return (
     <div className="flex items-center justify-between gap-10">
-      <RecapResa room={room} init={init} />
+      <RecapResa room={room} init={init} client={client} />
       <Card className="relative mx-auto w-full min-w-md pt-0">
         <CardHeader>
           <CardAction>
