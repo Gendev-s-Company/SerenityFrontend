@@ -79,7 +79,6 @@ const CustomerChoice = ({ handleForms, init }: Form) => {
     forms.resetForm();
   };
   const submit = async () => {
-    console.log(forms.getForm);
     const created = await createCustomer(forms.getForm);
     updateFilter(convertListCustomersToOption([created]));
     handleForm(false);

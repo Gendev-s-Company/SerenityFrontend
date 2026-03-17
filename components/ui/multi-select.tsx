@@ -19,7 +19,7 @@ type MultiSelectProps = {
   setOpts: (selected: FieldOptions[]) => void;
   placeholder?: string;
   multi?: boolean; // Nouvelle prop : true par défaut
-  disable?:boolean
+  disable?: boolean
 };
 
 export function MultiSelect({
@@ -54,13 +54,13 @@ export function MultiSelect({
   const selectables = opts.filter(
     (option) => !safidy.some((sel) => sel.id === option.id),
   );
-
+  const classname = !multi ? 'h-6 w-full justify-between' : 'h-6'
   return (
     <Command className="overflow-visible bg-transparent">
       <div className="group border border-input text-sm ring-offset-background rounded-xl focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 p-1">
         <div className="flex flex-wrap gap-1">
           {safidy.map((option) => (
-            <Badge key={option.id} variant="secondary" className="h-6">
+            <Badge key={option.id} variant="secondary" className={classname}>
               {option.label}
               <button
                 className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring"
@@ -117,6 +117,13 @@ export function MultiSelect({
             </CommandList>
           </div>
         ) : null}
+        {open && selectables.length <= 0 &&
+          <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+            </CommandList>
+          </div>
+        }
       </div>
     </Command>
   );

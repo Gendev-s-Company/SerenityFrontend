@@ -70,12 +70,12 @@ const Reservation = () => {
             <CustomerChoice handleForms={handleForms} init={forms} />
           </CollapsibleContent>
         </Collapsible>
-        <Collapsible open={progress === 2} className="flex items-start gap-2">
+        <Collapsible open={progress === 2} >
           <CollapsibleContent>
             <RoomChoice handleForms={handleForms} init={forms} />
           </CollapsibleContent>
         </Collapsible>
-        <Collapsible open={progress === 3} className="flex items-start gap-2">
+        <Collapsible open={progress === 3}>
           <CollapsibleContent>
             <RoomAccount handleForms={handleForms} init={forms} />
           </CollapsibleContent>
