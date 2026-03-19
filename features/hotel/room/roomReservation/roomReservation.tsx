@@ -35,13 +35,14 @@ export default function RoomReservationsPage() {
   const listTriggers = [
     { id: "-1", label: "Tous" },
     { id: "2", label: "Validé" },
-    { id: "7", label: "En cours" },
-    { id: "1", label: "Non validé" },
+    { id: "1", label: "En cours de validation" },
+    { id: "8", label: "Annulé" },
   ];
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatToISO = (dateString: any) => {
   if (!dateString) return "";
   return `${dateString}T00:00:00`;
@@ -88,7 +89,7 @@ export default function RoomReservationsPage() {
 
 
   const onUpdateAnnuler = async (formData: RoomReservationEntity) => {
-    await updateReservation(formData, "1");
+    await updateReservation(formData, "8");
     // setStartDate("");
     // setEndDate("");
     setRefresh((prev) => prev + 1);
@@ -101,6 +102,7 @@ export default function RoomReservationsPage() {
     setRefresh((prev) => prev + 1);
   };
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
 const btnAction: ColumnConfig<RoomReservationEntity> = {
   key: "action_btn",
   header: "Action",
@@ -109,7 +111,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
     console.log("TRIGGER === ", trigger);
     console.log("STATE === ", row.state);
 
-    if (row.state === 7) {
+    if (row.state === 1) {
 
       console.log("TEST MANDEHA");
       return (
@@ -117,7 +119,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
           <button
             onClick={(e) => {onUpdateAnnuler(row)}}
             type="button"
-            className="px-3 py-1 bg-amber-100 rounded-md hover:bg-amber-500 text-sm font-medium transition-colors"
+            className="px-3 py-1 bg-amber-100 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors"
           >
             ANNULER
           </button>
@@ -125,7 +127,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
           <button
             onClick={(e) => {onUpdateReserver(row)}}
             type="button"
-            className="px-3 py-1 bg-emerald-100 rounded-md hover:bg-emerald-500 text-sm font-medium transition-colors"
+            className="px-3 py-1 bg-emerald-100 rounded-md cursor-pointer hover:bg-emerald-500 text-sm font-medium transition-colors"
           >
             RESERVER
           </button>
@@ -143,6 +145,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
 
 
   const emptyReservation: Partial<RoomReservationEntity> = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reservationID: null as any,
     starttime: new Date(),
     endtime: new Date(),
@@ -154,7 +157,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
 
   const columns = useMemo(() => {
     return [...RoomReservationColumnOptions, btnAction];
-  }, []);
+  }, [btnAction]);
 
   const formFields = useMemo(() => {
     return RoomReservationFields;
@@ -173,8 +176,8 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
   const formattedStartDate = `${firstDayOfYear.getFullYear()}-${pad(firstDayOfYear.getMonth() + 1)}-${pad(firstDayOfYear.getDate())}T00:00:00`;
   const formattedEndDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T23:59:59`;
 
-  let finalStart = startDate === "" ? formattedStartDate : `${startDate}T00:00:00`;
-  let finalEnd = endDate === "" ? formattedEndDate : `${endDate}T23:59:59`;
+  const finalStart = startDate === "" ? formattedStartDate : `${startDate}T00:00:00`;
+  const finalEnd = endDate === "" ? "" : `${endDate}T23:59:59`;
 
     setLoading(true);
     if (user?.profil?.company?.companyID) {

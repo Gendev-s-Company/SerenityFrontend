@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { LayoutDashboard } from "lucide-react";
+import { Calendar, LayoutDashboard } from "lucide-react";
 import { HotelItems } from "./hotel-menu";
 import { RestoItems } from "./restaurant-menu";
 import { UsersItems } from "./users-menu";
@@ -15,6 +15,14 @@ export const items: PMenu[] = [
     icon: LayoutDashboard,
   },
   UsersItems,
+  {
+    title: "Clients",
+    url: "/view/customer",
+    dropdown: false,
+    isSubmenu: false,
+    subMenu: [],
+    icon: Calendar,
+  },
   HotelItems,
   RestoItems,
 

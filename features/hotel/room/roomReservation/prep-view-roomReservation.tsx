@@ -9,14 +9,29 @@ const reservationStateOptions: FieldOptions[] = [
 
 ];
 
+const stateOption: FieldOptions[] = [
+  { id: '1', label: 'Non validé', color:'blue' },
+  { id: '2', label: 'Validé', color:'green' },
+  { id: '8', label: 'Annulé', color:'gray' },
+]
 
 export const RoomReservationColumnOptions: ColumnConfig<RoomReservationEntity>[] = [
   { key: "reservationID", header: "ID", sorting: true },
   { key: "customer.name", header: "Client", type: "text", sorting: true },
   { key: "room.name", header: "Chambre", type: "link", href: (row) => `/view/hotel/room/detail?roomID=${row.roomID}` },
-  { key: "starttime", header: "Début", type: "text", sorting: true },
-  { key: "endtime", header: "Fin", type: "text", sorting: true },
+  { key: "starttime", header: "Début", type: "datetime", sorting: true },
+  { key: "endtime", header: "Fin", type: "datetime", sorting: true },
   { key: "price", header: "Prix Total", type: "text" },
+   {
+    key: "state", header: "Statut", type: "text", sorting: true, cell: (row) => {
+      const val = stateOption.find((r) => r.id === row.state.toString())
+
+      return (
+        <p style={{ color: val?.color }}>{val?.label}</p>
+      )
+    }
+
+  },
 //   { key: "state", header: "Statut", type: "text"},
 ];
 

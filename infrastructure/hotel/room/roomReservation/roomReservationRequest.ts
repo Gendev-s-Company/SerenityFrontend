@@ -44,10 +44,10 @@ export const getPaginateAllReservation = async (page:number,size:number,companyI
 
   console.log(formattedStartDate);
 
-  let finalStart = startdate === "" ? formattedStartDate : startdate;
-  let finalEnd = enddate === "" ? formattedEndDate : enddate;
+  const finalStart = startdate === "" ? formattedStartDate : startdate;
+  const finalEnd = enddate === "" ? "" : enddate;
 
-    const finalState = state === "-1" ? "1,2,3,7" : state; 
+    const finalState = state === "-1" ? "1,2,8" : state; 
 
   return await getCall<Page<RoomReservationEntity>>(`${roomreservation}/avalaible/${page}/${size}?state=${finalState}&start=${finalStart}&end=${finalEnd}&company=${companyId}`);
 }

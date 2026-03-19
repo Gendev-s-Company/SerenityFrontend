@@ -8,6 +8,7 @@ import useForm from "@/hooks/use-form";
 import {
   createCustomer,
   getAllCustomer,
+  getAllCustomerByCompany,
 } from "@/infrastructure/hotel/customer/customerRequest";
 import { FieldOptions } from "@/types/component-type/form-type";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
@@ -34,7 +35,7 @@ const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (user && user?.profil?.company?.companyID) {
-      getAllCustomer(user.profil.company.companyID)
+      getAllCustomerByCompany(user.profil.company.companyID)
         .then((data) => {
           const list = convertListCustomersToOption(data);
           setCustomer(list);

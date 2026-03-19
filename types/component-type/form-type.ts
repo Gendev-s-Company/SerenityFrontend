@@ -1,5 +1,5 @@
 export type FieldOptions = {
-  id: string; label: string
+  id: string; label: string, color?: string
 }
 export type FieldConfig<T> = {
   name: keyof T;

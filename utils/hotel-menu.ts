@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { BedDouble, BedSingle, BookText, Calendar, Gamepad, GamepadDirectional, Hotel, Inbox,LucidePictureInPicture } from "lucide-react";
+import { BedDouble, BedSingle, Book, BookMarked, BookText, Calendar, Gamepad, GamepadDirectional, Hotel, Inbox, LucidePictureInPicture } from "lucide-react";
 
 
 export const HotelItems: PMenu =
@@ -39,37 +39,30 @@ export const HotelItems: PMenu =
           subMenu: [],
           icon: BedDouble,
         },
-                {
-          title: "Client",
-          url: "/view/hotel/customer",
-          dropdown: false,
-          isSubmenu: false,
-          subMenu: [],
-          icon: Calendar,
-        },
+      ],
+      icon: Inbox,
+    },
+    {
+      title: "Reservation",
+      url: "#chambre",
+      dropdown: false,
+      isSubmenu: true,
+      subMenu: [
         {
           title: "Réservation",
           url: "/view/hotel/room/reservation/create",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
-          icon: BookText,
+          icon: BookMarked,
         },
         {
-          title: "Suivi",
+          title: "Listes",
           url: "/view/hotel/room/suivi",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
           icon: BookText,
-        },
-        {
-          title: "Calendrier",
-          url: "#calendrier",
-          dropdown: false,
-          isSubmenu: false,
-          subMenu: [],
-          icon: Calendar,
         },
       ],
       icon: Inbox,
