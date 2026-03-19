@@ -66,10 +66,7 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
 
   const convertToBase64 = (buffer: number[], type: string) => {
     if (!buffer || buffer.length === 0) return "";
-    const uint8Array = new Uint8Array(buffer);
-    let binary = "";
-    uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
-    return `data:${type};base64,${buffer}`;
+    return `data:image/jpeg;base64,${buffer}`;
   };
 
   const displayPhotos = useMemo(() => {
@@ -263,7 +260,7 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
 
                       <img
                         src={photo.src}
-                        alt="Activity"
+                        alt={photo.files.type}
                         className="object-cover w-full h-full transition-transform group-hover/card:scale-105"
                       />
                     </CardContent>

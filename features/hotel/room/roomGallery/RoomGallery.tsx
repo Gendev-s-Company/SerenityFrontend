@@ -66,7 +66,7 @@ export function RoomGallery() {
     const uint8Array = new Uint8Array(buffer);
     let binary = "";
     uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
-    return `data:${type};base64,${buffer}`;
+    return `data:image/jpeg;base64,${buffer}`;
   };
 
   const [loading, setLoading] = useState(true)
