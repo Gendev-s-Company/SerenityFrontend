@@ -32,7 +32,7 @@ const RoomChoice = ({ handleForms, init, validators, setValidator }: Form) => {
   const forms = useForm(body)
   useEffect(() => {
     if (user && user?.profil?.company?.companyID && forms.getForm.endtime !== "" && forms.getForm.starttime !== "") {
-      getAllRoomAvalaible(user.profil.company.companyID, [0], forms.getForm.starttime, forms.getForm.endtime)
+      getAllRoomAvalaible(user.profil.company.companyID, [0,8], forms.getForm.starttime, forms.getForm.endtime)
         .then((data) => {
           const list = convertListRoomsToOption(data)
           setRooms(list)

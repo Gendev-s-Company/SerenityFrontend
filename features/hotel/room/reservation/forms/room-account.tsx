@@ -38,7 +38,7 @@ const RoomAccount = ({ handleForms, init, client }: Form) => {
   const handleForm = (open: boolean) => {
     setToogle(open);
     if (resaResult && resaResult.accompte) {
-      handleForms("accountPaid", open ? String(resaResult.accompte) : "0");  
+      handleForms("accountPaid", open ? String(resaResult.accompte) : "0");
     }
     // forms.resetForm()
   };
@@ -47,6 +47,11 @@ const RoomAccount = ({ handleForms, init, client }: Form) => {
       getRoomyById(init.roomID)
         .then((data) => {
           setRoom(data);
+          if (data && data.roomPrice) {
+            handleForms("accountRated", data.roomPrice.accountRate.toString());
+
+          }
+
         })
         .catch((error) => {
           console.error("Error fetching room details:", error);
@@ -64,7 +69,6 @@ const RoomAccount = ({ handleForms, init, client }: Form) => {
       finalisationResa(body)
         .then((data) => {
           setResaResult(data);
-          handleForms("accountRated", data.accompte.toString());
           handleForms("AccountPaimentDeadline", data.deadline);
           // handleForms("accountPaid", String(data.accompte));
           handleForms("price", String(data.totalPrice));
