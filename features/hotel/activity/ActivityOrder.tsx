@@ -29,7 +29,7 @@ import { getAllActivity } from "@/infrastructure/hotel/activity/activityRequest"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { dateToBackend } from "@/utils/Util";
 
-export default function ActivitiesOrder() {
+export default function RoomReservation() {
   const user = getLocalStorage(); //maka localstorage
   const [activitieso, setActivitieso] = useState<ActivityOrderEntity[]>([]);
   const [refresh, setRefresh] = useState<number>(0);

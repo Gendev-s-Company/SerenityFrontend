@@ -9,4 +9,3 @@ const RoomPath="/hotel/room"
 export const getRoomyById = async (id: string) => {
     return await getCall<RoomEntity>(`${RoomPath}/${id}`);
 }
-

@@ -56,6 +56,14 @@ export const HotelItems: PMenu =
           icon: BookText,
         },
         {
+          title: "Suivi",
+          url: "/view/hotel/room/suivi",
+          dropdown: false,
+          isSubmenu: false,
+          subMenu: [],
+          icon: BookText,
+        },
+        {
           title: "Calendrier",
           url: "#calendrier",
           dropdown: false,
