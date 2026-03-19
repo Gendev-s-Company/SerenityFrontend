@@ -49,10 +49,27 @@ export const HotelItems: PMenu =
         },
         {
           title: "Réservation",
-          url: "/view/hotel/room/reservation/create",
+          url: "",
           dropdown: false,
           isSubmenu: false,
-          subMenu: [],
+          subMenu: [
+              {
+                title: "Réserver",
+                url: "/view/hotel/room/reservation/create",
+                dropdown: false,
+                isSubmenu: false,
+                subMenu: [],
+                icon: BedSingle,
+              },
+              {
+                title: "Disponibilité chambres",
+                url: "/view/hotel/room/disponibilite",
+                dropdown: false,
+                isSubmenu: false,
+                subMenu: [],
+                icon: BedSingle,
+              },
+          ],
           icon: BookText,
         },
         {

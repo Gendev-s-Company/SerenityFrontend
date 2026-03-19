@@ -15,3 +15,18 @@ export interface RoomEntity {
     photos:RoomPhotoEntity[],
     roomPrice:RoomPriceEntity |null,
 }
+
+export interface DisponibilityEntity{
+    roomID: string,
+    name: string,
+    room_state:number,
+    reservation_state:number,
+}
+
+export interface RoomDisponibilityEntity{
+    company: string,
+    start: string,
+    end:string,
+    state:[]|null,
+    status:number|null,
+}
