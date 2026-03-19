@@ -24,7 +24,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <SidebarGroup>
           <SidebarGroupLabel className="flex w-full gap-2">
             <Home style={{ width: '25px', height: '25px' }} />

@@ -24,12 +24,15 @@ export default function MainLayout({
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-                <main>
+                <main className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <Header />
                     <Separator />
                     <Suspense fallback={<div>Loading...</div>} />
-                    {children}
-                    <Footer />
+                    <div className="[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        {children}
+
+                        <Footer />
+                    </div>
                 </main>
             </SidebarInset>
         </SidebarProvider>

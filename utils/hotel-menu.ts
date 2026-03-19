@@ -49,7 +49,7 @@ export const HotelItems: PMenu =
       isSubmenu: true,
       subMenu: [
         {
-          title: "Réservation",
+          title: "Réserver une chambre",
           url: "/view/hotel/room/reservation/create",
           dropdown: false,
           isSubmenu: false,
@@ -57,7 +57,7 @@ export const HotelItems: PMenu =
           icon: BookMarked,
         },
         {
-          title: "Listes",
+          title: "Listes de réservations",
           url: "/view/hotel/room/suivi",
           dropdown: false,
           isSubmenu: false,
