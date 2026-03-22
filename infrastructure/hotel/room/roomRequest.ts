@@ -1,4 +1,4 @@
-import { RoomEntity } from "@/types/entity-type/roomEntity";
+import { DisponibilityEntity, RoomEntity } from "@/types/entity-type/roomEntity";
 import { deleteCall, getCall, postCall, putCall} from "@/infrastructure/api";
 import { Page } from "@/types/entity-type/common/Page";
 
@@ -38,5 +38,14 @@ export const getAllRoomAvalaible = async (company: string,state: number[] = [], 
     })
 
   return await getCall<RoomEntity[]>(`${roomPath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
+}
+
+export const getAllDisponibility = async (company: string,state: number[] = [], start:string, end:string) => {
+    let param = ''
+    state.map((row) => {
+        param += '&state='+row
+    })
+
+  return await getCall<DisponibilityEntity[]>(`${roomPath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
 }
 

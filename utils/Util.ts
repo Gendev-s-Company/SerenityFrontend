@@ -20,3 +20,17 @@ export const dateToBackend = (isoString : string) => {
   // .replace('Z', '') donne "2026-02-23T20:00:11.960"
   return offsetDate.toISOString().replace('Z', '');
 };
+
+// Convertit les dates de format :2026-02-23T20:00:11.960Z en 23 fevrier 2026 a 00:11:960
+export function timestampToText(timestamp :any) {
+  const date = new Date(timestamp);
+
+  return date.toLocaleString("fr-FR", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
