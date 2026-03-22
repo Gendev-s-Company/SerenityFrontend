@@ -19,7 +19,7 @@ export const RoomColumnOptions: ColumnConfig<RoomEntity>[] = [
     { key: "description", header: "Description", type: "text", sorting: true },
     { key: "peoples", header: "Personne", type: "text", sorting: true },
     { key: "bed", header: "Lit disponible", type: "text", sorting: true },
-    { key: "state", header: "Occupation", type: "text", sorting: true },
+    // { key: "state", header: "Etat", type: "text", sorting: true },
 ];
 export const RoomNamefield: FieldConfig<RoomEntity>[] = [
     { name: "name", libelle: "Nom de la chambre:", type: "text", normal: true },

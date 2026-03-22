@@ -1,11 +1,11 @@
-import Room from "@/features/hotel/room/Room"
+import Room from "@/features/hotel/room/Room";
 
 const page = () => {
   return (
-   <div className="p-5">
-    <Room/>
+    <div className="p-5">
+      <Room />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;
