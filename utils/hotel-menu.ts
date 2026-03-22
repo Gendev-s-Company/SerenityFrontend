@@ -23,14 +23,14 @@ export const HotelItems: PMenu =
           subMenu: [],
           icon: BedSingle,
         },
-        // {
-        //   title: "Liste des chambres",
-        //   url: "/view/hotel/room",
-        //   dropdown: false,
-        //   isSubmenu: false,
-        //   subMenu: [],
-        //   icon: BedSingle,
-        // },
+        {
+          title: "Liste des chambres",
+          url: "/view/hotel/room",
+          dropdown: false,
+          isSubmenu: false,
+          subMenu: [],
+          icon: BedSingle,
+        },
         {
           title: "Chambres",
           url: "/view/hotel/room/roomGallery",
@@ -58,7 +58,7 @@ export const HotelItems: PMenu =
         },
         {
           title: "Listes de réservations",
-          url: "/view/hotel/room/suivi",
+          url: "/view/hotel/room/reservation",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],

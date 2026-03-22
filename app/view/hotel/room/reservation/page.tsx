@@ -1,8 +1,9 @@
+import RoomReservation from "@/features/hotel/room/roomReservation/roomReservation";
 import React from 'react'
 
 const page = () => {
   return (
-    <div>Liste reservation</div>
+    <div><RoomReservation /></div>
   )
 }
 
