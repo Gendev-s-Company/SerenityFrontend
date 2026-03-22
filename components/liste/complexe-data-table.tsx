@@ -25,11 +25,11 @@ interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[]; // colonnes à afficher
   data: TData[]; // données à afficher
   fields: FieldConfig<TData>[];
-  onCreate: (data: TData) => void; // function à appeler pour la création d'entity
-  body: TData, // body à utiliser pour la création
-  columnFilter: string,//colonne à utiliser pour le champs filtre
+  onCreate?: (data: TData) => void; // function à appeler pour la création d'entity
+  body: TData; // body à utiliser pour la création
+  columnFilter: string; //colonne à utiliser pour le champs filtre
   rowCount: number; //nombre total d'enregistrement dans la base
-  pageCount: number;//nombre total de page dans la base
+  pageCount: number; //nombre total de page dans la base
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   loading?: boolean; // loading
@@ -54,7 +54,7 @@ export function DataTable<TData>({
 
   const [rowSelection, setRowSelection] = React.useState({});
   const columns = generateColumns<TData>(mcolumns, fields);
-  const [showSkeleton, setShowSkeleton] = React.useState(true)
+  const [showSkeleton, setShowSkeleton] = React.useState(true);
 
   const table = useReactTable({
     data,
@@ -79,27 +79,30 @@ export function DataTable<TData>({
   React.useEffect(() => {
     if (loading) {
       // garder le skeleton 2 secondes de plus
-      setShowSkeleton(true)
-
+      setShowSkeleton(true);
     } else {
       // si loading = true, afficher immédiatement le skeleton
-      setShowSkeleton(false)
+      setShowSkeleton(false);
     }
-  }, [loading])
+  }, [loading]);
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Tooltips libelle="Nouveau">
-          <CreateBox body={body} onSubmit={onCreate} fields={fields} />
-        </Tooltips>
+        {onCreate && (
+          <Tooltips libelle="Nouveau">
+            <CreateBox body={body} onSubmit={onCreate} fields={fields} />
+          </Tooltips>
+        )}
 
         {/* 
         début an'ilay filtre kely iny
       */}
         <Input
           placeholder={`Recherche ${columnFilter}...`}
-          value={(table.getColumn(columnFilter)?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn(columnFilter)?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
             table.getColumn(columnFilter)?.setFilterValue(event.target.value)
           }

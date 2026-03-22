@@ -4,7 +4,7 @@ import { DataTable } from "@/components/liste/complexe-data-table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useMemo, useState } from "react";
 import { PaginationState } from "@tanstack/react-table";
-
+import { Button } from "@/components/ui/button"
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { PageType } from "@/types/component-type/PageType";
 import { RoomReservationEntity } from "@/types/entity-type/roomReservationEntity";
@@ -116,21 +116,21 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
       console.log("TEST MANDEHA");
       return (
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={(e) => {onUpdateAnnuler(row)}}
             type="button"
-            className="px-3 py-1 bg-amber-100 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors"
+            className="px-3 py-1 bg-amber-400 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors"
           >
             ANNULER
-          </button>
+          </Button>
           
-          <button
+          <Button
             onClick={(e) => {onUpdateReserver(row)}}
             type="button"
-            className="px-3 py-1 bg-emerald-100 rounded-md cursor-pointer hover:bg-emerald-500 text-sm font-medium transition-colors"
+            className="px-3 py-1 bg-emerald-400 rounded-md cursor-pointer hover:bg-emerald-500 text-sm font-medium transition-colors"
           >
-            RESERVER
-          </button>
+            VALIDER
+          </Button>
         </div>
       );
     }
@@ -263,23 +263,23 @@ const reset = async () => {
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
-            <div className="md:ml-auto w-full md:w-auto">
-              <button 
+            <div className="flex gap-3 md:ml-auto w-full md:w-auto">
+              <Button 
                 onClick={handleSearch}
                 type="button"
-                className="px-3 py-1 bg-black-600 hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
+                className="px-3 py-1 cursor-pointer hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
               >
                 Rechercher
-              </button>
+              </Button>
             {/* </div> */}
             {/* <div className="md:ml-auto w-full md:w-auto"> */}
-              <button 
+              <Button 
                 onClick={reset}
                 type="button"
-                className="px-3 py-1 bg-black-600 hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
+                className="px-3 py-1 cursor-pointer hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
               >
                 Reset
-              </button>
+              </Button>
             </div>
 
           </div>
@@ -287,7 +287,6 @@ const reset = async () => {
 
         <DataTable
           body={emptyReservation as RoomReservationEntity}
-          onCreate={onCreate}
           data={reservations}
           mcolumns={columns}
           fields={formFields}

@@ -230,7 +230,7 @@ const legendItems =
             {/* Bouton */}
             <div className="flex justify-end mt-6">
               <Button
-                className="flex items-center gap-2 px-6"
+                className="flex items-center gap-2 px-6 cursor-pointer"
                 onClick={() => {
                     let stateArray: number[];
 
