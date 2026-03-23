@@ -14,6 +14,7 @@ import { getLocalStorage } from "@/utils/storage";
 import {getAllDisponibility} from "@/infrastructure/hotel/room/roomRequest"
 import { DisponibilityEntity} from "@/types/entity-type/roomEntity";
 import { Checkbox } from "@/components/ui/checkbox"
+import { Switch } from "@/components/ui/switch"
 import { Search } from "lucide-react";
 import { Field, FieldLabel } from "@/components/ui/field"
 import { dateToBackend, timestampToText } from "@/utils/Util"
@@ -30,6 +31,7 @@ const roomstateStyles: Record<number, string> = {
   5: "bg-gray-500",      // Fini avec réservation 
   6: "bg-gray-400",      // Fini sans réservation  clair
   7: "bg-purple-500",    // Payé mais absent 
+  8: "bg-red-500",    // Payé mais absent
 }
 
 const reservationStateLabels: Record<number, string> = {
@@ -38,9 +40,10 @@ const reservationStateLabels: Record<number, string> = {
   2: "Réservation validée",
   3: "Occupée (sans réservation)",
   4: "Occupée (avec réservation)",
-  5: "Fini (avec résa)",
-  6: "Fini (sans résa)",
+  5: "Fini (avec réservation)",
+  6: "Fini (sans réservation)",
   7: "Payé mais absent",
+  8:"Annulé"
 }
 
 export default function Disponibilite() {
@@ -49,6 +52,7 @@ export default function Disponibilite() {
   const [starttime, setStarttime] = useState(getNow());
   const [endtime, setEndtime] = useState(getNow());
   const [state, setState] = useState<number[]>([0]);
+  const [type, setType] = useState<string>('global');
   const [appliedFilters, setAppliedFilters] = useState({
     state: [] as number[],
     start: starttime,
@@ -59,7 +63,8 @@ export default function Disponibilite() {
   const [selectedMode,setSelectedMode]=useState<number>(0);
   const [isApplied, setIsApplied] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<DisponibilityEntity | null>(null);
-  const isOccupied = (state: number) => state !== 0;
+  // Pour le modal des checkbox en mode détaillé
+  const [open, setOpen] = useState(false)
 
 
   // MODE GLOBAL OU DETAILLE
@@ -78,6 +83,7 @@ const options =
         { value: "5", label: "Fini (Avec réservation)" },
         { value: "6", label: "Fini (Sans réservation)" },
         { value: "7", label: "Absent (réservation validée)" },
+        { value: "8", label: "Annulé" },
 ];
 
 const legendItems =
@@ -95,6 +101,7 @@ const legendItems =
         { color: "bg-gray-500", label: "Fini avec réservation" },
         { color: "bg-gray-400", label: "Fini sans réservation" },
         { color: "bg-purple-500", label: "Payé mais absent" },
+        { color: "bg-red-500", label: "Annulé" },
 ];
 
 
@@ -108,7 +115,8 @@ const legendItems =
         user.profil.company.companyID,
         state,
         start,
-        end
+        end,
+        type
       )
         .then((data) => {
           setDisponibilite(data)
@@ -182,21 +190,19 @@ const legendItems =
 
               {/* MultiSelect */}
               <div className="flex flex-col">
-                {/* <MultiSelect
-                  setOpts={updateFilter}
-                  safidy={filters}
-                  opts={etat}
-                  placeholder="Choisir..."
-                /> */}
               <Field className="flex flex-col">
-                <FieldLabel htmlFor="etat">Etat</FieldLabel>
+                <FieldLabel>Etat</FieldLabel>
+
+                {/* MODE GLOBAL */}
+                {selectedMode === 0 ? (
                   <Select
                     value={state[0].toString()}
-                    onValueChange={(value) => setState([Number(value)])}                  
-                    >
+                    onValueChange={(value) => setState([Number(value)])}
+                  >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choisir un mode" />
+                      <SelectValue placeholder="Choisir un état" />
                     </SelectTrigger>
+                
                     <SelectContent>
                       {options.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
@@ -205,56 +211,133 @@ const legendItems =
                       ))}
                     </SelectContent>
                   </Select>
+                ) : (
+                  /* MODE DETAILLE */    
+                    <>
+                      <Button
+                        variant="outline"
+                        onClick={() => setOpen(true)}
+                        title={
+                          options
+                            .filter((opt) => state.includes(Number(opt.value)))
+                            .map((opt) => opt.label)
+                            .join(", ")
+                        } // tooltip complet
+                        className="justify-start max-w-[250px] truncate text-left"
+                      >
+                        {state.length > 0
+                          ? (() => {
+                              const labels = options
+                                .filter((opt) => state.includes(Number(opt.value)))
+                                .map((opt) => opt.label)
+                          
+                              return labels.length > 2
+                                ? labels.slice(0, 2).join(", ") + "..."
+                                : labels.join(", ")
+                            })()
+                          : "Choisir les états"}
+                      </Button>
+                          
+                      <Dialog open={open} onOpenChange={setOpen}>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Choisir les états</DialogTitle>
+                          </DialogHeader>
+                          
+                          <DialogDescription>
+                            Détails des états
+                          </DialogDescription>
+                          
+                          <div className="space-y-3 mt-4">
+                            {options.map((opt) => (
+                              <div key={opt.value} className="flex items-center gap-2">
+                                <Checkbox
+                                  checked={state.includes(Number(opt.value))}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      setState([...state, Number(opt.value)])
+                                    } else {
+                                      setState(state.filter((s) => s !== Number(opt.value)))
+                                    }
+                                  }}
+                                />
+                                <span>{opt.label}</span>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="flex justify-end mt-4">
+                            <Button onClick={() => setOpen(false)}>
+                              Valider
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </>
+                )}
               </Field>
               </div>
 
-              {/* Select simple */}
               <Field className="flex flex-col">
-                <FieldLabel htmlFor="etat">Mode</FieldLabel>
-                <Select
-                  value={selectedMode.toString()}
-                  onValueChange={(value) => setSelectedMode(Number(value))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choisir un mode" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">Global</SelectItem>
-                    <SelectItem value="1">Détaillé</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FieldLabel htmlFor="etat">Type</FieldLabel>
+                  <Select
+                    value={type}
+                    onValueChange={(value) => setType(value)}                  
+                    >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir un type" />
+                    </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="global">Global</SelectItem>
+                        <SelectItem value="detaille">Détaillé</SelectItem>
+                      </SelectContent>
+                  </Select>
               </Field>
-
             </div>
-
-            {/* Bouton */}
-            <div className="flex justify-end mt-6">
+            <div className="flex items-end justify-between mt-6">
+                                
+              {/* Mode à gauche */}
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium">Mode</span>
+                                
+                <Switch
+                  className="scale-90"
+                  checked={selectedMode === 1}
+                  onCheckedChange={(checked) => setSelectedMode(checked ? 1 : 0)}
+                />
+            
+                <span className="text-sm">
+                  {selectedMode === 0 ? "Global" : "Détaillé"}
+                </span>
+              </div>
+                                
+              {/* Bouton à droite */}
               <Button
                 className="flex items-center gap-2 px-6 cursor-pointer"
                 onClick={() => {
-                    let stateArray: number[];
-
-                    if (selectedMode === 0) {
-                      // MODE GLOBAL
-                      stateArray =
-                        state[0] === 0
-                          ? [0]
-                          : [1, 2, 3, 4, 5, 6, 7];
-                    } else {
-                      // MODE DETAILLE
-                      stateArray = state;
+                  let stateArray: number[];
+                
+                  if (selectedMode === 0) {
+                    stateArray =
+                      state[0] === 0 ? [0] : [1, 2, 3, 4, 5, 6, 7,8];
+                  } else {
+                    stateArray = state;
+                    // Si l'état 1 est sélectionné, ajouter aussi les états 5 et 6
+                    if (stateArray.includes(0)) {
+                      stateArray = [...new Set([...stateArray, 5, 6])];
                     }
-
-                    setAppliedFilters({
-                      state: stateArray,
-                      start: starttime,
-                      end: endtime,
-                      mode: selectedMode
-                    });
-
-                    setIsApplied(true);
-                  }}
-                >
+                  }
+                
+                  setAppliedFilters({
+                    state: stateArray,
+                    start: starttime,
+                    end: endtime,
+                    mode: selectedMode
+                  });
+                
+                  setIsApplied(true);
+                }}
+              >
                 <Search className="w-4 h-4" />
                 Afficher
               </Button>
@@ -323,6 +406,14 @@ const legendItems =
                         ID : {room.roomID} <br />
                         Chambre : {room.name} <br />
                         Réservation : {displayLabel}
+                        {type !== 'global' && (
+                          <>
+                            <br />
+                            Départ : {room.actual_departure ? timestampToText(room.actual_departure) :"Non défini" } <br />
+                            Arrivée : {room.actual_arrival ? timestampToText(room.actual_arrival) :"Non défini"} <br />
+                            Jour : {timestampToText(room.day)}
+                          </>
+                        )}
                       </p>
                     </TooltipContent>
                   </Tooltip>
