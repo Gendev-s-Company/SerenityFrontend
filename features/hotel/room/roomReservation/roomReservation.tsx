@@ -14,6 +14,9 @@ import { getLocalStorage } from "@/utils/storage";
 import { getPaginateAllReservation, updateReservation} from "@/infrastructure/hotel/room/roomReservation/roomReservationRequest";
 
 import { RoomReservationColumnOptions, RoomReservationFields } from "./prep-view-roomReservation"; 
+import { id } from "zod/v4/locales";
+import { Label } from "@radix-ui/react-label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 
 export default function RoomReservationsPage() {
   const user = getLocalStorage();
@@ -21,7 +24,7 @@ export default function RoomReservationsPage() {
   const [refresh, setRefresh] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   
-  const [trigger, setTrigger] = useState<string>("-1");
+  const [trigger, setTrigger] = useState<string>("");
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
@@ -32,12 +35,56 @@ export default function RoomReservationsPage() {
     totalPage: 0,
   });
 
-  const listTriggers = [
-    { id: "-1", label: "Tous" },
-    { id: "2", label: "Réservations validés" },
-    { id: "1", label: "Réservations en validation" },
-    { id: "8", label: "Réservations annulé" },
-  ];
+  //////////////////////////////////////////////////////////////////////////////
+
+interface TriggerOption {
+  id: string;
+  label: string;
+}
+
+const listTriggers: TriggerOption[] = [
+  { id: "-1", label: "Tous" },
+  { id: "2", label: "Réservations validés" },
+  { id: "1", label: "Réservations en validation" },
+  { id: "8", label: "Réservations annulé" },
+];
+
+const listTriggers2: TriggerOption[] = [
+  { id: "-2", label: "Tous" },
+  { id: "4", label: "Occupés" },
+  { id: "5", label: "Terminés" },
+];
+
+
+const [list, setList] = useState<string>("1");
+const [listT, setListT] = useState<TriggerOption[]>([]);
+
+const listType = [
+  { id: "1", label: "Réservation" },
+  { id: "2", label: "Séjour" }
+];
+
+useEffect(() => {
+  setLoading(true);
+  
+  let newListT;
+  if (list === "1") {
+    newListT = listTriggers;
+  } else {
+    newListT = listTriggers2;
+  }
+  
+  setListT(newListT);
+  
+  if (newListT && newListT.length > 0) {
+    setTrigger(newListT[0].id);
+  }
+  
+  setLoading(false);
+}, [list]);
+
+
+  //////////////////////////////////////////////////////////////////////////////////////
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -102,6 +149,30 @@ export default function RoomReservationsPage() {
     setRefresh((prev) => prev + 1);
   };
 
+
+  const onUpdateFinished = async (formData: RoomReservationEntity) => {
+    await updateReservation(formData, "5");
+    // setStartDate("");
+    // setEndDate("");
+    setRefresh((prev) => prev + 1);
+  };
+
+
+  const onUpdateOccupied = async (formData: RoomReservationEntity) => {
+    await updateReservation(formData, "4");
+    // setStartDate("");
+    // setEndDate("");
+    setRefresh((prev) => prev + 1);
+  };
+
+
+  const onUpdateMissed = async (formData: RoomReservationEntity) => {
+    await updateReservation(formData, "7");
+    // setStartDate("");
+    // setEndDate("");
+    setRefresh((prev) => prev + 1);
+  };
+
 // eslint-disable-next-line react-hooks/exhaustive-deps
 const btnAction: ColumnConfig<RoomReservationEntity> = {
   key: "action_btn",
@@ -130,6 +201,46 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
             className="px-3 py-1 bg-emerald-400 rounded-md cursor-pointer hover:bg-emerald-500 text-sm font-medium transition-colors"
           >
             VALIDER
+          </Button>
+        </div>
+      );
+    }
+
+    if (row.state === 4) {
+
+      console.log("TEST MANDEHA");
+      return (
+        <div className="flex gap-2">
+          <Button
+            onClick={(e) => {onUpdateFinished(row)}}
+            type="button"
+            className="px-3 py-1 bg-purple-400 rounded-md cursor-pointer hover:bg-purple-500 text-sm font-medium transition-colors"
+          >
+            MARQUER COMME TERMINE
+          </Button>
+        </div>
+      );
+    }
+
+    if (row.state === 2) {
+
+      console.log("TEST MANDEHA");
+      return (
+        <div className="flex gap-2">
+          <Button
+            onClick={(e) => {onUpdateOccupied(row)}}
+            type="button"
+            className="px-3 py-1 bg-blue-400 rounded-md cursor-pointer hover:bg-blue-500 text-sm font-medium transition-colors"
+          >
+            MARQUER OCCUPE
+          </Button>
+          
+          <Button
+            onClick={(e) => {onUpdateMissed(row)}}
+            type="button"
+            className="px-3 py-1 bg-red-400 rounded-md cursor-pointer hover:bg-red-500 text-sm font-medium transition-colors"
+          >
+            MARQUER ABSENT
           </Button>
         </div>
       );
@@ -216,8 +327,47 @@ const reset = async () => {
     <div className="container mx-auto py-10 px-3">
       <div className="w-full max-w-6xl mx-auto p-5 relative border rounded-xl bg-slate-50/50 shadow-sm">
         
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-3">
+          <label className="text-sm font-bold text-slate-600 uppercase tracking-tight min-w-[50px]">
+            Type
+          </label>
+
+          <div className="relative">
+            <select
+              value={list}
+              onChange={(e) => setList(e.target.value)}
+              className="
+                cursor-pointer appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-700 text-sm font-medium
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 transition-all duration-200 w-full "
+            >
+              {listType.map((row) => (
+                <option key={row.id} value={row.id}>
+                  {row.label}
+                </option>
+              ))}
+            </select>
+            
+            {/* Flèche personnalisée */}
+            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg 
+                className="w-4 h-4 text-gray-400" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M19 9l-7 7-7-7" 
+                />
+              </svg>
+            </div>
+          </div>
+
+        </div>
+        
         <Tabs 
-        // value={trigger} onValueChange={(trigger) => setTrigger(trigger)}
         value={trigger} 
         onValueChange={(newTrigger) => {
           setTrigger(newTrigger);
@@ -227,7 +377,7 @@ const reset = async () => {
         className="w-[400px]"
         >
           <TabsList>
-            {listTriggers.map((row) => (
+            {listT.map((row) => (
               <TabsTrigger
                 key={row.id}
                 value={row.id}
@@ -238,6 +388,8 @@ const reset = async () => {
             ))}
           </TabsList>
         </Tabs>
+
+        
 
         <div className="mt-6">
           <div className="flex flex-col md:flex-row md:items-center w-full bg-white p-4 rounded-xl shadow-sm border border-slate-100 gap-4">

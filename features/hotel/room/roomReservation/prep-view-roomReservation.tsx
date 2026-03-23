@@ -13,6 +13,9 @@ const stateOption: FieldOptions[] = [
   { id: '1', label: 'Non validé', color:'blue' },
   { id: '2', label: 'Validé', color:'green' },
   { id: '8', label: 'Annulé', color:'gray' },
+  { id: '4', label: 'Occupé', color:'blue' },
+  { id: '5', label: 'Terminé', color:'purple' },
+
 ]
 
 export const RoomReservationColumnOptions: ColumnConfig<RoomReservationEntity>[] = [
