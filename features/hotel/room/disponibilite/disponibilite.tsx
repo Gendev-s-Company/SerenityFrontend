@@ -369,7 +369,7 @@ const legendItems =
 
         {/* GRID DES CHAMBRES */}
         <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
-            {filteredRooms.map((room) => {
+            {filteredRooms.map((room, id) => {
               const isOccupied = (state: number) => state !== 0;
             
               const displayColor =
@@ -387,7 +387,7 @@ const legendItems =
                   : reservationStateLabels[room.reservation_state];
             
               return (
-                <TooltipProvider key={room.roomID}>
+                <TooltipProvider key={id}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div
