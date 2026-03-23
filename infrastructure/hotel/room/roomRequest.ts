@@ -40,12 +40,12 @@ export const getAllRoomAvalaible = async (company: string,state: number[] = [], 
   return await getCall<RoomEntity[]>(`${roomPath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
 }
 
-export const getAllDisponibility = async (company: string,state: number[] = [], start:string, end:string) => {
+export const getAllDisponibility = async (company: string,state: number[] = [], start:string, end:string,type:string|null) => {
     let param = ''
     state.map((row) => {
         param += '&state='+row
     })
 
-  return await getCall<DisponibilityEntity[]>(`${roomPath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
+  return await getCall<DisponibilityEntity[]>(`${roomPath}/avalaible?company=${company}&start=${start}&end=${end}${param}&type=${type}`);
 }
 

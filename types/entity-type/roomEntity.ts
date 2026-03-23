@@ -21,6 +21,9 @@ export interface DisponibilityEntity{
     name: string,
     room_state:number,
     reservation_state:number,
+    actual_arrival:string|null,
+    actual_departure:string|null,
+    day:string|null,
 }
 
 export interface RoomDisponibilityEntity{
