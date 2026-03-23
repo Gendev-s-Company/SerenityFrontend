@@ -57,7 +57,7 @@ export const HotelItems: PMenu =
           icon: BookMarked,
         },
         {
-          title: "réservation | séjours",
+          title: "Réservation | séjours",
           url: "/view/hotel/room/reservation",
           dropdown: false,
           isSubmenu: false,
