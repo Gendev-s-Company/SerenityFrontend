@@ -31,6 +31,7 @@ const roomstateStyles: Record<number, string> = {
   5: "bg-gray-500",      // Fini avec réservation 
   6: "bg-gray-400",      // Fini sans réservation  clair
   7: "bg-purple-500",    // Payé mais absent 
+  8: "bg-red-500",    // Payé mais absent
 }
 
 const reservationStateLabels: Record<number, string> = {
@@ -82,6 +83,7 @@ const options =
         { value: "5", label: "Fini (Avec réservation)" },
         { value: "6", label: "Fini (Sans réservation)" },
         { value: "7", label: "Absent (réservation validée)" },
+        { value: "8", label: "Annulé" },
 ];
 
 const legendItems =
@@ -210,7 +212,7 @@ const legendItems =
                     </SelectContent>
                   </Select>
                 ) : (
-                  /* MODE DETAILLE */     
+                  /* MODE DETAILLE */    
                     <>
                       <Button
                         variant="outline"
@@ -220,7 +222,7 @@ const legendItems =
                             .filter((opt) => state.includes(Number(opt.value)))
                             .map((opt) => opt.label)
                             .join(", ")
-                        } // 👈 tooltip complet
+                        } // tooltip complet
                         className="justify-start max-w-[250px] truncate text-left"
                       >
                         {state.length > 0
@@ -320,6 +322,10 @@ const legendItems =
                       state[0] === 0 ? [0] : [1, 2, 3, 4, 5, 6, 7,8];
                   } else {
                     stateArray = state;
+                    // Si l'état 1 est sélectionné, ajouter aussi les états 5 et 6
+                    if (stateArray.includes(0)) {
+                      stateArray = [...new Set([...stateArray, 5, 6])];
+                    }
                   }
                 
                   setAppliedFilters({
