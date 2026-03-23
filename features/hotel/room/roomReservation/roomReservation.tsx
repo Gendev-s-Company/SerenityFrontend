@@ -34,9 +34,9 @@ export default function RoomReservationsPage() {
 
   const listTriggers = [
     { id: "-1", label: "Tous" },
-    { id: "2", label: "Validé" },
-    { id: "1", label: "En cours de validation" },
-    { id: "8", label: "Annulé" },
+    { id: "2", label: "Réservations validés" },
+    { id: "1", label: "Réservations en validation" },
+    { id: "8", label: "Réservations annulé" },
   ];
 
   const [startDate, setStartDate] = useState<string>("");
@@ -224,8 +224,9 @@ const reset = async () => {
           setStartDate(""); 
           setEndDate("");          
         }}
+        className="w-[400px]"
         >
-          <TabsList variant={"line"}>
+          <TabsList>
             {listTriggers.map((row) => (
               <TabsTrigger
                 key={row.id}

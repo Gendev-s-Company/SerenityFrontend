@@ -43,7 +43,7 @@ export const HotelItems: PMenu =
       icon: Inbox,
     },
     {
-      title: "Reservation",
+      title: "Séjours",
       url: "#chambre",
       dropdown: false,
       isSubmenu: true,
@@ -57,7 +57,7 @@ export const HotelItems: PMenu =
           icon: BookMarked,
         },
         {
-          title: "Listes de réservations",
+          title: "réservation | séjours",
           url: "/view/hotel/room/reservation",
           dropdown: false,
           isSubmenu: false,
