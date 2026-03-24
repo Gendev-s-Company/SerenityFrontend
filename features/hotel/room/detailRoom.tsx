@@ -58,7 +58,7 @@ export default function DetailRoom() {
                 <div>
                 <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{room?.name}</h2>
                 <p className="text-slate-500 mt-1 text-lg">
-                    Informations détaillées sur cette activité
+                    Informations détaillées sur cette chambre
                 </p>
                 </div>
                 
