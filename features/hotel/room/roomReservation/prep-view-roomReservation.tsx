@@ -24,7 +24,7 @@ export const RoomReservationColumnOptions: ColumnConfig<RoomReservationEntity>[]
   { key: "room.name", header: "Chambre", type: "link", href: (row) => `/view/hotel/room/detail?roomID=${row.roomID}` },
   { key: "starttime", header: "Début", type: "datetime", sorting: true },
   { key: "endtime", header: "Fin", type: "datetime", sorting: true },
-  { key: "price", header: "Prix Total", type: "text" },
+  { key: "price", header: "Prix Total", type: "amount" },
    {
     key: "state", header: "Statut", type: "text", sorting: true, cell: (row) => {
       const val = stateOption.find((r) => r.id === row.state.toString())

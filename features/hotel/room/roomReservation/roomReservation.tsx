@@ -108,8 +108,6 @@ useEffect(() => {
   // Fetch des données
   useEffect(() => {
     setLoading(true);
-    console.log("START DATE === ", startDate);
-    console.log("END DATE === ", endDate);
 
 
     if (user?.profil?.company?.companyID) {
@@ -188,12 +186,9 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
   header: "Action",
   hiding: false,
   cell: (row: RoomReservationEntity) => {
-    console.log("TRIGGER === ", trigger);
-    console.log("STATE === ", row.state);
 
     if (row.state === 1) {
 
-      console.log("TEST MANDEHA");
       return (
         <div className="flex gap-2">
           <TooltipProvider>
@@ -235,7 +230,6 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
 
     if (row.state === 4) {
 
-      console.log("TEST MANDEHA");
       return (
         <div className="flex gap-2">
           <TooltipProvider>
@@ -260,7 +254,6 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
 
     if (row.state === 2) {
 
-      console.log("TEST MANDEHA");
       return (
         <div className="flex gap-2">
           <TooltipProvider>

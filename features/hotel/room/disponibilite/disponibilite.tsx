@@ -377,6 +377,8 @@ export default function Disponibilite() {
 
         {/* GRID DES CHAMBRES */}
         <div className="flex flex-col gap-8 w-full">
+          <h3>Résultat de la recherche de disponibilité pour cette plage de  date:</h3>
+          {filteredRooms.length <= 0 && <span>Aucune chambre trouver pour les états recherchés</span>}
           {Object.entries(roomsGroupedById).map(([roomId, roomStates]) => {
             // On récupère le nom de la chambre depuis le premier élément du groupe
             const roomName = roomStates[0]?.name || roomStates[0]?.room_name;
