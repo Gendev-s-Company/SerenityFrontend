@@ -66,7 +66,7 @@ export default function DetailRoom() {
                 <Button 
                 size="lg"
                 onClick={navigate}
-                 className="hidden md:flex bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 rounded-xl shadow-lg shadow-indigo-200 transition-all hover:scale-105 active:scale-95">
+                 className="cursor-pointer hidden md:flex bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 rounded-xl shadow-lg shadow-indigo-200 transition-all hover:scale-105 active:scale-95">
                 Réserver
                 </Button>
             </div>
