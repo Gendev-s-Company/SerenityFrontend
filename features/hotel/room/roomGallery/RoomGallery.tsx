@@ -128,15 +128,15 @@ export function RoomGallery() {
       return [roomTypeOptions,  ...RoomNamefield];
   }, [roomTypeOptions]);
 
-    useEffect(() => {
-      if (user && user.profil.company.companyID) {
-        getAllRoomType(user.profil.company.companyID)
-          .then((data) => {
-            setRoomTypeOption(convertListToOption(data));
-          })
-          .catch((error) => console.error("Error fetching roomType:", error));
-      }
-    }, []);
+  useEffect(() => {
+    if (user && user.profil.company.companyID) {
+      getAllRoomType(user.profil.company.companyID)
+        .then((data) => {
+          setRoomTypeOption(convertListToOption(data));
+        })
+        .catch((error) => console.error("Error fetching roomType:", error));
+    }
+  }, []);
     
 
   // Chargement des chambres
