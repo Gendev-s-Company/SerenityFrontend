@@ -21,12 +21,20 @@ import { ReservationFieldValidator } from "../reservation";
 interface Form {
   init: ReservationEntity;
   handleForms: (name: string, value: string) => void;
-  validators: ReservationFieldValidator[],
+  validators: ReservationFieldValidator[];
   setValidator: (values: ReservationFieldValidator[]) => void;
   setClient: (values: string) => void;
+  setPass: (value: boolean) => void;
 }
 
-const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient }: Form) => {
+const CustomerChoice = ({
+  handleForms,
+  init,
+  validators,
+  setValidator,
+  setClient,
+  setPass,
+}: Form) => {
   const [filters, setFilters] = useState<FieldOptions[]>([]);
   const [customer, setCustomer] = useState<FieldOptions[]>([]);
   const [toogle, setToogle] = useState<boolean>(false);
@@ -40,7 +48,10 @@ const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient 
           const list = convertListCustomersToOption(data);
           setCustomer(list);
           const choosed = list.find((c) => c.id === init.customerID);
-          if (choosed) setFilters([choosed]);
+          if (choosed) {
+            setFilters([choosed]);
+            setPass(true);
+          }
         })
         .catch((error) => console.log(error));
     }
@@ -52,11 +63,11 @@ const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient 
   const updateFilter = (filters: FieldOptions[]) => {
     setFilters(filters);
     const value = filters.length > 0 ? filters[0].id : "";
-    const name = filters.length > 0 ? filters[0].label : ""
-    setClient(name)
+    const name = filters.length > 0 ? filters[0].label : "";
+    setClient(name);
     handleForms("customerID", value);
-
-    setValidator([])
+    setPass(true);
+    setValidator([]);
 
     if (user && user.userID) {
       handleForms("userID", user.userID);
@@ -95,10 +106,10 @@ const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient 
   };
   const getValidator = (name: string) => {
     if (validators.length > 0) {
-      return validators.find((p) => p.field === name)
+      return validators.find((p) => p.field === name);
     }
     return null;
-  }
+  };
   return (
     <div>
       {/* <form> */}
@@ -116,8 +127,12 @@ const CustomerChoice = ({ handleForms, init, validators, setValidator,setClient 
         </FieldLabel>
       </Field>
       <div className="flex flex-col gap-6 p-3">
-        <Field data-invalid={getValidator('customerID') ? true : false}>
-          <FieldLabel htmlFor={'end'}>{getValidator('customerID') ? getValidator('customerID')?.message : 'Client: '}</FieldLabel>
+        <Field data-invalid={getValidator("customerID") ? true : false}>
+          <FieldLabel htmlFor={"end"}>
+            {getValidator("customerID")
+              ? getValidator("customerID")?.message
+              : "Client: "}
+          </FieldLabel>
           <MultiSelect
             setOpts={updateFilter}
             safidy={filters}

@@ -19,14 +19,18 @@ import RoomAccount from "./forms/room-account";
 import { ReservationEntity } from "@/types/entity-type/reservationEntity";
 import Sbutton from "@/components/button/Sbutton";
 import { createReservation } from "@/infrastructure/hotel/room/reservation/reservationRequest";
+import { useSearchParams } from "next/navigation";
 
 const Reservation = () => {
   const step = 3;
+  const roomID = useSearchParams().get('roomid');
+  
   const [progress, setProgress] = useState<number>(1);
   const percent = Number(((progress / step) * 100).toFixed(2));
+  const [pass, setPass] = useState<boolean>(true)
   const [client, setClient] = useState<string>("")
   const body: ReservationEntity = {
-    roomID: "",
+    roomID: roomID ? roomID : "",
     starttime: "",
     endtime: "",
     customerID: "",
@@ -78,7 +82,7 @@ const Reservation = () => {
         const resValidator = validateCustomerChoice()
         error = resValidator.length
       }
-      if (error === 0) {
+      if (error === 0 && pass) {
         setProgress((prev) => prev + 1);
       }
     }
@@ -101,12 +105,12 @@ const Reservation = () => {
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
         <Collapsible open={progress === 1}>
           <CollapsibleContent>
-            <CustomerChoice setClient={setClient} handleForms={handleForms} init={forms} validators={customerValidator} setValidator={setCustomerValidator} />
+            <CustomerChoice setClient={setClient} handleForms={handleForms} init={forms} validators={customerValidator} setValidator={setCustomerValidator} setPass={setPass}/>
           </CollapsibleContent>
         </Collapsible>
         <Collapsible open={progress === 2} >
           <CollapsibleContent>
-            <RoomChoice handleForms={handleForms} init={forms} validators={roomValidator} setValidator={setRoomValidator} />
+            <RoomChoice handleForms={handleForms} init={forms} validators={roomValidator} setValidator={setRoomValidator} setPass={setPass} />
           </CollapsibleContent>
         </Collapsible>
         <Collapsible open={progress === 3}>

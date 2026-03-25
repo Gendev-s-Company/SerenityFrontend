@@ -50,7 +50,6 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
     setLoading(true);
     try {
       const response = await getAllphoto(roomId, page, size);
-      console.log(response.content);
 
       setPhotos(response.content);
     } catch (error) {
@@ -84,7 +83,7 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
     const res = []
 
     if (files) {
-      console.log(files);
+      
 
       setSelectedFile(
         [...files
@@ -99,7 +98,6 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
     setIsUploading(true);
 
     const formData = new FormData();
-    console.log(selectedFile);
 
     selectedFile.map((row) => {
 
@@ -110,9 +108,6 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
 
 
     try {
-
-      console.log("Fichier ajouté :", formData.getAll("uploadFile[]"));
-      console.log("ID ajouté :", formData.get("roomId"));
 
       await createPhoto(formData);
       setRefresh((prev) => prev + 1);

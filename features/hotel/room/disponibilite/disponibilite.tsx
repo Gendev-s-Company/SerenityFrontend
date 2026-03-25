@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect ,useMemo,useRef,useState} from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,8 +11,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { getLocalStorage } from "@/utils/storage";
-import {getAllDisponibility} from "@/infrastructure/hotel/room/roomRequest"
-import { DisponibilityEntity} from "@/types/entity-type/roomEntity";
+import { getAllDisponibility } from "@/infrastructure/hotel/room/roomRequest"
+import { DisponibilityEntity } from "@/types/entity-type/roomEntity";
 import { Checkbox } from "@/components/ui/checkbox"
 import { Switch } from "@/components/ui/switch"
 import { Search } from "lucide-react";
@@ -43,7 +43,7 @@ const reservationStateLabels: Record<number, string> = {
   5: "Fini (avec réservation)",
   6: "Fini (sans réservation)",
   7: "Payé mais absent",
-  8:"Annulé"
+  8: "Annulé"
 }
 
 export default function Disponibilite() {
@@ -59,8 +59,8 @@ export default function Disponibilite() {
     end: endtime,
     mode: 0
   });
-  const [disponibilite, setDisponibilite]= useState<DisponibilityEntity[]>([]);
-  const [selectedMode,setSelectedMode]=useState<number>(0);
+  const [disponibilite, setDisponibilite] = useState<DisponibilityEntity[]>([]);
+  const [selectedMode, setSelectedMode] = useState<number>(0);
   const [isApplied, setIsApplied] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<DisponibilityEntity | null>(null);
   // Pour le modal des checkbox en mode détaillé
@@ -68,13 +68,13 @@ export default function Disponibilite() {
 
 
   // MODE GLOBAL OU DETAILLE
-const options =
-  selectedMode === 0
-    ? [
+  const options =
+    selectedMode === 0
+      ? [
         { value: "0", label: "Libre" },
         { value: "1", label: "Occupé" },
       ]
-    : [
+      : [
         { value: "0", label: "Libre" },
         { value: "1", label: "Réservation non validée" },
         { value: "2", label: "Réservation validée" },
@@ -84,15 +84,15 @@ const options =
         { value: "6", label: "Fini (Sans réservation)" },
         { value: "7", label: "Absent (réservation validée)" },
         { value: "8", label: "Annulé" },
-];
+      ];
 
-const legendItems =
-  selectedMode === 0
-    ? [
+  const legendItems =
+    selectedMode === 0
+      ? [
         { color: "bg-green-500", label: "Libre" },
         { color: "bg-red-600", label: "Occupée" },
       ]
-    : [
+      : [
         { color: "bg-green-500", label: "Libre" },
         { color: "bg-yellow-400", label: "Réservation non validée" },
         { color: "bg-blue-500", label: "Réservation validée" },
@@ -102,7 +102,7 @@ const legendItems =
         { color: "bg-gray-400", label: "Fini sans réservation" },
         { color: "bg-purple-500", label: "Payé mais absent" },
         { color: "bg-red-500", label: "Annulé" },
-];
+      ];
 
 
   const fetchDisponibilite = (
@@ -120,25 +120,33 @@ const legendItems =
       )
         .then((data) => {
           setDisponibilite(data)
-          console.log(data);
         })
         .catch((error) => console.error(error))
     }
   }
 
-    const filteredRooms = useMemo(() => {
-      return disponibilite.filter(room => {
-        const { state } = appliedFilters;
-      
-        return state.includes(room.reservation_state);
-      });
-    }, [disponibilite, appliedFilters]);
+  const filteredRooms = useMemo(() => {
+    return disponibilite.filter(room => {
+      const { state } = appliedFilters;
+
+      return state.includes(room.reservation_state);
+    });
+  }, [disponibilite, appliedFilters]);
+
+  const roomsGroupedById = filteredRooms.reduce((acc, room) => {
+    const key = room.roomID;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(room);
+    return acc;
+  }, {} as Record<string, DisponibilityEntity[]>);
 
   useEffect(() => {
     if (selectedMode === 0 || (selectedMode === 1 && !isApplied)) {
       setState([0]);
     }
-  
+
     fetchDisponibilite(
       appliedFilters.state,
       appliedFilters.start,
@@ -161,35 +169,35 @@ const legendItems =
       </div>
 
       {/* Filtre */}
-        <Card className="mb-8 w-full max-w-5xl shadow-md border-0">
-          <CardContent className="p-6">
+      <Card className="mb-8 w-full max-w-5xl shadow-md border-0">
+        <CardContent className="p-6">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-              {/* Date début */}
-              <Field className="flex flex-col">
-                <FieldLabel htmlFor="start">Date début</FieldLabel>
-                <Input
-                  id="start"
-                  type="datetime-local"
-                  value={starttime}
-                  onChange={(e) => setStarttime(e.target.value)}
-                />
-              </Field>
+            {/* Date début */}
+            <Field className="flex flex-col">
+              <FieldLabel htmlFor="start">Date début</FieldLabel>
+              <Input
+                id="start"
+                type="datetime-local"
+                value={starttime}
+                onChange={(e) => setStarttime(e.target.value)}
+              />
+            </Field>
 
-              {/* Date fin */}
-              <Field className="flex flex-col">
-                <FieldLabel htmlFor="end">Date fin</FieldLabel>
-                <Input
-                  id="end"
-                  type="datetime-local"
-                  value={endtime}
-                  onChange={(e) => setEndtime(e.target.value)}
-                />
-              </Field>
+            {/* Date fin */}
+            <Field className="flex flex-col">
+              <FieldLabel htmlFor="end">Date fin</FieldLabel>
+              <Input
+                id="end"
+                type="datetime-local"
+                value={endtime}
+                onChange={(e) => setEndtime(e.target.value)}
+              />
+            </Field>
 
-              {/* MultiSelect */}
-              <div className="flex flex-col">
+            {/* MultiSelect */}
+            <div className="flex flex-col">
               <Field className="flex flex-col">
                 <FieldLabel>Etat</FieldLabel>
 
@@ -202,7 +210,7 @@ const legendItems =
                     <SelectTrigger>
                       <SelectValue placeholder="Choisir un état" />
                     </SelectTrigger>
-                
+
                     <SelectContent>
                       {options.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value}>
@@ -212,139 +220,139 @@ const legendItems =
                     </SelectContent>
                   </Select>
                 ) : (
-                  /* MODE DETAILLE */    
-                    <>
-                      <Button
-                        variant="outline"
-                        onClick={() => setOpen(true)}
-                        title={
-                          options
+                  /* MODE DETAILLE */
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => setOpen(true)}
+                      title={
+                        options
+                          .filter((opt) => state.includes(Number(opt.value)))
+                          .map((opt) => opt.label)
+                          .join(", ")
+                      } // tooltip complet
+                      className="justify-start max-w-[250px] truncate text-left"
+                    >
+                      {state.length > 0
+                        ? (() => {
+                          const labels = options
                             .filter((opt) => state.includes(Number(opt.value)))
                             .map((opt) => opt.label)
-                            .join(", ")
-                        } // tooltip complet
-                        className="justify-start max-w-[250px] truncate text-left"
-                      >
-                        {state.length > 0
-                          ? (() => {
-                              const labels = options
-                                .filter((opt) => state.includes(Number(opt.value)))
-                                .map((opt) => opt.label)
-                          
-                              return labels.length > 2
-                                ? labels.slice(0, 2).join(", ") + "..."
-                                : labels.join(", ")
-                            })()
-                          : "Choisir les états"}
-                      </Button>
-                          
-                      <Dialog open={open} onOpenChange={setOpen}>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Choisir les états</DialogTitle>
-                          </DialogHeader>
-                          
-                          <DialogDescription>
-                            Détails des états
-                          </DialogDescription>
-                          
-                          <div className="space-y-3 mt-4">
-                            {options.map((opt) => (
-                              <div key={opt.value} className="flex items-center gap-2">
-                                <Checkbox
-                                  checked={state.includes(Number(opt.value))}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      setState([...state, Number(opt.value)])
-                                    } else {
-                                      setState(state.filter((s) => s !== Number(opt.value)))
-                                    }
-                                  }}
-                                />
-                                <span>{opt.label}</span>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          <div className="flex justify-end mt-4">
-                            <Button onClick={() => setOpen(false)}>
-                              Valider
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </>
+
+                          return labels.length > 2
+                            ? labels.slice(0, 2).join(", ") + "..."
+                            : labels.join(", ")
+                        })()
+                        : "Choisir les états"}
+                    </Button>
+
+                    <Dialog open={open} onOpenChange={setOpen}>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Choisir les états</DialogTitle>
+                        </DialogHeader>
+
+                        <DialogDescription>
+                          Détails des états
+                        </DialogDescription>
+
+                        <div className="space-y-3 mt-4">
+                          {options.map((opt) => (
+                            <div key={opt.value} className="flex items-center gap-2">
+                              <Checkbox
+                                checked={state.includes(Number(opt.value))}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setState([...state, Number(opt.value)])
+                                  } else {
+                                    setState(state.filter((s) => s !== Number(opt.value)))
+                                  }
+                                }}
+                              />
+                              <span>{opt.label}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex justify-end mt-4">
+                          <Button onClick={() => setOpen(false)}>
+                            Valider
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </>
                 )}
               </Field>
-              </div>
+            </div>
 
-              <Field className="flex flex-col">
-                <FieldLabel htmlFor="etat">Type</FieldLabel>
-                  <Select
-                    value={type}
-                    onValueChange={(value) => setType(value)}                  
-                    >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choisir un type" />
-                    </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="global">Global</SelectItem>
-                        <SelectItem value="detaille">Détaillé</SelectItem>
-                      </SelectContent>
-                  </Select>
-              </Field>
-            </div>
-            <div className="flex items-end justify-between mt-6">
-                                
-              {/* Mode à gauche */}
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-medium">Mode</span>
-                                
-                <Switch
-                  className="scale-90"
-                  checked={selectedMode === 1}
-                  onCheckedChange={(checked) => setSelectedMode(checked ? 1 : 0)}
-                />
-            
-                <span className="text-sm">
-                  {selectedMode === 0 ? "Global" : "Détaillé"}
-                </span>
-              </div>
-                                
-              {/* Bouton à droite */}
-              <Button
-                className="flex items-center gap-2 px-6 cursor-pointer"
-                onClick={() => {
-                  let stateArray: number[];
-                
-                  if (selectedMode === 0) {
-                    stateArray =
-                      state[0] === 0 ? [0] : [1, 2, 3, 4, 5, 6, 7,8];
-                  } else {
-                    stateArray = state;
-                    // Si l'état 1 est sélectionné, ajouter aussi les états 5 et 6
-                    if (stateArray.includes(0)) {
-                      stateArray = [...new Set([...stateArray, 5, 6])];
-                    }
-                  }
-                
-                  setAppliedFilters({
-                    state: stateArray,
-                    start: starttime,
-                    end: endtime,
-                    mode: selectedMode
-                  });
-                
-                  setIsApplied(true);
-                }}
+            <Field className="flex flex-col">
+              <FieldLabel htmlFor="etat">Type</FieldLabel>
+              <Select
+                value={type}
+                onValueChange={(value) => setType(value)}
               >
-                <Search className="w-4 h-4" />
-                Afficher
-              </Button>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choisir un type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="global">Global</SelectItem>
+                  <SelectItem value="detaille">Détaillé</SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+          </div>
+          <div className="flex items-end justify-between mt-6">
+
+            {/* Mode à gauche */}
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium">Mode</span>
+
+              <Switch
+                className="scale-90"
+                checked={selectedMode === 1}
+                onCheckedChange={(checked) => setSelectedMode(checked ? 1 : 0)}
+              />
+
+              <span className="text-sm">
+                {selectedMode === 0 ? "Global" : "Détaillé"}
+              </span>
             </div>
-              
-          </CardContent>
-        </Card>
+
+            {/* Bouton à droite */}
+            <Button
+              className="flex items-center gap-2 px-6 cursor-pointer"
+              onClick={() => {
+                let stateArray: number[];
+
+                if (selectedMode === 0) {
+                  stateArray =
+                    state[0] === 0 ? [0] : [1, 2, 3, 4, 5, 6, 7, 8];
+                } else {
+                  stateArray = state;
+                  // Si l'état 1 est sélectionné, ajouter aussi les états 5 et 6
+                  if (stateArray.includes(0)) {
+                    stateArray = [...new Set([...stateArray, 5, 6])];
+                  }
+                }
+
+                setAppliedFilters({
+                  state: stateArray,
+                  start: starttime,
+                  end: endtime,
+                  mode: selectedMode
+                });
+
+                setIsApplied(true);
+              }}
+            >
+              <Search className="w-4 h-4" />
+              Afficher
+            </Button>
+          </div>
+
+        </CardContent>
+      </Card>
 
       <div className="flex flex-col items-center w-full max-w-6xl">
 
@@ -368,143 +376,211 @@ const legendItems =
         </div>
 
         {/* GRID DES CHAMBRES */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
-            {filteredRooms.map((room) => {
-              const isOccupied = (state: number) => state !== 0;
-            
-              const displayColor =
-                selectedMode === 0
-                  ? isOccupied(room.reservation_state)
-                    ? "bg-red-600"
-                    : "bg-green-500"
-                  : roomstateStyles[room.reservation_state];
-            
-              const displayLabel =
-                selectedMode === 0
-                  ? isOccupied(room.reservation_state)
-                    ? "Occupé"
-                    : "Libre"
-                  : reservationStateLabels[room.reservation_state];
-            
-              return (
-                <TooltipProvider key={room.roomID}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        onClick={() => setSelectedRoom(room)}
-                        className={`text-white text-sm font-semibold grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] h-[80px] flex items-center justify-center text-center shadow-md cursor-pointer hover:scale-105 transition-transform ${displayColor}`}
-                      >
-                        <div>
-                          {room.name} <br />
-                          {displayLabel}
-                        </div>
-                      </div>
-                    </TooltipTrigger>
-              
-                    <TooltipContent>
-                      <p>
-                        ID : {room.roomID} <br />
-                        Chambre : {room.name} <br />
-                        Réservation : {displayLabel}
-                        {type !== 'global' && (
-                          <>
-                            <br />
-                            Départ : {room.actual_departure ? timestampToText(room.actual_departure) :"Non défini" } <br />
-                            Arrivée : {room.actual_arrival ? timestampToText(room.actual_arrival) :"Non défini"} <br />
-                            Jour : {timestampToText(room.day)}
-                          </>
-                        )}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              );
-            })}
+        <div className="flex flex-col gap-8 w-full">
+          <h3>Résultat de la recherche de disponibilité pour cette plage de  date:</h3>
+          {filteredRooms.length <= 0 && <span>Aucune chambre trouver pour les états recherchés</span>}
+          {Object.entries(roomsGroupedById).map(([roomId, roomStates]) => {
+            // On récupère le nom de la chambre depuis le premier élément du groupe
+            const roomName = roomStates[0]?.name || roomStates[0]?.room_name;
+
+            return (
+              <div key={roomId} className="flex flex-col gap-2">
+                {/* En-tête de la ligne (Nom de la chambre) */}
+                <h3 className="text-lg font-bold border-b pb-1">Chambre : {roomName} (ID: {roomId})</h3>
+
+                {/* Conteneur horizontal pour les jours/états de cette chambre */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
+                  {roomStates.map((room, index) => {
+                    // Vos fonctions logiques internes
+                    const isOccupied = (state: number) => state !== 0 && state !== 5 && state !== 6 && state !== 8;
+                    const findColor = (state: number) => !isOccupied(state) ? "bg-green-500" : roomstateStyles[state];
+                    const setLabel = (state: number) => !isOccupied(state) ? "Disponible" : reservationStateLabels[state];
+
+                    const displayColor = findColor(room.reservation_state);
+                    const displayLabel = setLabel(room.reservation_state);
+                    const name = room?.name ? room.name : room.room_name;
+
+                    return (
+                      <TooltipProvider key={`${roomId}-${index}`}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div
+                              onClick={() => setSelectedRoom(room)}
+                              className={`text-white text-[12px] leading-tight font-semibold h-[80px] flex items-center justify-center text-center shadow-sm cursor-pointer hover:scale-105 transition-transform rounded-md ${displayColor}`}
+                            >
+                              <div>
+                                {/* On affiche le jour ici car le nom est déjà en titre de ligne */}
+                                {room.day ? new Date(room.day).toLocaleDateString() : name} <br />
+                                <span className="opacity-80 font-normal">{displayLabel}</span>
+                              </div>
+                            </div>
+                          </TooltipTrigger>
+
+                          <TooltipContent>
+                            <p>
+                              ID : {room.roomID} <br />
+                              Chambre : {name} <br />
+                              Réservation : {displayLabel}
+                              {type !== 'global' && (
+                                <>
+                                  <br />
+                                  Départ : {room.actual_departure ? timestampToText(room.actual_departure) : "Non défini"} <br />
+                                  Arrivée : {room.actual_arrival ? timestampToText(room.actual_arrival) : "Non défini"} <br />
+                                  Jour : {timestampToText(room.day)}
+                                </>
+                              )}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </div>
-          {selectedRoom && selectedMode === 1 && (
-            <Dialog open={true} onOpenChange={() => setSelectedRoom(null)}>
-              <DialogContent className="max-w-md rounded-2xl p-0 overflow-hidden" aria-description="room-content">
+        {/* <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
+          {filteredRooms.map((room, id) => {
+            const isOccupied = (state: number) => state !== 0 && state !== 5 && state !== 6 && state !== 8;
+            console.log(isOccupied(room.reservation_state) + " state io ehh " + room.reservation_state + " state " + typeof room.reservation_state);
+            const findColor = (state: number) => !isOccupied(state) ? "bg-green-500" : roomstateStyles[state]
+            const setLabel = (state: number) => !isOccupied(state) ? "Disponible" : reservationStateLabels[state];
+            // const displayColor =
+            //   selectedMode === 0
+            //     ? isOccupied(room.reservation_state)
+            //       ? "bg-red-600"
+            //       : "bg-green-500"
+            //     : roomstateStyles[room.reservation_state];
+            
+            const displayColor = findColor(room.reservation_state)
+            const displayLabel =setLabel(room.reservation_state)
+            // const displayLabel =
+            //   selectedMode === 0
+            //     ? isOccupied(room.reservation_state)
+            //       ? "Occupé"
+            //       : "Libre"
+            //     : reservationStateLabels[room.reservation_state];
+            const name = room?.name ? room.name : room.room_name
+            return (
+              <TooltipProvider key={id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      onClick={() => setSelectedRoom(room)}
+                      className={`text-white text-sm font-semibold grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] h-[80px] flex items-center justify-center text-center shadow-md cursor-pointer hover:scale-105 transition-transform ${displayColor}`}
+                    >
+                      <div>
+                        {name} <br />
+                        {displayLabel}
+                      </div>
+                    </div>
+                  </TooltipTrigger>
 
-
-                {/* HEADER */}
-                <div className={`p-5 text-white flex justify-between items-start ${
-                  roomstateStyles[selectedRoom.reservation_state]
-                }`}>
-                  <div>
-                    <h2 className="text-xl font-bold">
-                      <DialogHeader>
-                        <DialogTitle>{selectedRoom.name}</DialogTitle>
-                            <DialogDescription>
-                              Détails de la reservation
-                            </DialogDescription>
-                      </DialogHeader>
-                    </h2>
-                    <p className="text-sm opacity-90">
-                      {reservationStateLabels[selectedRoom.reservation_state]}
+                  <TooltipContent>
+                    <p>
+                      ID : {room.roomID} <br />
+                      Chambre : {name} <br />
+                      Réservation : {displayLabel}
+                      {type !== 'global' && (
+                        <>
+                          <br />
+                          Départ : {room.actual_departure ? timestampToText(room.actual_departure) : "Non défini"} <br />
+                          Arrivée : {room.actual_arrival ? timestampToText(room.actual_arrival) : "Non défini"} <br />
+                          Jour : {timestampToText(room.day)}
+                        </>
+                      )}
                     </p>
-                  </div>
-                </div>              
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })}
+        </div> */}
+        {selectedRoom && selectedMode === 1 && (
+          <Dialog open={true} onOpenChange={() => setSelectedRoom(null)}>
+            <DialogContent className="max-w-md rounded-2xl p-0 overflow-hidden" aria-description="room-content">
 
-                {/* BODY */}
-                <div className="p-6 space-y-6 bg-white">              
 
-                  {/* ID */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-sm">Identifiant</span>
-                    <span className="font-semibold text-gray-800">
-                      {selectedRoom.roomID}
-                    </span>
-                  </div>              
+              {/* HEADER */}
+              <div className={`p-5 text-white flex justify-between items-start ${roomstateStyles[selectedRoom.reservation_state]
+                }`}>
+                <div>
+                  <h2 className="text-xl font-bold">
+                    <DialogHeader>
+                      <DialogTitle>{selectedRoom.name}</DialogTitle>
+                      <DialogDescription>
+                        Détails de la disponibilité de la chambre
+                      </DialogDescription>
+                    </DialogHeader>
+                  </h2>
+                  <p className="text-sm opacity-90">
+                    {reservationStateLabels[selectedRoom.reservation_state]}
+                  </p>
+                </div>
+              </div>
 
-                  {/* État badge */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 text-sm">État</span>
-                    <span
-                      className={`px-3 py-1 text-xs font-medium rounded-full text-white ${
-                        roomstateStyles[selectedRoom.reservation_state]
+              {/* BODY */}
+              <div className="p-6 space-y-6 bg-white">
+
+                {/* ID */}
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500 text-sm">Identifiant</span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedRoom.roomID}
+                  </span>
+                </div>
+
+                {/* État badge */}
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500 text-sm">État</span>
+                  <span
+                    className={`px-3 py-1 text-xs font-medium rounded-full text-white ${roomstateStyles[selectedRoom.reservation_state]
                       }`}
-                    >
-                      {reservationStateLabels[selectedRoom.reservation_state]}
+                  >
+                    {reservationStateLabels[selectedRoom.reservation_state]}
+                  </span>
+                </div>
+
+                {/* PÉRIODE */}
+                <div className="bg-gray-50 rounded-xl p-4 border space-y-3">
+
+                  <h3 className="text-sm font-semibold text-gray-600">
+                    Période du statut de la disponibilité:
+                  </h3>
+
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Début {selectedMode} select: {selectedRoom.reservation_state}</span>
+                    <span className="font-medium text-gray-800">
+                      {((selectedRoom.reservation_state!== 0 && selectedRoom.reservation_state !== 5 && selectedRoom.reservation_state !== 6 && selectedRoom.reservation_state !== 8) && selectedMode===1)
+                      ? timestampToText(selectedRoom.actual_arrival) :timestampToText(appliedFilters.start)}
                     </span>
-                  </div>              
+                  </div>
 
-                  {/* PÉRIODE */}
-                  <div className="bg-gray-50 rounded-xl p-4 border space-y-3">              
-
-                    <h3 className="text-sm font-semibold text-gray-600">
-                      Période de réservation
-                    </h3>             
-
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Début</span>
-                      <span className="font-medium text-gray-800">
-                        {timestampToText(appliedFilters.start)}
-                      </span>
-                    </div>              
-
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Fin</span>
-                      <span className="font-medium text-gray-800">
-                        {timestampToText(appliedFilters.end)}
-                      </span>
-                    </div>              
-
-                  </div>              
-
-                  {/* ACTION */}
-                  <div className="flex justify-end pt-2">
-                    <Button
-                      onClick={() => setSelectedRoom(null)}
-                      className="rounded-lg px-5"
-                    >
-                      Fermer
-                    </Button>
-                  </div>              
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Fin</span>
+                    <span className="font-medium text-gray-800">
+                      {((selectedRoom.reservation_state!== 0 && selectedRoom.reservation_state !== 5 && selectedRoom.reservation_state !== 6 && selectedRoom.reservation_state !== 8) && selectedMode===1)
+                      ? timestampToText(selectedRoom.actual_departure) :timestampToText(appliedFilters.end)}
+                    </span>
+                  </div>
 
                 </div>
-              </DialogContent>
-            </Dialog>
-          )}
+
+                {/* ACTION */}
+                <div className="flex justify-end pt-2">
+                  <Button
+                    onClick={() => setSelectedRoom(null)}
+                    className="rounded-lg px-5"
+                  >
+                    Fermer
+                  </Button>
+                </div>
+
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   )

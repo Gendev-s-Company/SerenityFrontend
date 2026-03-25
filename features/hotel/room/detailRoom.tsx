@@ -1,5 +1,5 @@
 'use client';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import PhotoDetailRoom from './PhotoDetailRoom';
 // import ActivityPrice from '../activityPrice/ActivityPrice';
@@ -15,7 +15,8 @@ export default function DetailRoom() {
     const roomID = useSearchParams().get('roomID');
     // const roomID = 'ROOM000001';
     const [refresh, setRefresh] = useState<number>(0);
-
+    const router = useRouter();
+    const navigate = () => router.push('/view/hotel/room/reservation/create?roomid='+roomID)
 // ###############################################################################################################
 
     const [lastPrice, setLastPrice] = useState<RoomPriceEntity | null>(null);
@@ -57,12 +58,15 @@ export default function DetailRoom() {
                 <div>
                 <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{room?.name}</h2>
                 <p className="text-slate-500 mt-1 text-lg">
-                    Informations détaillées sur cette activité
+                    Informations détaillées sur cette chambre
                 </p>
                 </div>
                 
                 {/* BOUTON RÉSERVER - Version Desktop */}
-                <Button size="lg" className="hidden md:flex bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 rounded-xl shadow-lg shadow-indigo-200 transition-all hover:scale-105 active:scale-95">
+                <Button 
+                size="lg"
+                onClick={navigate}
+                 className="cursor-pointer hidden md:flex bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 rounded-xl shadow-lg shadow-indigo-200 transition-all hover:scale-105 active:scale-95">
                 Réserver
                 </Button>
             </div>
