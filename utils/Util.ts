@@ -34,3 +34,26 @@ export function timestampToText(timestamp :any) {
     minute: "2-digit",
   });
 }
+
+export function normalizeDateKey(dateString: string | null) {
+  if(dateString === null) return null;  
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export function generateDateRange(startDate: string, endDate: string): string[] {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const dateArray: string[] = [];
+
+  const currentDate = new Date(start);
+  while (currentDate <= end) {
+    dateArray.push(normalizeDateKey(currentDate.toISOString()));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dateArray;
+}
