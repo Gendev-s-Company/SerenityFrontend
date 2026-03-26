@@ -135,14 +135,14 @@ export default function Disponibilite() {
     });
   }, [disponibilite, appliedFilters]);
 
-  // const roomsGroupedById = filteredRooms.reduce((acc, room) => {
-  //   const key = room.roomID;
-  //   if (!acc[key]) {
-  //     acc[key] = [];
-  //   }
-  //   acc[key].push(room);
-  //   return acc;
-  // }, {} as Record<string, DisponibilityEntity[]>);
+  const roomsGroupedById = filteredRooms.reduce((acc, room) => {
+    const key = room.roomID;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(room);
+    return acc;
+  }, {} as Record<string, DisponibilityEntity[]>);
 
   const dates = generateDateRange(appliedFilters.start, appliedFilters.end);
 
