@@ -135,14 +135,14 @@ export default function Disponibilite() {
     });
   }, [disponibilite, appliedFilters]);
 
-  const roomsGroupedById = filteredRooms.reduce((acc, room) => {
-    const key = room.roomID;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(room);
-    return acc;
-  }, {} as Record<string, DisponibilityEntity[]>);
+  // const roomsGroupedById = filteredRooms.reduce((acc, room) => {
+  //   const key = room.roomID;
+  //   if (!acc[key]) {
+  //     acc[key] = [];
+  //   }
+  //   acc[key].push(room);
+  //   return acc;
+  // }, {} as Record<string, DisponibilityEntity[]>);
 
   const dates = generateDateRange(appliedFilters.start, appliedFilters.end);
 
@@ -178,7 +178,7 @@ export default function Disponibilite() {
           Gestion des disponibilités
         </h1>
         <p className="text-gray-500 text-sm mt-1">
-          Consultez et filtrez l'état des chambres en temps réel
+          Consultez et filtrez l&apos;état des chambres en temps réel
         </p>
       </div>
 
