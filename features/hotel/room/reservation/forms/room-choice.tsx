@@ -83,6 +83,7 @@ const RoomChoice = ({
     setFilters(filters);
     const value = filters.length > 0 ? filters[0].id : "";
     handleForms("roomID", value);
+    setPass(true)
     setValidator([]);
   };
   const getValidator = (name: string) => {
