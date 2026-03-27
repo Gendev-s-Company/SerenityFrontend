@@ -9,6 +9,7 @@ import {
   updateActivityOrder,
   deleteActivityOrder,
   getPaginateActivityOrderByCompany,
+  advancedSearchActivityOrder,
 } from "@/infrastructure/hotel/activity/activityOrderRequets";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
@@ -17,17 +18,22 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { getLocalStorage } from "@/utils/storage";
-import { ActivityOrderEntity } from "@/types/entity-type/activityorderEntity";
+import { ActivityOrderEntity, ActivitySearchedField } from "@/types/entity-type/activityorderEntity";
 import { ActivityEntity } from "@/types/entity-type/activityEntity";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
 import {
   ActivityOrderfield,
   ActivityOrderColumnOptions,
 } from "./prep-view-activityOrder";
-import { getAllCustomer } from "@/infrastructure/hotel/customer/customerRequest";
+import { getAllCustomer, getAllCustomerByCompany } from "@/infrastructure/hotel/customer/customerRequest";
 import { getAllActivity } from "@/infrastructure/hotel/activity/activityRequest";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { dateToBackend } from "@/utils/Util";
+import useForm from "@/hooks/use-form";
+import { Button } from "@/components/ui/button";
+import OrderSearchform from "./form/OrderSearchform";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Switch } from "@/components/ui/switch";
 
 export default function ActivitiesOrder() {
   const user = getLocalStorage(); //maka localstorage
@@ -40,6 +46,15 @@ export default function ActivitiesOrder() {
     pageIndex: 0,
     pageSize: pageSize,
   });
+  const fields: ActivitySearchedField = {
+    customer: '',
+    end: '',
+    start: '',
+    min: '',
+    max: ''
+  }
+  const [filter, setFilter] = useState<ActivitySearchedField>(fields)
+  const forms = useForm<ActivitySearchedField>(fields)
 
   const [all, setAll] = useState<PageType>({
     totalElement: 0,
@@ -48,6 +63,7 @@ export default function ActivitiesOrder() {
 
   const [activityOption, setActivityOption] = useState<FieldOptions[]>([]);
   const [customerOption, setCustomerOption] = useState<FieldOptions[]>([]);
+  const [toogle, setToogle] = useState<boolean>(false);
 
   // function for tabs
   const listTriggers = [
@@ -61,7 +77,7 @@ export default function ActivitiesOrder() {
   ////Liste activity
   useEffect(() => {
     if (user && user.profil.company.companyID) {
-      getAllCustomer()
+      getAllCustomerByCompany(user.profil.company.companyID)
         .then((data) => {
           setCustomerOption(convertListToOption(data));
         })
@@ -83,11 +99,13 @@ export default function ActivitiesOrder() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     if (user && user.profil.company.companyID) {
-      getPaginateActivityOrderByCompany(
+      // getPaginateActivityOrderByCompany(
+      advancedSearchActivityOrder(
         page.pageIndex,
         page.pageSize,
         user.profil.company.companyID,
-        trigger,
+        Number(trigger),
+        filter
       )
         .then((data) => {
           setActivitieso(data.content);
@@ -106,7 +124,7 @@ export default function ActivitiesOrder() {
           console.error("Error fetching users:", error);
         });
     }
-  }, [refresh, page.pageIndex, trigger]);
+  }, [refresh, page.pageIndex, trigger, filter]);
 
   const onCreate = async (formData: ActivityOrderEntity) => {
     const body = formData;
@@ -122,6 +140,8 @@ export default function ActivitiesOrder() {
   };
 
   const onUpdate = async (formData: ActivityOrderEntity) => {
+    console.log(formData);
+
     await updateActivityOrder(formData);
     setRefresh((prev) => prev + 1);
   };
@@ -216,7 +236,9 @@ export default function ActivitiesOrder() {
     return [options, optionsCustomer, ...ActivityOrderfield];
     // return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
   }, [options, optionsCustomer]);
-
+  const handleSearch = () => {
+    setFilter(forms.getForm)
+  }
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
@@ -236,6 +258,17 @@ export default function ActivitiesOrder() {
         <h2 className="text-xl font-semibold">
           Liste des commandes enregistrées
         </h2>
+        <Field orientation="horizontal" className="p-2">
+          <Switch
+            checked={toogle}
+            onCheckedChange={setToogle}
+            id="switch-size-default"
+          />
+          <FieldLabel htmlFor="switch-size-default">
+            Filtrer
+          </FieldLabel>
+        </Field>
+        {toogle && <OrderSearchform customer={customerOption} forms={forms} handleSearch={handleSearch} />}
         <DataTable
           body={body}
           onCreate={onCreate}

@@ -1,6 +1,6 @@
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
-import { ActivityOrderEntity } from "@/types/entity-type/activityorderEntity";
+import { ActivityOrderEntity, ActivitySearchedField } from "@/types/entity-type/activityorderEntity";
 import { getCurrency } from "@/utils/Util";
 // column de la table
 const stateOption: FieldOptions[] = [
