@@ -94,6 +94,7 @@ export default function Company() {
                     pagination={page}
                     columnFilter="name"
                     loading={loading}
+                    authority={user?.profil?.authority}
                 />
             </div>
         </div>

@@ -20,6 +20,7 @@ import { FieldConfig } from "@/types/component-type/form-type";
 import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
 import CreateBox from "../create/create-box";
+import { findAuthority } from "@/control/crud/crud-access";
 // interface utilisé pour le datatable
 interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[]; // colonnes à afficher
@@ -33,6 +34,7 @@ interface DataTableProps<TData> {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   loading?: boolean; // loading
+  authority?:number
 }
 export function DataTable<TData>({
   data,
@@ -46,14 +48,19 @@ export function DataTable<TData>({
   pagination,
   onPaginationChange,
   loading = true, // valeur par défaut
+  authority = 1
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
 
+  
+  const authorization = findAuthority(authority)
+  const canCreate = authorization?.action.includes('create')
+
   const [rowSelection, setRowSelection] = React.useState({});
-  const columns = generateColumns<TData>(mcolumns, fields);
+  const columns = generateColumns<TData>(mcolumns, fields, authorization!);
   const [showSkeleton, setShowSkeleton] = React.useState(true);
 
   const table = useReactTable({
@@ -89,7 +96,7 @@ export function DataTable<TData>({
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        {onCreate && (
+        {(onCreate && canCreate) && (
           <Tooltips libelle="Nouveau">
             <CreateBox body={body} onSubmit={onCreate} fields={fields} />
           </Tooltips>

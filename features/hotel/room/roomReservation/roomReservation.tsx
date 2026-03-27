@@ -511,6 +511,7 @@ const reset = async () => {
           onPaginationChange={setPage}
           pagination={page}
           loading={loading}
+          authority={user?.profil?.authority}
         />
       </div>
     </div>

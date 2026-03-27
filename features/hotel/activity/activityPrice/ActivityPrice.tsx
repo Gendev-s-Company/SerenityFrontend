@@ -137,6 +137,7 @@ export default function ActivityPrice({ activityId, refresh, setRefresh }: Activ
         onPaginationChange={setPage}
         pagination={page}
         loading={loading}
+        authority={user?.profil?.authority}
       />
     </div>
   );

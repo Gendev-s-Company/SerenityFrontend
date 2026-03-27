@@ -8,10 +8,14 @@ import DeleteBox from "../delete/delete-box";
 import UpdateBox from "../update/update-box";
 import { FieldConfig } from "@/types/component-type/form-type";
 import { getCurrency } from "@/utils/Util";
+import { Actions } from "@/types/component-type/Action-type";
 export function generateColumns<T>(
   configs: ColumnConfig<T>[],
   fields: FieldConfig<T>[],
+  authorization: Actions,
 ): ColumnDef<T>[] {
+  const canDelete = authorization?.action?.includes("delete");
+  const canUpdate = authorization?.action?.includes("update");
   return configs.map((config) => {
     const isSortingEnabled = config.sorting ?? false;
     const isHidingEnabled = config.hiding ?? true;
@@ -80,17 +84,19 @@ export function generateColumns<T>(
         if (config.type === "button") {
           return (
             <div className="flex items-start gap-2">
-              {config.onUpdate && (
+              {(config.onUpdate && canUpdate) && (
                 <UpdateBox
                   body={rowData}
                   onUpdate={config.onUpdate}
                   fields={fields}
                 />
               )}
-              <DeleteBox
-                id={rowData["id" as keyof T] as string}
-                onDelete={() => config.onDelete && config.onDelete(rowData)}
-              />
+              {canDelete && (
+                <DeleteBox
+                  id={rowData["id" as keyof T] as string}
+                  onDelete={() => config.onDelete && config.onDelete(rowData)}
+                />
+              )}
             </div>
           );
         }

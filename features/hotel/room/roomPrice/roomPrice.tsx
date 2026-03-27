@@ -122,6 +122,7 @@ export default function RoomPrice({ roomId, refresh, setRefresh }: RoomPriceProp
         onPaginationChange={setPage}
         pagination={page}
         loading={loading}
+        authority={user?.profil?.authority}
       />
     </div>
   );
