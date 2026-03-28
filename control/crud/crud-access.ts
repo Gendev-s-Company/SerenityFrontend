@@ -2,6 +2,7 @@ import { Actions } from "@/types/component-type/Action-type"
 
 // cas général
 const list_action: Actions[] = [
+    { min_weight: 0, max_weight: 0, action: ['unauthorized'] },
     { min_weight: 1, max_weight: 4, action: ['read'] },
     { min_weight: 5, max_weight: 6, action: ['read', 'update'] },
     { min_weight: 7, max_weight: 8, action: ['read', 'update', 'create'] },

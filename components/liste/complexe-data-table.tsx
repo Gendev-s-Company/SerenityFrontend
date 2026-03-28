@@ -21,6 +21,10 @@ import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
 import CreateBox from "../create/create-box";
 import { findAuthority } from "@/control/crud/crud-access";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon } from "lucide-react";
+import Salert from "../alert/Salert";
+
 // interface utilisé pour le datatable
 interface DataTableProps<TData> {
   mcolumns: ColumnConfig<TData>[]; // colonnes à afficher
@@ -34,7 +38,7 @@ interface DataTableProps<TData> {
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
   loading?: boolean; // loading
-  authority?:number
+  authority?: number;
 }
 export function DataTable<TData>({
   data,
@@ -48,16 +52,16 @@ export function DataTable<TData>({
   pagination,
   onPaginationChange,
   loading = true, // valeur par défaut
-  authority = 1
+  authority = 0,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
 
-  
-  const authorization = findAuthority(authority)
-  const canCreate = authorization?.action.includes('create')
+  const authorization = findAuthority(authority);
+  const canCreate = authorization?.action.includes("create");
+  const canRead = authorization?.action.includes("read");
 
   const [rowSelection, setRowSelection] = React.useState({});
   const columns = generateColumns<TData>(mcolumns, fields, authorization!);
@@ -95,48 +99,68 @@ export function DataTable<TData>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        {(onCreate && canCreate) && (
-          <Tooltips libelle="Nouveau">
-            <CreateBox body={body} onSubmit={onCreate} fields={fields} />
-          </Tooltips>
-        )}
+      {canRead ? (
+        <>
+          <div className="flex items-center py-4">
+            {onCreate && canCreate && (
+              <Tooltips libelle="Nouveau">
+                <CreateBox body={body} onSubmit={onCreate} fields={fields} />
+              </Tooltips>
+            )}
 
-        {/* 
+            {/* 
         début an'ilay filtre kely iny
       */}
-        <Input
-          placeholder={`Recherche ${columnFilter}...`}
-          value={
-            (table.getColumn(columnFilter)?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn(columnFilter)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm ml-auto"
-        />
-        {/* 
+            <Input
+              placeholder={`Recherche ${columnFilter}...`}
+              value={
+                (table.getColumn(columnFilter)?.getFilterValue() as string) ??
+                ""
+              }
+              onChange={(event) =>
+                table
+                  .getColumn(columnFilter)
+                  ?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm ml-auto"
+            />
+            {/* 
           fin input filter
         */}
-      </div>
-      {/* affichage de la liste */}
-      <div className="overflow-hidden rounded-md border">
-        <Liste table={table} loading={showSkeleton} />
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} {" sur "}
-          {table.getFilteredRowModel().rows.length} ligne(s) choisis.
-        </div>
-        <div className="space-x-2">
-          <div className="text-muted-foreground flex-1 text-sm">
-            Page {table.getState().pagination.pageIndex + 1} sur{" "}
-            {table.getPageCount()} ({rowCount} éléments au total)
           </div>
-          {/* pagination */}
-          <Paginate table={table} />
-        </div>
-      </div>
+          {/* affichage de la liste */}
+          <div className="overflow-hidden rounded-md border">
+            <Liste table={table} loading={showSkeleton} />
+          </div>
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="text-muted-foreground flex-1 text-sm">
+              {table.getFilteredSelectedRowModel().rows.length} {" sur "}
+              {table.getFilteredRowModel().rows.length} ligne(s) choisis.
+            </div>
+            <div className="space-x-2">
+              <div className="text-muted-foreground flex-1 text-sm">
+                Page {table.getState().pagination.pageIndex + 1} sur{" "}
+                {table.getPageCount()} ({rowCount} éléments au total)
+              </div>
+              {/* pagination */}
+              <Paginate table={table} />
+            </div>
+          </div>
+        </>
+      ) : (
+        // <Alert variant="destructive" className="min-w-md">
+        //   <AlertCircleIcon />
+        //   <AlertTitle>Non Autorisé</AlertTitle>
+        //   <AlertDescription>
+        //     Vous n'avez pas accès à cette fonctionnalité, faute de manque d'autorisation
+        //   </AlertDescription>
+        // </Alert>
+        <Salert title={"Non autorisé"} 
+         message={"Vous n'avez pas accès à cette fonctionnalité, faute de manque d'autorisation"} 
+         variant={'destructive'} 
+         Picon={AlertCircleIcon}
+         />
+      )}
     </div>
   );
 }
