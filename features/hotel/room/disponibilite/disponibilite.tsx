@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 // Indicateur d'etat des chambres
 const roomstateStyles: Record<number, string> = {
+  9: "bg-gray-300",     // Aucune donnée
   0: "bg-green-500",     // Libre
   1: "bg-yellow-400",    // Réservation non validée
   2: "bg-blue-500",      // Réservation validée 
@@ -35,6 +36,7 @@ const roomstateStyles: Record<number, string> = {
 }
 
 const reservationStateLabels: Record<number, string> = {
+  9: "Aucune donnée",
   0: "Disponible",
   1: "Réservation non validée",
   2: "Réservation validée",
@@ -94,6 +96,7 @@ export default function Disponibilite() {
         { color: "bg-red-600", label: "Occupée" },
       ]
       : [
+        { color: "bg-gray-300", label: "Aucune donnée" },
         { color: "bg-green-500", label: "Libre" },
         { color: "bg-yellow-400", label: "Réservation non validée" },
         { color: "bg-blue-500", label: "Réservation validée" },
@@ -476,12 +479,12 @@ export default function Disponibilite() {
                       <td className="border border-gray-300 p-1 sm:p-2 font-semibold bg-gray-50 sticky left-0 z-5 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">{roomName}</td>
                       {dates.map(date => {
                         const roomForDate = rooms.find(r => normalizeDateKey(r.day) === date);
-                        const state = roomForDate ? roomForDate.reservation_state : 0;
-                        const label = reservationStateLabels[state] || "Libre";
+                        const state = roomForDate ? roomForDate.reservation_state : 9;
+                        const label = reservationStateLabels[state] || "Aucune donnée";
 
                         // Appliquer les couleurs selon le mode
                         const cellColor = appliedFilters.mode === 0
-                          ? (state !== 0 ? 'bg-red-600' : 'bg-green-500')
+                          ? (state === 0 ? 'bg-green-500' : state === 9 ? 'bg-gray-300' : 'bg-red-600')
                           : roomstateStyles[state];
 
                         return (
