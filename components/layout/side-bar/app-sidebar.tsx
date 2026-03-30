@@ -14,6 +14,8 @@ import SubmenuComponent from "./submenu-list";
 import { items } from "@/utils/menu-list";
 import { Home } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { filterMenu } from "@/control/menu/sidebar-access";
+import { getLocalStorage } from "@/utils/storage";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -21,6 +23,8 @@ export function AppSidebar() {
   const isActive = (url: string) => pathname === url;
   const isParentActive = (subMenu: typeof items[0]["subMenu"]) =>
     subMenu.some(sub => pathname === sub.url);
+  const user = getLocalStorage();//maka localstorage 
+  const visibleMenu=filterMenu(items, user.profil.authority) //filtrena menu araka ny authority anle user; 
 
   return (
     <Sidebar>
@@ -34,7 +38,7 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map(item => {
+              {visibleMenu.map(item => {
                 const active = isActive(item.url) || (item.subMenu && isParentActive(item.subMenu));
                 return (
                   <div key={item.title}>

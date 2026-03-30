@@ -16,6 +16,8 @@ export const UsersItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: Inbox,
+            minAuthority: 10,
+
         },
         {
             title: "Profil utilisateur",
@@ -24,6 +26,7 @@ export const UsersItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: CircleUserRound,
+            minAuthority: 1,
         },
         {
             title: "Utilisateurs",
@@ -32,6 +35,7 @@ export const UsersItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: UsersRound,
+            minAuthority: 6,
         },
         {
             title: "Suivie de travail",
@@ -46,6 +50,7 @@ export const UsersItems: PMenu =
                     isSubmenu: false,
                     subMenu: [],
                     icon: BriefcaseBusiness,
+                    minAuthority: 2,
                 },
                 {
                     title: "Calendrier",
@@ -54,11 +59,14 @@ export const UsersItems: PMenu =
                     isSubmenu: false,
                     subMenu: [],
                     icon: Calendar,
+                    minAuthority: 2,
                 },
             ],
             icon: Calendar,
+            minAuthority: 2,
         },
 
     ],
     icon: BookUser,
+    minAuthority: 1,
 }

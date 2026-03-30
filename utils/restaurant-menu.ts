@@ -21,6 +21,7 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: Grid3x3,
+            minAuthority: 2,
           },
           {
             title: "Réservation table",
@@ -29,6 +30,7 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: BookText,
+            minAuthority: 2,
           },
           {
             title: "Calendrier table",
@@ -37,9 +39,11 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: Calendar,
+            minAuthority: 2,
           },
         ],
         icon: Inbox,
+        minAuthority: 2,
       },
       {
         title: "Plat",
@@ -53,6 +57,8 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: BookImage,
+            minAuthority: 2,
+
           },
           {
             title: "Création plat",
@@ -61,8 +67,10 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: Beef,
+            minAuthority: 4
           },],
         icon: Calendar,
+        minAuthority: 2,
       },
       {
         title: "Commande",
@@ -76,6 +84,7 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: Inbox,
+            minAuthority: 2,
           },
           {
             title: "Commande",
@@ -84,11 +93,15 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: CalendarArrowUp,
+            minAuthority: 2,
           },],
         icon: Calendar,
+        minAuthority: 2,
+
       },
       
     ],
     icon: UtensilsCrossed,
+    minAuthority: 2,
   }
 ;

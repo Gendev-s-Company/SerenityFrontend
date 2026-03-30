@@ -22,6 +22,7 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: BedSingle,
+          minAuthority: 4,
         },
         {
           title: "Liste des chambres",
@@ -30,6 +31,7 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: BedSingle,
+          minAuthority: 4,
         },
         {
           title: "Chambres",
@@ -38,9 +40,11 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: BedDouble,
+          minAuthority: 4,
         },
       ],
       icon: Inbox,
+      minAuthority: 4,
     },
     {
       title: "Séjours",
@@ -55,6 +59,7 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: BookMarked,
+          minAuthority: 2,
         },
         {
           title: "Réservation | séjours",
@@ -63,6 +68,7 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: BookText,
+          minAuthority: 2,
         },
         {
           title: "Disponibilité chambres",
@@ -71,9 +77,11 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: BedSingle,
+          minAuthority: 2,
         },
       ],
       icon: Inbox,
+      minAuthority: 2,
     },
     {
       title: "Activité",
@@ -88,6 +96,7 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: Gamepad,
+          minAuthority: 2,
         },
         {
           title: "Commandes",
@@ -96,11 +105,14 @@ export const HotelItems: PMenu =
           isSubmenu: false,
           subMenu: [],
           icon: Inbox,
+          minAuthority: 2,
         },
       ],
       icon: GamepadDirectional,
+      minAuthority: 2,
     },
   ],
   icon: Hotel,
+  minAuthority: 2,
 }
   ;
