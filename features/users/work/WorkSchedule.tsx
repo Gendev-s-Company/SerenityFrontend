@@ -99,6 +99,7 @@ export default function WorkSchedulePage() {
         onPaginationChange={setPage}
         pagination={page}
         loading={loading}
+        authority={user?.profil?.authority}
       />
     </div>
   );

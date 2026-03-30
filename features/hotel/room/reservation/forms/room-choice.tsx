@@ -59,7 +59,8 @@ const RoomChoice = ({
             setFilters([choosed]);
             setPass(true);
           }
-          if (init.roomID) {
+          // mila amboarina
+          if (init.roomID && !choosed) {
             const list_validator: ReservationFieldValidator[] = [];
             list_validator.push({
               field: "roomID",

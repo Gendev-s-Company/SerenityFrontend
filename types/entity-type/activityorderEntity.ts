@@ -11,6 +11,12 @@ export interface ActivityOrderEntity {
     state:string,
     skipValidation: boolean,
     totalPrice?: number,
+}
 
-
+export interface ActivitySearchedField {
+    customer?: string,
+    min?: string,
+    max?: string,
+    start?:string,
+    end?:string
 }

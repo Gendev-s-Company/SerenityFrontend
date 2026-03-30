@@ -165,6 +165,7 @@ export default function Room() {
               onPaginationChange={setPage}
               pagination={page}
               loading={loading}
+              authority={user?.profil?.authority}
             />
           </div>
         </div>

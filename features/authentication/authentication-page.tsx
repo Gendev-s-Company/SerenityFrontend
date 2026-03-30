@@ -1,4 +1,5 @@
 "use client";
+import Salert from "@/components/alert/Salert";
 import Sbutton from "@/components/button/Sbutton";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,9 @@ import { Label } from "@/components/ui/label";
 import useForm from "@/hooks/use-form";
 import { login } from "@/infrastructure/user/userRequest";
 import { setAuthStorage, userStorage } from "@/utils/storage";
+import { AlertCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AuthenticationPage() {
   const router = useRouter();
@@ -27,13 +30,20 @@ export default function AuthenticationPage() {
     password: "1234",
     status: 0,
   };
-  const forms = useForm(body)
-  
+  const forms = useForm(body);
+  const [error, setError] = useState<boolean>(false);
+
   const formAction = async () => {
-    console.log("En cours d'authentification");    
-    const user =await login(forms.getForm);
-    setAuthStorage(JSON.stringify(user))
-    router.push("/view");
+    console.log("En cours d'authentification");
+    try {
+      setError(false);
+      const user = await login(forms.getForm);
+      setAuthStorage(JSON.stringify(user));
+      router.push("/view");
+    } catch (error) {
+      setError(true);
+      throw error;
+    }
   };
 
   return (
@@ -55,8 +65,10 @@ export default function AuthenticationPage() {
                   type="text"
                   placeholder="0330099988"
                   name="phone"
-                  value={forms.getForm && forms.getForm['phone'] as string}
-                  onChange={(e) => forms.handleInputChange('phone', e.target.value)}
+                  value={forms.getForm && (forms.getForm["phone"] as string)}
+                  onChange={(e) =>
+                    forms.handleInputChange("phone", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -72,18 +84,33 @@ export default function AuthenticationPage() {
                 </div>
                 <Input
                   id="password"
-                  value={forms.getForm && forms.getForm['password'] as string}
+                  value={forms.getForm && (forms.getForm["password"] as string)}
                   name="password"
-                  onChange={(e) => forms.handleInputChange('password', e.target.value)}
-
+                  onChange={(e) =>
+                    forms.handleInputChange("password", e.target.value)
+                  }
                   type="password"
-                  required />
+                  required
+                />
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Sbutton message="Connexion réussi !" libelle="Se connecter" className="w-full" formAction={formAction} />
+          <Sbutton
+            message="Connexion réussi !"
+            libelle="Se connecter"
+            className="w-full"
+            formAction={formAction}
+          />
+          {error && (
+            <Salert
+              title={"Erreur d'authentification"}
+              message={"Identifiants invalides"}
+              variant={"destructive"}
+              Picon={AlertCircleIcon}
+            />
+          )}
           <Button className="cursor-pointer" variant="link">
             {"Besoin d'aide?"}
           </Button>

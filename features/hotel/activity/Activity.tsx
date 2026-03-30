@@ -121,6 +121,7 @@ export default function Activity() {
           onPaginationChange={setPage}
           pagination={page}
           loading={loading}
+          authority={user?.profil?.authority}
         />
       </div>
     </div>

@@ -122,6 +122,7 @@ export default function Customer(){
             onPaginationChange={setPage}
             pagination={page}
             loading={loading}
+            authority={user?.profil?.authority}
           />
         </div>
       </div>

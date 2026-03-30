@@ -28,7 +28,7 @@ const DropdownMenuComponent: React.FC<DropdownMenuProps> = ({ items, title, Pico
           <CollapsibleTrigger asChild>
             <SidebarMenuButton
                 className={`relative flex w-full items-center justify-between
-                  px-3 py-2 transition-all duration-200 ease-in-out
+                  px-3 py-2 transition-all duration-200 ease-in-out cursor-pointer
                   ${
                     active
                       ? "text-blue-600 before:absolute before:left-0 before:top-1/2 before:h-6 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-blue-600"

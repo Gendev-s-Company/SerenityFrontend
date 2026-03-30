@@ -340,7 +340,7 @@ export default function Disponibilite() {
 
                 if (selectedMode === 0) {
                   stateArray =
-                    state[0] === 0 ? [0] : [1, 2, 3, 4, 5, 6, 7, 8];
+                    state[0] === 0 ? [0,5,6,8] : [1, 2, 3, 4, 7];
                 } else {
                   stateArray = state;
                   // Si l'état 1 est sélectionné, ajouter aussi les états 5 et 6
