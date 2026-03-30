@@ -74,7 +74,7 @@ export default function DetailActivity() {
                         <div className="grid grid-cols-1 gap-4">
                             {/* Bloc Prix Principal */}
                             <div className="p-4 rounded-xl border border-slate-100 bg-indigo-50/30">
-                                <span className="block text-xs font-semibold text-indigo-500 uppercase">Dernier prix constaté</span>
+                                <span className="block text-xs font-semibold text-indigo-500 uppercase">Prix actif:</span>
                                 {lastPrice ? (
                                     <div className="mt-1">
                                         <span className="text-2xl font-extrabold text-slate-800">
