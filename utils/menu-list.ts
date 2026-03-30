@@ -13,6 +13,7 @@ export const items: PMenu[] = [
     isSubmenu: false,
     subMenu: [],
     icon: LayoutDashboard,
+    minAuthority: 4,
   },
   UsersItems,
   {
@@ -22,8 +23,18 @@ export const items: PMenu[] = [
     isSubmenu: false,
     subMenu: [],
     icon: Calendar,
+    minAuthority: 4,
   },
   HotelItems,
+  // {
+  //   title: "HOTEL",
+  //   url: "/view/hotel/room/roomGallery",
+  //   dropdown: false,
+  //   isSubmenu: false,
+  //   subMenu: [],
+  //   icon: LayoutDashboard,
+  //   minAuthority: 4,
+  // },
   RestoItems,
 
 ];

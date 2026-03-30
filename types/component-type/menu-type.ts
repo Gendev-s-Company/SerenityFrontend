@@ -7,5 +7,6 @@ export interface PMenu {
     isSubmenu: boolean,
     subMenu: PMenu[],
     icon: LucideIcon,
+    minAuthority: number;
 }
 
