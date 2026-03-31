@@ -15,6 +15,24 @@ export const RestoItems: PMenu =
         isSubmenu: false,
         subMenu: [
           {
+            title: "Test details Table",
+            url: "/view/restaurant/table/details",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Grid3x3,
+            minAuthority: 2,
+          },
+          {
+            title: "Type de tables",
+            url: "/view/restaurant/table/tableType",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Grid3x3,
+            minAuthority: 2,
+          },
+          {
             title: "Situation des tables",
             url: "#situationt",
             dropdown: false,
