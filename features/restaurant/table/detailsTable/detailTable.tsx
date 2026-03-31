@@ -10,8 +10,7 @@ import { getTableById } from '@/infrastructure/restaurant/table/tabledetail/tabl
 import { TableEntity } from '@/types/entity-type/tableEntity';
 
 export default function Detailtable() {
-    // const tableID = useSearchParams().get('tableID');
-    const tableID = 'TTAB000004';
+    const tableID = useSearchParams().get('tableID');
     const [refresh, setRefresh] = useState<number>(0);
     const router = useRouter();
     // const navigate = () => router.push('/view/hotel/table/reservation/create?tableid='+tableID)

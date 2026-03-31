@@ -25,14 +25,14 @@ export function AppSidebar() {
   const isActive = (url: string) => pathname === url;
   const isParentActive = (subMenu: typeof items[0]["subMenu"]) =>
     subMenu.some(sub => pathname === sub.url);
-  const user = getLocalStorage();//maka localstorage 
+  const user = getLocalStorage()!;//maka localstorage 
   const [visibleMenu, setVisibleMenu] = useState<PMenu[]>()
   useEffect(() => {
     if (user && user.profil?.authority) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisibleMenu(filterMenu(items, user?.profil?.authority))//filtrena menu araka ny authority anle user; 
     }
-  }, [user.profil.authority])
+  }, [user?.profil?.authority])
   // const visibleMenu=filterMenu(items, user?.profil?.authority) //filtrena menu araka ny authority anle user; 
 
   return (

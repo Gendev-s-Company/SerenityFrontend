@@ -16,7 +16,7 @@ export const RestoItems: PMenu =
         subMenu: [
           {
             title: "Table",
-            url: "/view/restaurant/table/restauranttable",
+            url: "/view/restaurant/table",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
