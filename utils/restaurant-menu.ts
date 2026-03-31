@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, UtensilsCrossed } from "lucide-react";
+import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed } from "lucide-react";
 
 export const RestoItems: PMenu = 
   {
@@ -10,26 +10,26 @@ export const RestoItems: PMenu =
     subMenu: [
       {
         title: "Tables",
-        url: "#chambre",
+        url: "#table",
         dropdown: true,
         isSubmenu: false,
         subMenu: [
           {
-            title: "Test details Table",
-            url: "/view/restaurant/table/details",
+            title: "Table",
+            url: "view/restaurant/table/restauranttable",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Grid3x3,
+            icon: Armchair ,
             minAuthority: 2,
           },
           {
-            title: "Type de tables",
+            title: "Type de table",
             url: "/view/restaurant/table/tableType",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Grid3x3,
+            icon: Table2,
             minAuthority: 2,
           },
           {
