@@ -16,6 +16,8 @@ import { Home } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { filterMenu } from "@/control/menu/sidebar-access";
 import { getLocalStorage } from "@/utils/storage";
+import { useEffect, useState } from "react";
+import { PMenu } from "@/types/component-type/menu-type";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -24,7 +26,14 @@ export function AppSidebar() {
   const isParentActive = (subMenu: typeof items[0]["subMenu"]) =>
     subMenu.some(sub => pathname === sub.url);
   const user = getLocalStorage();//maka localstorage 
-  const visibleMenu=filterMenu(items, user.profil.authority) //filtrena menu araka ny authority anle user; 
+  const [visibleMenu, setVisibleMenu] = useState<PMenu[]>()
+  useEffect(() => {
+    if (user && user.profil?.authority) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisibleMenu(filterMenu(items, user?.profil?.authority))//filtrena menu araka ny authority anle user; 
+    }
+  }, [user.profil.authority])
+  // const visibleMenu=filterMenu(items, user?.profil?.authority) //filtrena menu araka ny authority anle user; 
 
   return (
     <Sidebar>
@@ -38,7 +47,7 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {visibleMenu.map(item => {
+              {visibleMenu?.map(item => {
                 const active = isActive(item.url) || (item.subMenu && isParentActive(item.subMenu));
                 return (
                   <div key={item.title}>
