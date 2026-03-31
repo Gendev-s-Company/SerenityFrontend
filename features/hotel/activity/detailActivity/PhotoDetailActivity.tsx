@@ -223,8 +223,8 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
             <CarouselContent>
               <CarouselItem>
                 <div className="grid grid-cols-2 gap-4 h-[400px]">
-                  {displayPhotos.map((photo) => (
-                    <Card key={photo.photoID} className="overflow-hidden border-2 hover:border-primary/50 transition-colors relative group">
+                  {displayPhotos.map((photo, id) => (
+                    <Card key={id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors relative group">
                       <CardContent className="p-0 h-full relative">
                       <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                         <DropdownMenu>
