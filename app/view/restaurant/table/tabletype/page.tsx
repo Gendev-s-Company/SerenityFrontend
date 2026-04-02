@@ -1,9 +1,11 @@
-import TableType from "@/features/restaurant/table/tableType/tableType"
+import TableType from "@/features/restaurant/table/tabletype/TableType"
 
 
 const page = () => {
   return (
-    <TableType />
+   <div className="p-5">
+    <TableType/>
+    </div>
   )
 }
 

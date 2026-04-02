@@ -25,7 +25,7 @@ export const RestoItems: PMenu =
           },
           {
             title: "Type de table",
-            url: "/view/restaurant/table/tableType",
+            url: "/view/restaurant/table/tabletype",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],

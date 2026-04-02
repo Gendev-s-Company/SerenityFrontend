@@ -11,7 +11,7 @@ import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { DataTable } from "@/components/liste/complexe-data-table";
 import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
-import { convertListToOption } from "@/infrastructure/restaurant/table/tableType/tabletypeFonction";
+import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
 
 export default function RestaurantTable() {
     const [restaurantTable,setRestaurantTable]=useState<RestaurantTableEntity[]>([]);
