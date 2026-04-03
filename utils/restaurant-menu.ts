@@ -51,6 +51,15 @@ export const RestoItems: PMenu =
             minAuthority: 2,
           },
           {
+            title: "Disponibilité table",
+            url: "#disponibilite",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: BookText,
+            minAuthority: 2,
+          },
+          {
             title: "Calendrier table",
             url: "#calendriert",
             dropdown: false,
