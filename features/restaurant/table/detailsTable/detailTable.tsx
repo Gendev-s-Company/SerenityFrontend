@@ -7,7 +7,7 @@ import PhotoDetailTable from './PhotoDetailTable';
 import { Button } from '@/components/ui/button';
 import { getCurrency } from '@/utils/Util';
 import { getTableById } from '@/infrastructure/restaurant/table/tabledetail/tableRequest';
-import { TableEntity } from '@/types/entity-type/tableEntity';
+import { RestaurantTableEntity } from '@/types/entity-type/restauranTableEntity';
 
 export default function Detailtable() {
     const tableID = useSearchParams().get('tableID');
@@ -16,7 +16,7 @@ export default function Detailtable() {
     // const navigate = () => router.push('/view/hotel/table/reservation/create?tableid='+tableID)
 // ###############################################################################################################
 
-    const [table, settable] = useState<TableEntity | null>(null);
+    const [table, settable] = useState<RestaurantTableEntity | null>(null);
     
 
     useEffect(() => {

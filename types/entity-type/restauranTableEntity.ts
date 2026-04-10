@@ -2,12 +2,12 @@ import { TableTypeEntity } from "./tableTypeEntity";
 
 export interface RestaurantTableEntity {
     tableID: string|null,
-    name: string,
-    description: string,
+    name: string|null,
+    description: string|null,
     tabletype: TableTypeEntity,
     capacity: number,
     status: number,
-    skipValidation?: boolean
+    skipValidation: boolean,
 }
 
 export interface DisponibilityEntity{
