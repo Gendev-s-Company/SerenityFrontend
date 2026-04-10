@@ -1,9 +1,9 @@
-import RestaurantTable from "@/features/restaurant/table/restauranttable/restaurantTable"
+import Disponibilite from "@/features/restaurant/table/disponibilite/disponibilite"
 
 
 const page = () => {
   return (
-    <div>Disponibilité des tables</div>
+    <div><Disponibilite /></div>
   )
 }
 

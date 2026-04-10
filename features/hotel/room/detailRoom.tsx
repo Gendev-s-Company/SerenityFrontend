@@ -112,7 +112,7 @@ export default function DetailRoom() {
                     
                     {room?.roomPrice?.hourPrice && (
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
-                        ⚡ {getCurrency(room.roomPrice.hourPrice)} / Heure
+                        ⏰ {getCurrency(room.roomPrice.hourPrice)} / Heure
                     </span>
                     )}
                 </div>

@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed } from "lucide-react";
+import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed, Menu, BookMarked, CookingPot, Utensils } from "lucide-react";
 
 export const RestoItems: PMenu = 
   {
@@ -20,8 +20,8 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Armchair ,
-            minAuthority: 2,
+            icon: Utensils,
+             minAuthority: 2,
           },
           {
             title: "Type de table",
@@ -47,12 +47,12 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: BookText,
+            icon: BookMarked,
             minAuthority: 2,
           },
           {
             title: "Disponibilité table",
-            url: "#disponibilite",
+            url: "/view/restaurant/table/disponibilite",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
@@ -93,7 +93,7 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Beef,
+            icon: CookingPot,
             minAuthority: 4
           },],
         icon: Calendar,
@@ -115,7 +115,7 @@ export const RestoItems: PMenu =
           },
           {
             title: "Commande",
-            url: "#situationc",
+            url: "#situation",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],

@@ -245,14 +245,18 @@ return (
               {/* BADGES PRIX */}
               <div className="mb-6 flex gap-3">
                 {room.roomPrice?.nightPrice && (
-                  <div className="bg-indigo-500 text-white font-semibold px-3 py-1 rounded-lg shadow-md">
-                    Prix/Nuit : {getCurrency(room.roomPrice.nightPrice)}
+                  <div>
+                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
+                    🌙 {getCurrency(room.roomPrice.nightPrice)}/nuit
+                    </span>
                   </div>
                 )}
 
                 {room.roomPrice?.hourPrice && (
-                  <div className="bg-amber-400 text-white font-semibold px-3 py-1 rounded-lg shadow-md">
-                    Prix/Heure : {getCurrency(room.roomPrice.hourPrice)}
+                  <div>
+                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
+                      ⏰ {getCurrency(room.roomPrice.hourPrice)}/heure
+                    </span>
                   </div>
                 )}
               </div>

@@ -1,6 +1,6 @@
 import { deleteCall, getCall, postCall, putCall } from "@/infrastructure/api";
 import { Page } from "@/types/entity-type/common/Page";
-import { RestaurantTableEntity } from "@/types/entity-type/restauranTableEntity";
+import { RestaurantTableEntity,DisponibilityEntity } from "@/types/entity-type/restauranTableEntity";
 
 const restaurantTablePath="/restaurant/table"
 export const getAllTable = async (company:string) => {
@@ -25,4 +25,12 @@ export const updateTable = async (table: RestaurantTableEntity) => {
 
 export const deleteTable = async (id: string) => {
     return await deleteCall<RestaurantTableEntity>(`${restaurantTablePath}/${id}`);
+}
+
+export const getAllDisponibility = async (company: string,state: number[] = [], start:string, end:string,type:string|null) => {
+    let param = ''
+    state.map((row) => {
+        param += '&state='+row
+    })
+    return await getCall<DisponibilityEntity[]>(`${restaurantTablePath}/avalaible?company=${company}&start=${start}&end=${end}${param}&type=${type}`);
 }
