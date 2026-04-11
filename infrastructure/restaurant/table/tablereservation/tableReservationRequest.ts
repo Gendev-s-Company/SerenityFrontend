@@ -2,7 +2,7 @@ import { deleteCall, getCall, postCall, putCall} from "@/infrastructure/api";
 import { Page } from "@/types/entity-type/common/Page";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 
-const tablereservation="/hotel/table/reservation"
+const tablereservation="/restaurant/table/occupation"
 
 export const getAllReservation = async (companyId : string) => {
   return await getCall<TableReservationEntity[]>(`${tablereservation}/avalaible?company=${companyId}`);
