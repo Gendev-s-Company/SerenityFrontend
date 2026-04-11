@@ -417,7 +417,7 @@ const reset = async () => {
           data={reservations}
           mcolumns={columns}
           fields={formFields}
-          columnFilter="reservationID"
+          columnFilter="occupationID"
           pageCount={paginationInfo.totalPage}
           rowCount={paginationInfo.totalElement}
           onPaginationChange={setPage}
