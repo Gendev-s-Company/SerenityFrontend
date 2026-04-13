@@ -43,7 +43,7 @@ export const RestoItems: PMenu =
           },
           {
             title: "Réservation table",
-            url: "#reservation",
+            url: "/view/restaurant/table/reservation",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
