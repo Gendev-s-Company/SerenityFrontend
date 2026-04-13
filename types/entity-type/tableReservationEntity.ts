@@ -1,6 +1,6 @@
 import { CustomerEntity } from "./customerEntity";
 import { RoomEntity } from "./roomEntity";
-import { TableEntity } from "./tableEntity";
+import { RestaurantTableEntity } from "./restauranTableEntity";
 import { UserEntity } from "./userEntity";
 
 export interface TableReservationEntity {
@@ -11,7 +11,7 @@ export interface TableReservationEntity {
     customerID: string;
     userID: string;
     state: number;
-    table: TableEntity
+    table: RestaurantTableEntity
     room: RoomEntity;
     user: UserEntity;
     customer: CustomerEntity;
