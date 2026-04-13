@@ -33,7 +33,7 @@ export default function TableReservationsPage() {
   const [refresh, setRefresh] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   
-  const [trigger, setTrigger] = useState<string>("");
+  const [trigger, setTrigger] = useState<string>("-1");
   const [page, setPage] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
