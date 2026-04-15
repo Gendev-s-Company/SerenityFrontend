@@ -1,5 +1,4 @@
 import { CustomerEntity } from "./customerEntity";
-import { RoomEntity } from "./roomEntity";
 import { TableEntity } from "./tableEntity";
 import { UserEntity } from "./userEntity";
 
@@ -12,7 +11,6 @@ export interface TableReservationEntity {
     userID: string;
     state: number;
     table: TableEntity
-    room: RoomEntity;
     user: UserEntity;
     customer: CustomerEntity;
 

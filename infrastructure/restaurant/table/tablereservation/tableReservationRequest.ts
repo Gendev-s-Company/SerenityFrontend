@@ -1,5 +1,6 @@
 import { deleteCall, getCall, postCall, putCall} from "@/infrastructure/api";
 import { Page } from "@/types/entity-type/common/Page";
+import { ReservationTableEntity } from "@/types/entity-type/reservationTableEntity";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 
 const tablereservation="/restaurant/table/occupation"
@@ -41,5 +42,10 @@ export const getPaginateAllReservation = async (page:number,size:number,companyI
     // const finalState = state === "-1" ? "1,2,8" : (state === "-2" ? "4,5" : state);
 
   return await getCall<Page<TableReservationEntity>>(`${tablereservation}/avalaible/${page}/${size}?state=${finalState}&start=${finalStart}&end=${finalEnd}&company=${companyId}`);
+}
+
+
+export const createReservation = async (body: ReservationTableEntity) => {
+  return await postCall<ReservationTableEntity>(tablereservation, body);
 }
 

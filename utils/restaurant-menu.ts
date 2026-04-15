@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed } from "lucide-react";
+import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed, BookMarked } from "lucide-react";
 
 export const RestoItems: PMenu = 
   {
@@ -48,6 +48,15 @@ export const RestoItems: PMenu =
             isSubmenu: false,
             subMenu: [],
             icon: BookText,
+            minAuthority: 2,
+          },
+          {
+            title: "Réserver une table",
+            url: "/view/restaurant/table/createResa",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: BookMarked,
             minAuthority: 2,
           },
           {

@@ -26,3 +26,22 @@ export const updateTable = async (table: RestaurantTableEntity) => {
 export const deleteTable = async (id: string) => {
     return await deleteCall<RestaurantTableEntity>(`${restaurantTablePath}/${id}`);
 }
+
+
+export const getAllTableAvalaible = async (company: string,state: number[] = [], start:string, end:string) => {
+    let param = ''
+    state.map((row) => {
+        param += '&state='+row
+    })
+
+  return await getCall<RestaurantTableEntity[]>(`${restaurantTablePath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
+}
+
+export const getAllDisponibility = async (company: string,state: number[] = [], start:string, end:string,type:string|null) => {
+    let param = ''
+    state.map((row) => {
+        param += '&state='+row
+    })
+
+  return await getCall<RestaurantTableEntity[]>(`${restaurantTablePath}/avalaible?company=${company}&start=${start}&end=${end}${param}&type=${type}`);
+}
