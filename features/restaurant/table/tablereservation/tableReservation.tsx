@@ -109,39 +109,8 @@ const listTriggers: TriggerOption[] = [
 
 
 
-  const onUpdateAnnuler = async (formData: TableReservationEntity) => {
-    await updateReservation(formData, "8");
-    // setStartDate("");
-    // setEndDate("");
-    setRefresh((prev) => prev + 1);
-  };
-
-  const onUpdateReserver = async (formData: TableReservationEntity) => {
-    await updateReservation(formData, "2");
-    // setStartDate("");
-    // setEndDate("");
-    setRefresh((prev) => prev + 1);
-  };
-
-
-  const onUpdateFinished = async (formData: TableReservationEntity) => {
-    await updateReservation(formData, "5");
-    // setStartDate("");
-    // setEndDate("");
-    setRefresh((prev) => prev + 1);
-  };
-
-
-  const onUpdateOccupied = async (formData: TableReservationEntity) => {
-    await updateReservation(formData, "4");
-    // setStartDate("");
-    // setEndDate("");
-    setRefresh((prev) => prev + 1);
-  };
-
-
-  const onUpdateMissed = async (formData: TableReservationEntity) => {
-    await updateReservation(formData, "7");
+  const onUpdateTerminer = async (formData: TableReservationEntity) => {
+    await updateReservation(formData, "1");
     // setStartDate("");
     // setEndDate("");
     setRefresh((prev) => prev + 1);
@@ -154,7 +123,7 @@ const btnAction: ColumnConfig<TableReservationEntity> = {
   hiding: false,
   cell: (row: TableReservationEntity) => {
 
-    if (row.state === 1) {
+    if (row.state === 0) {
 
       return (
         <div className="flex gap-2">
@@ -162,32 +131,15 @@ const btnAction: ColumnConfig<TableReservationEntity> = {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={(e) => onUpdateAnnuler(row)}
+                  onClick={(e) => onUpdateTerminer(row)}
                   type="button"
                   className="px-3 py-1 bg-amber-400 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
                 >
                   <BookmarkX className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                <p>Annuler la réservation</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={(e) => onUpdateReserver(row)}
-                  type="button"
-                  className="px-3 py-1 bg-emerald-400 rounded-md cursor-pointer hover:bg-emerald-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
-                >
-                  <BookmarkCheck className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                <p>Valider la réservation</p>
+              <TooltipContent side="bottom" className="bg-white text-green-700 border border-green-200 shadow-lg">
+                <p>Terminer la réservation</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -195,72 +147,33 @@ const btnAction: ColumnConfig<TableReservationEntity> = {
       );
     }
 
-    if (row.state === 4) {
 
-      return (
-        <div className="flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={(e) => onUpdateFinished(row)}
-                  type="button"
-                  className="px-3 py-1 bg-purple-400 rounded-md cursor-pointer hover:bg-purple-500 text-sm font-medium transition-colors"
-                >
-                  <DoorOpenIcon className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                <p>Marquer comme terminé</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      );
-    }
+    // if (row.state === 2) {
 
-    if (row.state === 2) {
-
-      return (
-        <div className="flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={(e) => onUpdateOccupied(row)}
-                  type="button"
-                  className="px-3 py-1 bg-blue-400 rounded-md cursor-pointer hover:bg-blue-500 text-sm font-medium transition-colors"
-                >
-                  <DoorClosedLocked className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                <p>Marquer comme occupé</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={(e) => onUpdateMissed(row)}
-                  type="button"
-                  className="px-3 py-1 bg-red-400 rounded-md cursor-pointer hover:bg-red-500 text-sm font-medium transition-colors"
-                >
-                  <UserX2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                <p>Marquer comme absent</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+    //   return (
+    //     <div className="flex gap-2">
+    //       <TooltipProvider>
+    //         <Tooltip>
+    //           <TooltipTrigger asChild>
+    //             <Button
+    //               onClick={(e) => onUpdateOccupied(row)}
+    //               type="button"
+    //               className="px-3 py-1 bg-blue-400 rounded-md cursor-pointer hover:bg-blue-500 text-sm font-medium transition-colors"
+    //             >
+    //               <DoorClosedLocked className="h-4 w-4" />
+    //             </Button>
+    //           </TooltipTrigger>
+    //           <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
+    //             <p>Marquer comme occupé</p>
+    //           </TooltipContent>
+    //         </Tooltip>
+    //       </TooltipProvider>
 
 
-        </div>
-      );
-    }
+
+    //     </div>
+    //   );
+    // }
     return null;
   },
   // onUpdate: (row) => {

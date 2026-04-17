@@ -8,8 +8,8 @@ import { getLocalStorage } from "@/utils/storage";
 import React, { useEffect, useState } from "react";
 import { ReservationFieldValidator } from "../reservation";
 import { ReservationTableEntity } from "@/types/entity-type/reservationTableEntity";
-import { getAllTableAvalaible } from "@/infrastructure/restaurant/table/restauranttable/restaurantTableRequest";
 import { RestaurantTableEntity } from "@/types/entity-type/restauranTableEntity";
+import { getAllTableAvalaible } from "@/infrastructure/restaurant/table/tableOccupation/tableOccupationRequest";
 
 interface Form {
   init: ReservationTableEntity;
@@ -47,7 +47,7 @@ const TableChoice = ({
     ) {
       getAllTableAvalaible(
         user.profil.company.companyID,
-        [0, 8],
+        [0, 1],
         forms.getForm.starttime,
         forms.getForm.endtime,
       )
