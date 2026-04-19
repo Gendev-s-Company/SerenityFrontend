@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { ReservationFieldValidator } from "../reservation";
 import { ReservationTableEntity } from "@/types/entity-type/reservationTableEntity";
 import { RestaurantTableEntity } from "@/types/entity-type/restauranTableEntity";
-import { getAllTableAvalaible } from "@/infrastructure/restaurant/table/tableOccupation/tableOccupationRequest";
+import { getAllTableAvalaible } from "@/infrastructure/restaurant/table/restauranttable/restaurantTableRequest";
 
 interface Form {
   init: ReservationTableEntity;

@@ -3,16 +3,18 @@ import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 
 const reservationStateOptions: FieldOptions[] = [
-  { id: '0', label: 'En cours' },
-  { id: '1', label: 'Fini' },
-  { id: '2', label: 'Payé en totalité' },
+  { id: '1', label: 'Non validé' },
+  { id: '2', label: 'Validé' },
+  { id: '7', label: 'En cours' },
 
 ];
 
 const stateOption: FieldOptions[] = [
-  { id: '0', label: 'En cours', color:'blue' },
-  { id: '1', label: 'Fini', color:'green' },
-  { id: '2', label: 'Payé en totalité', color:'gray' },
+  { id: '1', label: 'Non validé', color:'blue' },
+  { id: '2', label: 'Validé', color:'green' },
+  { id: '8', label: 'Annulé', color:'gray' },
+  { id: '4', label: 'Occupé', color:'blue' },
+  { id: '5', label: 'Terminé', color:'purple' },
 
 ]
 
