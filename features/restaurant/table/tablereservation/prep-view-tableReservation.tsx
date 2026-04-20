@@ -27,7 +27,10 @@ export const TableReservationColumnOptions: ColumnConfig<TableReservationEntity>
    {
     key: "state", header: "Statut", type: "text", sorting: true, cell: (row) => {
       const val = stateOption.find((r) => r.id === row.state.toString())
-
+      console.log(row.state);
+      
+      console.log(val);
+      
       return (
         <p style={{ color: val?.color }}>{val?.label}</p>
       )

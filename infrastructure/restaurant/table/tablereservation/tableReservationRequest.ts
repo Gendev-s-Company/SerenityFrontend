@@ -37,7 +37,7 @@ export const getPaginateAllReservation = async (page:number,size:number,companyI
   const finalStart = startdate === "" ? formattedStartDate : startdate;
   const finalEnd = enddate === "" ? "" : enddate;
 
-    const finalState = state === "-1" ? "0,1,2" : state; 
+    const finalState = state === "-1" ? "0,1,2" : (state === "-2" ? "4,5" : state); 
 
     // const finalState = state === "-1" ? "1,2,8" : (state === "-2" ? "4,5" : state);
 

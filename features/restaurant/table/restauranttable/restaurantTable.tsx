@@ -10,8 +10,10 @@ import { RestaurantTableColumnOptions, RestaurantTableNameField } from "./prep-v
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
-import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
+import { convertListToOption } from "@/infrastructure/restaurant/table/tableType/tabletypeFonction";
+import { getAllTableType } from "@/infrastructure/restaurant/table/tableType/tableTypeRequest";
+// import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
+// import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
 
 export default function RestaurantTable() {
     const [restaurantTable,setRestaurantTable]=useState<RestaurantTableEntity[]>([]);
@@ -41,6 +43,7 @@ export default function RestaurantTable() {
     }, []);
 
     useEffect(()=> {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         if (user && user.profil.company.companyID) {
         getPaginateTable(user.profil.company.companyID,page.pageIndex,page.pageSize)

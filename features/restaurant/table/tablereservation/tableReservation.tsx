@@ -120,6 +120,8 @@ useEffect(() => {
         formatToISO(endDate)
       )
         .then((data) => {
+          console.log(data.content);
+          
           setReservations(data.content);
           setPaginationInfo({
             totalElement: data.totalElements,

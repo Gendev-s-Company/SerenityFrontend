@@ -22,7 +22,7 @@ import TableChoice from "./forms/table-choice";
 import { createReservation } from "@/infrastructure/restaurant/table/tablereservation/tableReservationRequest";
 
 const Reservation = () => {
-  const step = 3;
+  const step = 2;
   const tableID = useSearchParams().get('tableID');
   
   const [progress, setProgress] = useState<number>(1);
@@ -35,7 +35,7 @@ const Reservation = () => {
     endtime: "",
     customerID: "",
     userID: "",
-    state: "1",
+    state: '1',
     status: 0,
     skipValidation: true,
   };
