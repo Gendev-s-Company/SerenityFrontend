@@ -60,6 +60,15 @@ export const RestoItems: PMenu =
             minAuthority: 2,
           },
           {
+            title: "Réserver une table",
+            url: "/view/restaurant/table/createResa",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: BookMarked,
+            minAuthority: 2,
+          },
+          {
             title: "Calendrier table",
             url: "#calendriert",
             dropdown: false,
