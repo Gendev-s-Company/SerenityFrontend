@@ -11,8 +11,8 @@ export const RestoItems: PMenu =
       {
         title: "Tables",
         url: "#table",
-        dropdown: true,
-        isSubmenu: false,
+        dropdown: false,
+        isSubmenu: true,
         subMenu: [
           {
             title: "Table",
@@ -42,7 +42,7 @@ export const RestoItems: PMenu =
             minAuthority: 2,
           },
           {
-            title: "Réservation table",
+            title: "Situation table",
             url: "/view/restaurant/table/reservation",
             dropdown: false,
             isSubmenu: false,
@@ -69,7 +69,7 @@ export const RestoItems: PMenu =
         dropdown: false,
         isSubmenu: true,
         subMenu: [{
-            title: "Catalogue",
+            title: "Menu",
             url: "#liste",
             dropdown: false,
             isSubmenu: false,
@@ -91,12 +91,13 @@ export const RestoItems: PMenu =
         minAuthority: 2,
       },
       {
-        title: "Commande",
+        title: "Service",
         url: "#commande",
         dropdown: false,
         isSubmenu: true,
-        subMenu: [{
-            title: "Liste",
+        subMenu: [
+          {
+            title: "Plan de table",
             url: "#liste",
             dropdown: false,
             isSubmenu: false,
@@ -105,7 +106,16 @@ export const RestoItems: PMenu =
             minAuthority: 2,
           },
           {
-            title: "Commande",
+            title: "Liste commandes",
+            url: "#liste",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Inbox,
+            minAuthority: 2,
+          },
+          {
+            title: "Création commande",
             url: "#situation",
             dropdown: false,
             isSubmenu: false,

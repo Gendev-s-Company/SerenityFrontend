@@ -25,6 +25,7 @@ export const items: PMenu[] = [
     icon: Calendar,
     minAuthority: 4,
   },
+  RestoItems,
   HotelItems,
   // {
   //   title: "HOTEL",
@@ -35,6 +36,5 @@ export const items: PMenu[] = [
   //   icon: LayoutDashboard,
   //   minAuthority: 4,
   // },
-  RestoItems,
 
 ];

@@ -12,8 +12,8 @@ export const HotelItems: PMenu =
     {
       title: "Chambre",
       url: "#chambre",
-      dropdown: false,
-      isSubmenu: true,
+      dropdown: true,
+      isSubmenu: false,
       subMenu: [
         {
           title: "Type des chambres",
@@ -27,7 +27,7 @@ export const HotelItems: PMenu =
         {
           title: "Liste des chambres",
           url: "/view/hotel/room",
-          dropdown: false,
+          dropdown: true,
           isSubmenu: false,
           subMenu: [],
           icon: BedSingle,
@@ -49,8 +49,8 @@ export const HotelItems: PMenu =
     {
       title: "Séjours",
       url: "#chambre",
-      dropdown: false,
-      isSubmenu: true,
+      dropdown: true,
+      isSubmenu: false,
       subMenu: [
         {
           title: "Réserver une chambre",
