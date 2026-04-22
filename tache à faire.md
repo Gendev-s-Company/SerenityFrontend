@@ -4,22 +4,21 @@ BACKEND:
         -api qui fait un crud sur dish
         -api qui fait un crud sur dishPhoto
         -api qui fait un crud sur dishPrice
-        -api qui modifie le state d'un plat (dispo/non dispo)
+        -api qui modifie le state d'un plat (dispo/non dispo) 0-> dispo, 1-> non dispo
 
 
     -Commande:
         -api qui fait un crud dishOrder:
-            .pour la liste
-            .le front va envoyer dishOrder et dishOrderDetails en une fois.
+            .pour la liste -> recuperer juste les parents
+            .pour la création, le front va envoyer dishOrder et dishOrderDetails en une fois.
                 pour enregistrer, utiliser le concept de HELPER (parent/enfant)
-            .il faut verifier que le state du plat est = 0 (disponible) avant d'enregistrer
+            .il faut verifier que le state du plat est = 0 (disponible) avant d'enregistrer si 1 -> raise exception
 
         -api qui fait un getById
             .il faut retourner le parent et la liste des enfants
             .mettre aussi dans le type de retour le prix total
             
         -api qui fait un crud sur dishOrderDetails
-            .pour la liste, il faut faire un findByParent
             .on a besoin de l'api create|delete|update dans le cas où le client veut modifier sa commande
             .si le client ajoute une commande et que le state du parent est à 1, modifier ce dernier à 0
 
@@ -40,7 +39,7 @@ BACKEND:
             .sous chaque photo, on pourra augmenter ou diminuer la quantité de plat
             .apres validation du panier:
                 *recuperer la liste de table avec statut occuper/libre puis en choisir une 
-                *si libre est choisi, la table sera reserver et il faudra choisir l'heure de la reservation
+                *si libre est choisi, la table sera occuper et il faudra choisir l'heure de la reservation (mbola ampiana am backend)
     
     -Commande:
         -Afficher la liste des commandes.
