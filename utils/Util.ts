@@ -35,6 +35,20 @@ export function timestampToText(timestamp :any) {
   });
 }
 
+// Date en texte
+export function formatDateFR(dateString: any) {
+  const [year, month, day] = dateString.split('-');
+  const date = new Date(year, month - 1, day);
+
+  return new Intl.DateTimeFormat('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
+}
+
+
 export function normalizeDateKey(dateString: string | null) {
   if(dateString === null) return null;  
   const date = new Date(dateString);

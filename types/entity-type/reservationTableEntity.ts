@@ -1,5 +1,5 @@
 import { CustomerEntity } from "./customerEntity";
-import { TableEntity } from "./tableEntity";
+import { RestaurantTableEntity } from "./restauranTableEntity";
 import { UserEntity } from "./userEntity";
 
 export interface ReservationTableEntity {
@@ -11,7 +11,7 @@ export interface ReservationTableEntity {
     state: string,
     status: number,
     skipValidation: boolean,
-    table?: TableEntity,
+    table?: RestaurantTableEntity,
     user?: UserEntity,
     customer?: CustomerEntity
 }

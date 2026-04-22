@@ -8,7 +8,7 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { dateToBackend, generateDateRange, normalizeDateKey, timestampToText } from "@/utils/Util";
+import { dateToBackend, formatDateFR, generateDateRange, normalizeDateKey, timestampToText } from "@/utils/Util";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { DisponibilityEntity } from "@/types/entity-type/restauranTableEntity";
@@ -405,7 +405,7 @@ export default function Disponibilite() {
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
                 {Object.entries(tablesGroupedById).map(([tableId, tableStates]) => {
                   // On récupère le nom de la table  depuis le premier élément du groupe
-                  const tableName = tableStates[0]?.name || tableStates[0]?.name;
+                  const tableName = tableStates[0]?.table_name || tableStates[0]?.table_name;
 
                   return (
                     <div key={tableId}>
@@ -416,7 +416,7 @@ export default function Disponibilite() {
 
                         const displayColor = findColor(table.reservation_state);
                         const displayLabel = setLabel(table.reservation_state);
-                        const name = table?.name ? table.name : table.name;
+                        const name = table?.table_name ? table.table_name : table.table_name;
 
                         return (
                           <TooltipProvider key={`${tableId}-${index}`}>
@@ -461,66 +461,110 @@ export default function Disponibilite() {
           </div>
 
         ) : (
-        <div className="overflow-x-auto overflow-y-auto max-h-[50vh] sm:max-h-[60vh] lg:max-h-[70vh] w-full border border-gray-300 rounded-lg">
+          <div className="overflow-x-auto overflow-y-auto max-h-[50vh] sm:max-h-[60vh] lg:max-h-[70vh] w-full border border-gray-300 rounded-lg">
             <table className="table-auto border-collapse border border-gray-300 w-full text-xs sm:text-sm">
+                  
               <thead className="sticky top-0 z-10">
                 <tr>
-                  <th className="border border-gray-300 p-1 sm:p-2 bg-gray-100 font-semibold sticky left-0 z-20 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">Chambre</th>
+                  <th className="border border-gray-300 p-1 sm:p-2 bg-gray-100 font-semibold sticky left-0 z-20 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">
+                    Table
+                  </th>
+                  
                   {dates.map(date => (
-                    <th key={date} className="border border-gray-300 p-1 sm:p-2 bg-gray-100 text-xs sm:text-sm font-semibold whitespace-nowrap min-w-[30px] sm:min-w-[40px]">
-                      {timestampToText(date)}
+                    <th
+                      key={date}
+                      className="border border-gray-300 p-1 sm:p-2 bg-gray-100 text-xs sm:text-sm font-semibold whitespace-nowrap min-w-[30px] sm:min-w-[40px]"
+                    >
+                      {formatDateFR(date)}
                     </th>
                   ))}
                 </tr>
               </thead>
+                
               <tbody>
                 {Object.entries(allTablesGrouped).map(([tableID, tables]) => {
-                  const tableName = tables[0]?.name || tableID;
+                  const tableName = tables[0]?.table_name || tableID
+                
                   return (
                     <tr key={tableID}>
-                      <td className="border border-gray-300 p-1 sm:p-2 font-semibold bg-gray-50 sticky left-0 z-5 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">{tableName}</td>
+                      
+                      {/* NOM TABLE */}
+                      <td className="border border-gray-300 p-1 sm:p-2 font-semibold bg-gray-50 sticky left-0 z-5 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">
+                        {tableName}
+                      </td>
+                  
+                      {/* COLONNES PAR DATE */}
                       {dates.map(date => {
-                        const tableForDate = tables.find(t => normalizeDateKey(t.day) === date);
-                        const state = tableForDate ? tableForDate.reservation_state : 9;
-                        const label = reservationStateLabels[state] || "Aucune donnée";
-
-                        // Appliquer les couleurs selon le mode
-                        const cellColor = appliedFilters.mode === 0
-                          ? (state === 0 ? 'bg-green-500' : state === 9 ? 'bg-gray-300' : 'bg-red-600')
-                          : tablestateStyles[state];
-
+                        
+                        // ✅ IMPORTANT : on récupère toutes les réservations du jour
+                        const tablesForDate = tables.filter(
+                          t => normalizeDateKey(t.day) === date
+                        )
+                      
                         return (
-                          <TooltipProvider key={date}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <td
-                                  className={`border border-gray-300 p-2 cursor-pointer hover:opacity-80 ${cellColor || 'bg-gray-200'}`}
-                                  onClick={() => tableForDate && setSelectedTable(tableForDate)}
-                                >
-                                </td>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  Table: {tableName} <br />
-                                  Date: {timestampToText(date)} <br />
-                                  État: {label}
-                                  {tableForDate && (
-                                    <>
-                                      <br />
-                                      Arrivée: {tableForDate.actual_arrival ? timestampToText(tableForDate.actual_arrival) : "Non défini"}<br />
-                                      Départ: {tableForDate.actual_departure ? timestampToText(tableForDate.actual_departure) : "Non défini"}
-                                    </>
-                                  )}
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        );
+                          <td
+                            key={date}
+                            className="border border-gray-300 p-1 align-top min-h-[60px]"
+                          >
+                            {tablesForDate.length > 0 ? (
+                              <div className="flex flex-col gap-1">
+                                
+                                {tablesForDate.map((res, i) => {
+                                  const state = res.reservation_state
+                                  const label = reservationStateLabels[state] || "Inconnu"
+                                
+                                  const cellColor =
+                                    appliedFilters.mode === 0
+                                      ? (state === 0
+                                          ? 'bg-green-500'
+                                          : 'bg-red-600')
+                                      : tablestateStyles[state]
+                                      
+                                  return (
+                                    <TooltipProvider key={`${date}-${i}`}>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div
+                                            onClick={() => setSelectedTable(res)}
+                                            className={`text-white text-[10px] px-1 py-[2px] rounded cursor-pointer hover:scale-102 transition-transform ${cellColor}`}
+                                          >
+                                            {res.actual_arrival
+                                              ? timestampToText(res.actual_arrival)
+                                              : "--"}{" "}
+                                            -{" "}
+                                            {res.actual_departure
+                                              ? timestampToText(res.actual_departure)
+                                              : "--"}
+                                          </div>
+                                        </TooltipTrigger>
+                                            
+                                        <TooltipContent>
+                                          <p>
+                                            Table : {tableName} <br />
+                                            Date : {timestampToText(date)} <br />
+                                            État : {label} <br />
+                                            Arrivée : {res.actual_arrival ? timestampToText(res.actual_arrival) : "Non défini"} <br />
+                                            Départ : {res.actual_departure ? timestampToText(res.actual_departure) : "Non défini"}
+                                          </p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  )
+                                })}
+          
+                              </div>
+                            ) : (
+                              <div className="h-[20px]"></div>
+                            )}
+                          </td>
+                        )
                       })}
+          
                     </tr>
-                  );
+                  )
                 })}
               </tbody>
+              
             </table>
           </div>
         )}
@@ -536,7 +580,7 @@ export default function Disponibilite() {
                 <div>
                   <h2 className="text-xl font-bold">
                     <DialogHeader>
-                      <DialogTitle>{selectedTable.name}</DialogTitle>
+                      <DialogTitle>{selectedTable.table_name}</DialogTitle>
                       <DialogDescription>
                         Détails de la disponibilité de la table
                       </DialogDescription>
@@ -578,7 +622,7 @@ export default function Disponibilite() {
                   </h3>
 
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Début {selectedMode} select: {selectedTable.reservation_state}</span>
+                    <span className="text-gray-500">Début</span>
                     <span className="font-medium text-gray-800">
                       {((selectedTable.reservation_state !== 0 && selectedTable.reservation_state !== 5 && selectedTable.reservation_state !== 6 && selectedTable.reservation_state !== 8) && selectedMode === 1)
                         ? timestampToText(selectedTable.actual_arrival) : timestampToText(appliedFilters.start)}
