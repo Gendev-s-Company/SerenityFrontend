@@ -496,7 +496,7 @@ export default function Disponibilite() {
                       {/* COLONNES PAR DATE */}
                       {dates.map(date => {
                         
-                        // ✅ IMPORTANT : on récupère toutes les réservations du jour
+                        //IMPORTANT : on récupère toutes les réservations du jour
                         const tablesForDate = tables.filter(
                           t => normalizeDateKey(t.day) === date
                         )
@@ -541,7 +541,7 @@ export default function Disponibilite() {
                                         <TooltipContent>
                                           <p>
                                             Table : {tableName} <br />
-                                            Date : {timestampToText(date)} <br />
+                                            Date : {formatDateFR(date)} <br />
                                             État : {label} <br />
                                             Arrivée : {res.actual_arrival ? timestampToText(res.actual_arrival) : "Non défini"} <br />
                                             Départ : {res.actual_departure ? timestampToText(res.actual_departure) : "Non défini"}
