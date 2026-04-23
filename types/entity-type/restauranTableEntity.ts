@@ -12,7 +12,7 @@ export interface RestaurantTableEntity {
 
 export interface DisponibilityEntity{
     tableID: string,
-    name: string,
+    table_name: string,
     table_state:number,
     reservation_state:number,
     actual_arrival:string|null,
