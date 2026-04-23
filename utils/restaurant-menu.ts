@@ -98,7 +98,7 @@ export const RestoItems: PMenu =
           },
           {
             title: "Création plat",
-            url: "#situationc",
+            url: "/view/restaurant/plat",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
