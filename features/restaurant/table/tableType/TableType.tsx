@@ -1,9 +1,11 @@
 "use client";
+// import TableType from "@/features/restaurant/table/tableType/tableType"
 
 import { DataTable } from "@/components/liste/complexe-data-table";
 // import { createtableType, deletetableType, getPaginatetableTypes, updatetableType } from '@/infrastructure/hotel/room/tableType/tableTypeRequest';
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { useEffect, useMemo, useState } from "react";
+import { TableTypeColumnOptions, TableTypeNamefield } from "./prep-view-tableType";
 import { PaginationState } from "@tanstack/react-table";
 import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
@@ -11,7 +13,6 @@ import { getLocalStorage } from "@/utils/storage";
 import { TableTypeEntity } from "@/types/entity-type/tableTypeEntity";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { createTableType, deleteTableType, getPaginateTableTypes, updateTableType } from "@/infrastructure/restaurant/table/tableType/tableTypeRequest";
-import { TableTypeColumnOptions, TableTypeNameField } from "./prep-view-tableType";
 
 export default function TableType() {
     const [tableType,settableType]=useState<TableTypeEntity[]>([]);
@@ -117,7 +118,7 @@ const onDelete = async (id: string | null) => {
               onCreate={onCreate}
               data={tableType}
               mcolumns={columns}
-              fields={TableTypeNameField}
+              fields={TableTypeNamefield}
               columnFilter="name"
               pageCount={all.totalPage}
               rowCount={all.totalElement}

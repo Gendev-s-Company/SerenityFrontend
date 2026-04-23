@@ -10,7 +10,7 @@ export const TableTypeColumnOptions: ColumnConfig<TableTypeEntity>[] = [
     { key: "status", header: "Statut", sorting: true },
 
 ];
-export const TableTypeNameField: FieldConfig<TableTypeEntity>[] = [
+export const TableTypeNamefield: FieldConfig<TableTypeEntity>[] = [
     { name: "name", libelle: "Nom", type: "text",normal:true },
     { name: "description", libelle: "Description", type: "text", normal: true },
     {
