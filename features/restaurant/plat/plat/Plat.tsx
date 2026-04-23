@@ -9,7 +9,7 @@ import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { DataTable } from "@/components/liste/complexe-data-table";
 import { PlatEntity } from "@/types/entity-type/platEntity";
 import { createPlat, deletePlat, getPaginatePlat, updateDispo, updatePlat } from "@/infrastructure/restaurant/plat/plat/platRequest";
-import { PlatColumnOptions, PlatNamefield } from "./prep-viewPlat";
+import { PlatColumnOptions, PlatColumnOptions2, PlatNamefield } from "./prep-viewPlat";
 import { getAllPlatType } from "@/infrastructure/restaurant/plat/platType/platTypeRequest";
 import { convertListToOption } from "@/infrastructure/restaurant/plat/platType/platTypeFonction";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
@@ -102,8 +102,70 @@ export default function Plat() {
     };
 
 
+    const btnAction2: ColumnConfig<PlatEntity> = {
+      key: "action_btn",
+      header: "Action",
+      type: "button",
+      hiding: false,
+       cell: (row: PlatEntity) => {
+
+        if (row.state === 1) {
+
+            return (
+                <div className="flex gap-2">
+                    <TooltipProvider>
+                        <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                            onClick={(e) => fonctionDispo(row)}
+                            type="button"
+                            className="px-3 py-1 bg-green-400 rounded-md cursor-pointer hover:bg-green-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
+                            >
+                            {/* <BookmarkX className="h-4 w-4" /> */}
+                            Rendre disponible
+                            </Button>
+                        </TooltipTrigger>
+                        {/* <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
+                            <p>Disponible</p>
+                        </TooltipContent> */}
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            );
+            }if (row.state === 0) {
+
+            return (
+                <div className="flex gap-2">
+                    <TooltipProvider>
+                        <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                            onClick={(e) => fonctionNonDispo(row)}
+                            type="button"
+                            className="px-3 py-1 bg-amber-400 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
+                            >
+                            {/* <BookmarkX className="h-4 w-4" /> */}
+                            Rendre indisponible
+                            </Button>
+                        </TooltipTrigger>
+                        {/* <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
+                            <p>Indisponible</p>
+                        </TooltipContent> */}
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            );
+            }
+        }
+    };
+
+
     const columns = useMemo(() => {
       return [...PlatColumnOptions, btnAction];
+    }, []);
+
+    const columns2 = useMemo(() => {
+      return [...PlatColumnOptions2, btnAction2];
     }, []);
 
     const options: FieldConfig<PlatEntity> = useMemo(
@@ -157,6 +219,11 @@ export default function Plat() {
       setRefresh((prev) => prev + 1);
     };
 
+
+    const getRowClassName = (row: PlatEntity) => {
+        return row.state === 1 ? "bg-gray-100" : "";
+        };
+
     return (
     <div className="container mx-auto py-10 px-3">
 
@@ -177,6 +244,33 @@ export default function Plat() {
           authority={user?.profil?.authority}
         />
       </div>
+
+       <br/> 
+
+      <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <h2 className="text-xl font-semibold">{"Situation des plats"}</h2>
+        <DataTable
+          body={body}
+        //   onCreate={onCreate}
+          data={Plat}
+          mcolumns={columns2}
+          fields={namefield}
+          columnFilter="name"
+          pageCount={all.totalPage}
+          rowCount={all.totalElement}
+          onPaginationChange={setPage}
+          pagination={page}
+          loading={loading}
+          authority={user?.profil?.authority}
+        />
+      </div>
+
+
     </div>
+
+
+
+
+    
   );
 }
