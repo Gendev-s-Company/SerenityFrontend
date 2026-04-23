@@ -88,6 +88,15 @@ export const RestoItems: PMenu =
 
           },
           {
+            title: "Création Type de plat",
+            url: "/view/restaurant/plat/platType",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Beef,
+            minAuthority: 4
+          },
+          {
             title: "Création plat",
             url: "#situationc",
             dropdown: false,
