@@ -6,7 +6,7 @@ export const PlatColumnOptions: ColumnConfig<PlatEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" ,href: (row) => `/dishes/${row.dishID}`},
     { key: "dishID", header: "Dishid", sorting: true },
     { key: "name", header: "Name", type: "link", sorting: true, 
-        href: (row) => `/view/restaurant/plat/detail?dishID=${row.dishID}`,
+        href: (row) => `/view/restaurant/plat/detail?dishID=${row.dishID}&dishState=${row.state}`,
     },
     // { key: "typeid.name", header: "Type", type: "text", sorting: true },
     { key: "description", header: "description", type: "text", sorting: true },

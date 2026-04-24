@@ -4,14 +4,18 @@ import { useEffect, useState } from 'react';
 
 import { getCurrency } from '@/utils/Util';
 import { PlatEntity } from '@/types/entity-type/platEntity';
-import { getPlatById } from '@/infrastructure/restaurant/plat/plat/platRequest';
+import { getPlatById, updateDispo } from '@/infrastructure/restaurant/plat/plat/platRequest';
 import { getplatLastPriceById } from '@/infrastructure/restaurant/plat/platPrice/platPriceRequest';
 import { PlatPriceEntity } from '@/types/entity-type/platPriceEntity';
 import PlatPrice from '../platPrice/platPrice';
 import PhotoDetailPlat from './photoPlat';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip';
+import { Button } from '@/components/ui/button';
 
 export default function DetailPlat() {
     const platID = useSearchParams().get('dishID');
+    const platSTATE = useSearchParams().get('dishState');
+
     const [refresh, setRefresh] = useState<number>(0);
 
     // const platID = platID;
@@ -27,7 +31,7 @@ export default function DetailPlat() {
                     console.error("Error fetching activity details:", error);
                 });
         }
-    }, [platID]);
+    }, [refresh,platID]);
 
 
     useEffect(() => {
@@ -41,6 +45,16 @@ export default function DetailPlat() {
         }
     }, [platID, refresh]);
 
+    const fonctionDispo = async (formData: PlatEntity) => {
+            await updateDispo(formData, "0");
+            setRefresh((prev) => prev + 1);
+    };
+    
+    
+    const fonctionNonDispo = async (formData: PlatEntity) => {
+        await updateDispo(formData, "1");
+        setRefresh((prev) => prev + 1);
+    };
 
     return (
         <>
@@ -55,6 +69,23 @@ export default function DetailPlat() {
                             Informations détaillées sur ce plat
                         </p>
                     </div>
+
+                    {plat?.state === 0 && (
+                        <div className="flex-shrink-0">
+                            <span className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-bold border border-green-200">
+                                <span className="mr-1.5">●</span>
+                                DISPONIBLE
+                            </span>
+                        </div>
+                    )}
+                    {plat?.state === 1 && (
+                        <div className="flex-shrink-0">
+                            <span className="inline-flex items-center px-4 py-2 rounded-full bg-red-100 text-red-700 text-sm font-bold border border-red-200">
+                                <span className="mr-1.5">●</span>
+                                NON DISPONIBLE
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -87,11 +118,49 @@ export default function DetailPlat() {
                                 )}
                             </div>
 
-                            {/* <div className="flex flex-wrap gap-3">
-                                <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
+                            <div className="flex flex-wrap gap-3">
+                                {/* <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
                                     ✨ Plat disponible
-                                </span>
-                            </div> */}
+                                </span> */}
+
+                                {plat?.state === 1 && plat && (
+                                    <div className="flex gap-2">
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        onClick={(e) => fonctionDispo(plat)}
+                                                        type="button"
+                                                        className="px-3 py-1 bg-green-400 rounded-md cursor-pointer hover:bg-green-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
+                                                    >
+                                                        Rendre disponible
+                                                    </Button>
+                                                </TooltipTrigger>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </div>
+                                )}
+                                
+                                {plat?.state === 0 && plat && (
+                                    <div className="flex gap-2">
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        onClick={(e) => fonctionNonDispo(plat)}
+                                                        type="button"
+                                                        className="px-3 py-1 bg-amber-400 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
+                                                    >
+                                                        Rendre indisponible
+                                                    </Button>
+                                                </TooltipTrigger>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </div>
+                                )}
+        
+
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -111,20 +111,20 @@ export default function PlatPrice({ PlatId, refresh, setRefresh }: PlatPriceProp
       };
   
 
-  const Plat: PlatEntity = {
-    skipValidation: true,
-    dishID: PlatID,
-    type: PlatType,
-    name: "",
-    description: "",
-    status: 0,
-    state : 0
-  };
+  // const Plat: PlatEntity = {
+  //   skipValidation: true,
+  //   dishID: PlatID,
+  //   type: PlatType,
+  //   name: "",
+  //   description: "",
+  //   status: 0,
+  //   state : 0
+  // };
 
   const body: PlatPriceEntity = {
     priceID: null,
     // dish: Plat,
-    dishID : "",
+    dishID : PlatID,
     price: 0,
     dateChanged: new Date(),
     status: 0,
@@ -133,7 +133,7 @@ export default function PlatPrice({ PlatId, refresh, setRefresh }: PlatPriceProp
 
   const onCreate = async (formData: PlatPriceEntity) => {
 
-    console.log(formData);
+    console.log("TRYYY ",formData);
 
     await createplatPrice(formData);
     setRefresh((prev: number) => prev + 1);
@@ -142,7 +142,7 @@ export default function PlatPrice({ PlatId, refresh, setRefresh }: PlatPriceProp
     <div className="container mx-auto py-10 px-3">
       <DataTable
         body={body}
-        // onCreate={onCreate}
+        onCreate={onCreate}
         data={PlatPrice}
         mcolumns={columns}
         fields={PlatPriceNamefield}
