@@ -1,11 +1,16 @@
 import { deleteCall, getCall, postCall, putCall } from "@/infrastructure/api";
 import { Page } from "@/types/entity-type/common/Page";
+import { PlatCatalogueEntity } from "@/types/entity-type/platCatalogueEntity";
 import { PlatEntity } from "@/types/entity-type/platEntity";
 import { pl } from "zod/v4/locales";
 
 const platPath="/restaurant/dish"
 export const getAllPlat = async (company:string) => {
     return await getCall<PlatEntity[]>(platPath+'/all?company=' + company);
+}
+
+export const getAllPlatALL = async (company:string) => {
+    return await getCall<PlatCatalogueEntity[]>(platPath+'/all?company=' + company);
 }
 
 export const getPaginatePlat = async (company:string, page:number, size:number) => {
