@@ -14,7 +14,7 @@ import { getAllPlatType } from "@/infrastructure/restaurant/plat/platType/platTy
 import { convertListToOption } from "@/infrastructure/restaurant/plat/platType/platTypeFonction";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Button } from "@/components/ui/button";
-import { BookmarkX } from "lucide-react";
+import { Ban, BookmarkX, CheckCheck } from "lucide-react";
 
 export default function Plat() {
     const [Plat,setPlat]=useState<PlatEntity[]>([]);
@@ -81,15 +81,10 @@ export default function Plat() {
 
 
     const fonctionDispo = async (formData: PlatEntity) => {
-        await updateDispo(formData, "0");
+        await updateDispo(formData, formData.state === 1 ? "0" : "1");
         setRefresh((prev) => prev + 1);
     };
 
-
-    const fonctionNonDispo = async (formData: PlatEntity) => {
-        await updateDispo(formData, "1");
-        setRefresh((prev) => prev + 1);
-    };
 
     const btnAction: ColumnConfig<PlatEntity> = {
       key: "action_btn",
@@ -101,67 +96,45 @@ export default function Plat() {
       onClick: (row) => console.log("Editer", row.dishID),
     };
 
-
-    const btnAction2: ColumnConfig<PlatEntity> = {
-      key: "action_btn",
-      header: "Action",
-      type: "button",
-      hiding: false,
-       cell: (row: PlatEntity) => {
-
-        if (row.state === 1) {
-
-            return (
-                <div className="flex gap-2">
+    interface BoutonProps {      
+      row: PlatEntity;
+    }
+    const Bouton = ({ row }: BoutonProps)=> {
+        return (
+          <div className="flex gap-2">
                     <TooltipProvider>
                         <Tooltip>
                         <TooltipTrigger asChild>
                             <Button
                             onClick={(e) => fonctionDispo(row)}
                             type="button"
-                            className="px-3 py-1 bg-green-400 rounded-md cursor-pointer hover:bg-green-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
+                            className={`px-3 py-1 bg-${row.state === 1 ? 'red' : 'green'}-400 rounded-md cursor-pointer hover:bg-${row.state === 1 ? 'red' : 'green'} -500 text-sm font-medium transition-colors inline-flex items-center gap-2`}
                             >
-                            {/* <BookmarkX className="h-4 w-4" /> */}
-                            Rendre disponible
+                            {
+                              row.state === 1 ? <Ban className="h-4 w-4" /> : <CheckCheck  className="h-4 w-4" />
+                            }
+                            
                             </Button>
                         </TooltipTrigger>
-                        {/* <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                            <p>Disponible</p>
-                        </TooltipContent> */}
+                        <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
+                            <p>{row.state === 1 ? "Indisponible, cliquer pour rendre disponible" : "Disponible, cliquer pour rendre indisponible"}</p>
+                        </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                 </div>
-            );
-            }if (row.state === 0) {
-
-            return (
-                <div className="flex gap-2">
-                    <TooltipProvider>
-                        <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                            onClick={(e) => fonctionNonDispo(row)}
-                            type="button"
-                            className="px-3 py-1 bg-amber-400 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
-                            >
-                            {/* <BookmarkX className="h-4 w-4" /> */}
-                            Rendre indisponible
-                            </Button>
-                        </TooltipTrigger>
-                        {/* <TooltipContent side="bottom" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
-                            <p>Indisponible</p>
-                        </TooltipContent> */}
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
-            );
-            }
-        }
+        )
+    }
+    const btnAction2: ColumnConfig<PlatEntity> = {
+      key: "action_btn2",
+      header: "Disponibilité",
+      type: "button",
+      hiding: false,
+      cell: (row) => <Bouton row={row} />,
     };
 
 
     const columns = useMemo(() => {
-      return [...PlatColumnOptions, btnAction];
+      return [...PlatColumnOptions,btnAction2, btnAction];
     }, []);
 
     const columns2 = useMemo(() => {
@@ -220,9 +193,6 @@ export default function Plat() {
     };
 
 
-    const getRowClassName = (row: PlatEntity) => {
-        return row.state === 1 ? "bg-gray-100" : "";
-        };
 
     return (
     <div className="container mx-auto py-10 px-3">
@@ -244,28 +214,6 @@ export default function Plat() {
           authority={user?.profil?.authority}
         />
       </div>
-
-       <br/> 
-
-      <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-        <h2 className="text-xl font-semibold">{"Situation des plats"}</h2>
-        <DataTable
-          body={body}
-        //   onCreate={onCreate}
-          data={Plat}
-          mcolumns={columns2}
-          fields={namefield}
-          columnFilter="name"
-          pageCount={all.totalPage}
-          rowCount={all.totalElement}
-          onPaginationChange={setPage}
-          pagination={page}
-          loading={loading}
-          authority={user?.profil?.authority}
-        />
-      </div>
-
-
     </div>
 
 
