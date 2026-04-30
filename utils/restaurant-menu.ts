@@ -1,5 +1,6 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed, Menu, BookMarked, CookingPot, Utensils } from "lucide-react";
+import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed, Menu, BookMarked, CookingPot, Utensils,SquareMenu } from "lucide-react";
+
 
 export const RestoItems: PMenu = 
   {
@@ -79,14 +80,34 @@ export const RestoItems: PMenu =
 
           },
           {
-            title: "Création plat",
-            url: "#situationc",
+            title: "Création Type de plat",
+            url: "/view/restaurant/plat/platType",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
             icon: CookingPot,
             minAuthority: 4
-          },],
+          },
+          {
+            title: "Création plat",
+            url: "/view/restaurant/plat",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: Beef,
+            minAuthority: 4
+          },
+          {
+            title: "Catalogue de plat",
+            url: "/view/restaurant/plat/catalogue",
+            dropdown: false,
+            isSubmenu: false,
+            subMenu: [],
+            icon: SquareMenu,
+            minAuthority: 4
+          },
+        
+        ],
         icon: Calendar,
         minAuthority: 2,
       },
