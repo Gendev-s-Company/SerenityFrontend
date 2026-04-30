@@ -16,9 +16,9 @@ export default function Liste<TData>({
       {/* HEADER */}
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id} className="text-center">
+          <TableRow key={headerGroup.id} className="text-start">
             {headerGroup.headers.map((header) => (
-              <TableHead key={header.id} className="text-center">
+              <TableHead key={header.id} className="text-start">
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -36,7 +36,7 @@ export default function Liste<TData>({
         {/* 🔹 SKELETON LOADING */}
         {loading ? (
           Array.from({ length: rowCount }).map((_, rowIndex) => (
-            <TableRow key={rowIndex} className="animate-pulse">
+            <TableRow key={rowIndex} className="animate-pulse text-center">
               {Array.from({ length: columnCount }).map((_, colIndex) => (
                 <TableCell key={colIndex}>
                   <div className="h-4 w-full rounded-md bg-muted" />
@@ -53,7 +53,7 @@ export default function Liste<TData>({
               className="normal-case"
             >
               {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} className="normal-case text-center">
+                <TableCell key={cell.id} className="normal-case text-start">
                   {flexRender(
                     cell.column.columnDef.cell,
                     cell.getContext()

@@ -71,7 +71,7 @@ export const RestoItems: PMenu =
         isSubmenu: true,
         subMenu: [{
             title: "Menu",
-            url: "#liste",
+            url: "/view/restaurant/plat/catalogue",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
@@ -89,7 +89,7 @@ export const RestoItems: PMenu =
             minAuthority: 4
           },
           {
-            title: "Création plat",
+            title: "Gestion des plats",
             url: "/view/restaurant/plat",
             dropdown: false,
             isSubmenu: false,
@@ -99,7 +99,7 @@ export const RestoItems: PMenu =
           },
           {
             title: "Catalogue de plat",
-            url: "/view/restaurant/plat/catalogue",
+            url: "/view/restaurant/plat#",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],

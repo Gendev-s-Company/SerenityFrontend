@@ -44,6 +44,7 @@ export default function Plat() {
     }, []);
 
     useEffect(()=> {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         if (user && user.profil.company.companyID) {
         getPaginatePlat(user.profil.company.companyID,page.pageIndex,page.pageSize)
@@ -101,14 +102,14 @@ export default function Plat() {
     }
     const Bouton = ({ row }: BoutonProps)=> {
         return (
-          <div className="flex gap-2">
+          <div className="flex justify-center w-20" >
                     <TooltipProvider>
                         <Tooltip>
                         <TooltipTrigger asChild>
                             <Button
                             onClick={(e) => fonctionDispo(row)}
                             type="button"
-                            className={`px-3 py-1 bg-${row.state === 1 ? 'red' : 'green'}-400 rounded-md cursor-pointer hover:bg-${row.state === 1 ? 'red' : 'green'} -500 text-sm font-medium transition-colors inline-flex items-center gap-2`}
+                            className={`px-3 py-1 bg-${row.state === 1 ? 'red' : 'green'}-400 rounded-md cursor-pointer hover:bg-${row.state === 1 ? 'red' : 'green'} -500 text-sm font-medium transition-colors`}
                             >
                             {
                               row.state === 1 ? <Ban className="h-4 w-4" /> : <CheckCheck  className="h-4 w-4" />
@@ -137,9 +138,6 @@ export default function Plat() {
       return [...PlatColumnOptions,btnAction2, btnAction];
     }, []);
 
-    const columns2 = useMemo(() => {
-      return [...PlatColumnOptions2, btnAction2];
-    }, []);
 
     const options: FieldConfig<PlatEntity> = useMemo(
     () => ({
