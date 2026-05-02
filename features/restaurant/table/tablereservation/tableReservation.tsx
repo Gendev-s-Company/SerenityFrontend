@@ -104,11 +104,9 @@ useEffect(() => {
   return `${dateString}T00:00:00`;
   };
 
-
   // Fetch des données
   useEffect(() => {
     setLoading(true);
-
 
     if (user?.profil?.company?.companyID) {
       getPaginateAllReservation(

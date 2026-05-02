@@ -12,7 +12,7 @@ import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { TableTypeEntity } from "@/types/entity-type/tableTypeEntity";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
-import { createTableType, deleteTableType, getPaginateTableTypes, updateTableType } from "@/infrastructure/restaurant/table/tableType/tableTypeRequest";
+import { createTableType, deleteTableType, getPaginateTableTypes, updateTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
 
 export default function TableType() {
     const [tableType,settableType]=useState<TableTypeEntity[]>([]);
@@ -98,6 +98,7 @@ const onDelete = async (id: string | null) => {
       description: "",
       status: 0,
       skipValidation: false,
+      tables: null,
     };
 
     const onCreate = async (formData: TableTypeEntity) => {

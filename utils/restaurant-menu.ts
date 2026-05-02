@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Beef, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed, Menu, BookMarked, CookingPot, Utensils } from "lucide-react";
+import { Map,ListOrdered,Pen , BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair , Table2, UtensilsCrossed, Menu, BookMarked, CookingPot, Utensils, SquareMenu } from "lucide-react";
 
 export const RestoItems: PMenu = 
   {
@@ -25,7 +25,7 @@ export const RestoItems: PMenu =
           },
           {
             title: "Type de table",
-            url: "/view/restaurant/table/tableType",
+            url: "/view/restaurant/table/tabletype",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
@@ -38,7 +38,7 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: BookMarked,
+            icon: Pen ,
             minAuthority: 2,
           },
           {
@@ -74,7 +74,7 @@ export const RestoItems: PMenu =
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: BookImage,
+            icon: SquareMenu,
             minAuthority: 2,
 
           },
@@ -87,7 +87,7 @@ export const RestoItems: PMenu =
             icon: CookingPot,
             minAuthority: 4
           },],
-        icon: Calendar,
+        icon: Inbox,
         minAuthority: 2,
       },
       {
@@ -98,32 +98,32 @@ export const RestoItems: PMenu =
         subMenu: [
           {
             title: "Plan de table",
-            url: "#liste",
+            url: "/view/restaurant/dishOrder/seatingPlan",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: Map,
             minAuthority: 2,
           },
           {
             title: "Liste commandes",
-            url: "#liste",
+            url: "/view/restaurant/dishOrder",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: Inbox,
+            icon: ListOrdered,
             minAuthority: 2,
           },
           {
             title: "Création commande",
-            url: "#situation",
+            url: "/view/restaurant/dishOrder/tableOrder",
             dropdown: false,
             isSubmenu: false,
             subMenu: [],
-            icon: CalendarArrowUp,
+            icon: Pen,
             minAuthority: 2,
           },],
-        icon: Calendar,
+        icon: Inbox,
         minAuthority: 2,
 
       },

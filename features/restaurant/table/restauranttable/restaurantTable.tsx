@@ -10,8 +10,8 @@ import { RestaurantTableColumnOptions, RestaurantTableNameField } from "./prep-v
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { convertListToOption } from "@/infrastructure/restaurant/table/tableType/tabletypeFonction";
-import { getAllTableType } from "@/infrastructure/restaurant/table/tableType/tableTypeRequest";
+import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
+import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
 // import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
 // import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
 
@@ -133,9 +133,11 @@ export default function RestaurantTable() {
         description: "",
         company:company,
         status: 0,
+        tables: null,
       },
       capacity: 0,
       status: 0,
+      skipValidation: false,
     };
     const onCreate = async (formData: RestaurantTableEntity) => {
       const body = formData;
