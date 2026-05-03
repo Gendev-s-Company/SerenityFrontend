@@ -6,6 +6,7 @@ export interface TableTypeEntity {
     description: string,
     company: CompanyEntity,
     status: number,
+    tables: TableTypeEntity[] | null,
     skipValidation?: boolean,
 
 }

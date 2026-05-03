@@ -3,10 +3,15 @@ import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 
 const reservationStateOptions: FieldOptions[] = [
-  { id: '1', label: 'Non validé' },
-  { id: '2', label: 'Validé' },
-  { id: '7', label: 'En cours' },
-
+  { id: '0', label: 'Libre' },
+  { id: '1', label: 'Réservation non validée' },
+  { id: '2', label: 'Réservation validée (payée)' },
+  { id: '3', label: 'Table occupée sans réservation' },
+  { id: '4', label: 'Table occupée avec réservation' },
+  { id: '5', label: 'Terminé avec réservation' },
+  { id: '6', label: 'Terminé sans réservation' },
+  { id: '7', label: 'Réservation payée (client absent)' },
+  { id: '8', label: 'Réservation annulée' },
 ];
 
 const stateOption: FieldOptions[] = [
@@ -42,9 +47,9 @@ export const TableReservationColumnOptions: ColumnConfig<TableReservationEntity>
 
 
 export const TableReservationFields: FieldConfig<TableReservationEntity>[] = [
-  { name: "customerID", libelle: "Client :", type: "select", normal: true },
+  // { name: "customerID", libelle: "Client :", type: "select", normal: true },
   { name: "tableID", libelle: "Table :", type: "select", normal: true },
-  { name: "starttime", libelle: "Date début occupation :", type: "date", normal: true },
-  { name: "endtime", libelle: "Date fin occupation :", type: "date", normal: true },
+  { name: "starttime", libelle: "Date début occupation :", type: "datetime-local", normal: true },
+  { name: "endtime", libelle: "Date fin occupation :", type: "datetime-local", normal: true },
   { name: "state", libelle: "État réservation :", type: "select", items: reservationStateOptions, normal: false },
 ];

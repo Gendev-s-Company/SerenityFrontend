@@ -12,6 +12,10 @@ export const getPaginateTableTypes = async (company:string,page:number,size:numb
   return await getCall<Page<TableTypeEntity>>(`${tableTypePath}/all/${page}/${size}?company=${company}` );
 }
 
+export const getPaginategroupTableTypes = async (company:string,page:number,size:number) => {
+  return await getCall<Page<TableTypeEntity>>(`${tableTypePath}/group/type/${page}/${size}?company=${company}` );
+}
+
 export const getTableTypeById = async (id: string) => {
     return await getCall<TableTypeEntity>(`${tableTypePath}/${id}`);
 }

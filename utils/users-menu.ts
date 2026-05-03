@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { BookUser, BriefcaseBusiness, Calendar, CircleUserRound, Inbox, UsersRound } from "lucide-react";
+import { BookUser, BriefcaseBusiness, Calendar, CircleUserRound, Inbox, UsersRound,ListTodo } from "lucide-react";
 
 export const UsersItems: PMenu =
 {
@@ -62,7 +62,7 @@ export const UsersItems: PMenu =
                     minAuthority: 2,
                 },
             ],
-            icon: Calendar,
+            icon: ListTodo ,
             minAuthority: 2,
         },
 
