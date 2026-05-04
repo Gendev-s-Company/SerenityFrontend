@@ -5,9 +5,9 @@ import { DishOrderEntity } from "@/types/entity-type/dishOrderEntity";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
-import { dateToBackend, timestampToText } from "@/utils/Util";
+import { getEndOfDay, getStartOfDay, timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
-import { Clock, Table, X } from "lucide-react";
+import { Clock, CookingPot, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -21,6 +21,7 @@ import { convertListCustomersToOption } from "@/features/hotel/room/reservation/
 import { TableReservationFields } from "@/features/restaurant/table/tablereservation/prep-view-tableReservation";
 import { getDishOrderByTableoccupation } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
 import { stateLabel } from "../../dishOrderDetails/prep-view-dishOrderDetails";
+import { useRouter } from "next/navigation";
 
 const occupationStateLabels: Record<number, string> = {
   9: "Aucune donnée",
@@ -35,16 +36,28 @@ const occupationStateLabels: Record<number, string> = {
   8: "Annulé"
 }
 
+const occupationstateStyles: Record<number, string> = {
+  9: "bg-gray-100 text-gray-500",     // Aucune donnée
+  0: "bg-green-100 text-green-500",     // Libre
+  1: "bg-yellow-100 text-yellow-500",    // Réservation non validée
+  2: "bg-blue-100 text-blue-500",      // Réservation validée 
+  3: "bg-red-100 text-red-500",       // Occupée sans réservation 
+  4: "bg-orange-100 text-orange-500",    // Occupée avec réservation 
+  5: "bg-gray-100 text-gray-500",      // Fini avec réservation 
+  6: "bg-gray-100 text-gray-500",      // Fini sans réservation  clair
+  7: "bg-purple-100 text-purple-500",    // Payé mais absent 
+  8: "bg-red-100 text-red-500",    // Payé mais absent
+}
+
 export default function SeatingPlanDetails() {
+    const router = useRouter();
     const idtable = useSearchParams().get('tableID');
     const [tableOccupations, setTableOccupations] = useState<TableReservationEntity[]>([]);
-    const [dishorders, setDishorders] = useState<DishOrderEntity[]>([]);
-    const getNow = () => dateToBackend(new Date().toISOString());
-    const [startInput, setStartInput] = useState(getNow());
-    const [endInput, setEndInput] = useState(getNow());
+    const [startInput, setStartInput] = useState(getStartOfDay());
+    const [endInput, setEndInput] = useState(getEndOfDay());
     
-    const [starttime, setStarttime] = useState(getNow());
-    const [endtime, setEndtime] = useState(getNow());
+    const [starttime, setStarttime] = useState(getStartOfDay());
+    const [endtime, setEndtime] = useState(getEndOfDay());
     const [loading, setLoading] = useState(false);
     const [refresh, setRefresh] = useState<number>(0);
     const [page, setPage] = useState<PaginationState>({
@@ -134,9 +147,8 @@ export default function SeatingPlanDetails() {
     };
 
     const handleReset = () => {
-        const now = getNow();
-        setStartInput(now);
-        setEndInput(now);
+        setStartInput(getStartOfDay());
+        setEndInput(getEndOfDay());
     };
 
     const hasActiveState = tableOccupations.some(
@@ -202,6 +214,14 @@ export default function SeatingPlanDetails() {
         } finally {
             setLoadingDetails(false);
         }
+    };
+
+    const handleButtonClick = () => {
+      router.push(`/view/restaurant/dishOrder/tableOrder`);
+    };
+
+    const order = (idOccupation: string) => {
+      router.push(`/view/restaurant/dishOrder/tableOrder?idOccupation=`+ idOccupation);
     };
 
     return (     
@@ -277,7 +297,9 @@ export default function SeatingPlanDetails() {
               
                 {/* ID */}
                 <td className="p-3">
-                  <span className="text-blue-600 font-medium cursor-pointer hover:underline">
+                  <span
+                  onClick={() => handleOpenModal(item)}
+                  className="text-blue-600 font-medium cursor-pointer hover:underline">
                     {item.occupationID}
                   </span>
                 </td>
@@ -295,11 +317,7 @@ export default function SeatingPlanDetails() {
                 {/* ETAT */}
                 <td className="p-3">
                   <span className={`px-2 py-1 text-xs rounded-full font-medium
-                    ${item.state === 0 ? "bg-gray-100 text-gray-500" :
-                      item.state === 1 ? "bg-green-100 text-green-600" :
-                      item.state === 2 ? "bg-yellow-100 text-yellow-600" :
-                      item.state === 3 ? "bg-blue-100 text-blue-600" :
-                      "bg-red-100 text-red-600"}
+                    ${occupationstateStyles[item.state]}
                   `}>
                     {occupationStateLabels[item.state] || item.state}
                   </span>
@@ -474,9 +492,20 @@ export default function SeatingPlanDetails() {
                         ))
                       
                       ) : (
-                        <p className="text-center text-sm text-gray-400 py-4">
-                          Aucun détail disponible
-                        </p>
+                        <div>
+                          <p className="text-center text-sm text-gray-400 py-4">
+                            Aucun détail disponible
+                          </p>
+                          {/* <div className="flex justify-center pb-4">
+                            <button
+                              onClick={handleButtonClick}
+                              className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+                            >
+                            <Menu size={16} />
+                              Commander des plats
+                            </button>
+                          </div> */}
+                        </div>
                       )}
 
                     </div>
@@ -484,34 +513,56 @@ export default function SeatingPlanDetails() {
                 </div>
                     
                 {/* FOOTER (TOTAL) */}
-                <div className="bg-white border-t px-6 py-4 flex justify-between items-center">
-                    
-                  <div>
-                    <p className="text-xs text-gray-400">Total commande</p>
-                    <p className="text-xl font-bold text-green-600">
-                      {occupationDetails?.totalPrice || 0} Ar
-                    </p>
+                  <div className="bg-white border-t px-6 py-4 flex justify-between items-center">
+
+                    <div>
+                      <p className="text-xs text-gray-400">Total commande</p>                 
+
+                      {occupationDetails ? (
+                        <p className="text-xl font-bold text-green-600">
+                          {occupationDetails.totalPrice || 0} Ar
+                        </p>
+                      ) : (
+                        <p className="text-sm text-gray-400">
+                          Aucun total disponible
+                        </p>
+                      )}
+                    </div>                  
+
                   </div>
-                </div>
                     
               </div>
             </div>
           )}
     </div>
         ) : (    
-          <div className="flex flex-col items-center h-64 bg-white rounded-2xl shadow-md p-4">
+        <div className="flex flex-col items-center h-64 bg-white rounded-2xl shadow-md p-4">
 
-            {/* Texte centré en haut */}
-            <p className="text-center text-sm text-green-400">
-              Cette table n'est pas occupée pour aujourd'hui
-            </p>
+          {/* Texte */}
+          <p className="text-center text-sm text-gray-400">
+            Cette table n'est pas occupée pour aujourd'hui
+          </p>
 
-            {/* CreateBox centré au milieu du reste */}
-            <div className="flex-1 flex items-center justify-center w-full">
+          {/* Zone centrale */}
+          <div className="flex-1 flex items-center justify-center w-full">
+
+            <div className="flex items-center gap-4">
+              {/* CreateBox */}
               <CreateBox body={body} onSubmit={onCreate} fields={namefield} />
+
+              {/* Bouton */}
+              <button
+                className="flex items-center gap-1 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+                onClick={handleButtonClick}
+              >
+                <CookingPot size={16} />
+                Voir et commander les plats
+              </button>
             </div>
 
           </div>
+
+        </div>
         )}
     </div>
     );

@@ -70,4 +70,18 @@ export function generateDateRange(startDate: string, endDate: string): string[] 
   }
 
   return dateArray;
+
+
 }
+
+export const getStartOfDay = () => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return dateToBackend(d.toISOString());
+};
+
+export const getEndOfDay = () => {
+  const d = new Date();
+  d.setHours(23, 0, 0, 0);
+  return dateToBackend(d.toISOString());
+};

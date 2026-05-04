@@ -59,6 +59,7 @@ export default function TableOrder() {
   const [tableOccupations, setTableOccupations] = useState<TableReservationEntity[]>([]);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [tabledisponibles, setTablesdisponibles] = useState<number>(0);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -122,18 +123,18 @@ export default function TableOrder() {
   };
 
 
- const filteredDishes = useMemo(() => {
-  return dishes.filter((d) => {
-    const matchCategory =
-      category === "Tous" || d.type?.typeID === category;
+   const filteredDishes = useMemo(() => {
+    return dishes.filter((d) => {
+      const matchCategory =
+        category === "Tous" || d.type?.typeID === category;
 
-    const matchSearch = d.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+      const matchSearch = d.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-    return matchCategory && matchSearch;
-  });
-}, [dishes, category, search]);
+      return matchCategory && matchSearch;
+    });
+  }, [dishes, category, search]);
 
 
   // ===== PAGINATION =====
@@ -220,7 +221,7 @@ const addToOrder = (dish: DishEntity) => {
       )
         .then((data) => {
           setTableOccupations(data);
-          console.log("Tables disponibles :", data);
+        setTablesdisponibles(data.length);
         })
         .catch((err) => console.error("Erreur tables :", err));
     };
@@ -343,7 +344,11 @@ const addToOrder = (dish: DishEntity) => {
             <div className="flex items-center">
               <Field className="flex items-center gap-3 w-auto">
                 <FieldLabel htmlFor="start" className="whitespace-nowrap">
-                  Tables Disponibles:
+                  {tabledisponibles > 0 && (
+                    <p className="text-sm text-green-600 text-center">
+                      {tabledisponibles} disponible(s)
+                    </p>
+                  )}
                 </FieldLabel>
 
                 <Select onValueChange={(value) => setSelectedTable(value ? tableOccupations.find(t => t.occupationID === value) || null : null)}>
