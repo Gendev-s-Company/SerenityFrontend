@@ -12,7 +12,6 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   Info,
-  Pen,
 
 } from "lucide-react";
 import CreateBox from "@/components/create/create-box";
@@ -22,7 +21,6 @@ import { convertListCustomersToOption } from "@/features/hotel/room/reservation/
 import { TableReservationFields } from "@/features/restaurant/table/tablereservation/prep-view-tableReservation";
 import { getDishOrderByTableoccupation } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
 import { stateLabel } from "../../dishOrderDetails/prep-view-dishOrderDetails";
-import { set } from "zod";
 
 const occupationStateLabels: Record<number, string> = {
   9: "Aucune donnée",
@@ -220,7 +218,7 @@ export default function SeatingPlanDetails() {
       </div>
         <div className="flex gap-4 items-center bg-white p-4 rounded-xl shadow-sm">
                 <div>
-                    <label className="text-xs text-gray-500">Date début</label>
+                    <label className="text-xs text-gray-500">Date début:</label>
                     <input
                         type="datetime-local"
                         value={startInput}
@@ -230,7 +228,7 @@ export default function SeatingPlanDetails() {
                 </div>
 
                 <div>
-                    <label className="text-xs text-gray-500">Date fin</label>
+                    <label className="text-xs text-gray-500">Date fin:</label>
                     <input
                         type="datetime-local"
                         value={endInput}
@@ -501,10 +499,19 @@ export default function SeatingPlanDetails() {
           )}
     </div>
         ) : (    
-        <div className="flex justify-center items-center h-64 bg-white rounded-2xl shadow-md">
-                {/* Boite de dialogue d'occupation de table */}
-                <CreateBox body={body}  onSubmit={onCreate} fields={namefield} />
+          <div className="flex flex-col items-center h-64 bg-white rounded-2xl shadow-md p-4">
+
+            {/* Texte centré en haut */}
+            <p className="text-center text-sm text-green-400">
+              Cette table n'est pas occupée pour aujourd'hui
+            </p>
+
+            {/* CreateBox centré au milieu du reste */}
+            <div className="flex-1 flex items-center justify-center w-full">
+              <CreateBox body={body} onSubmit={onCreate} fields={namefield} />
             </div>
+
+          </div>
         )}
     </div>
     );

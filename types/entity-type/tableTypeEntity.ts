@@ -1,4 +1,5 @@
 import { CompanyEntity } from "./companyEntity";
+import { RestaurantTableEntity } from "./restauranTableEntity";
 
 export interface TableTypeEntity {
     tabletypeid: string|null,
@@ -6,7 +7,7 @@ export interface TableTypeEntity {
     description: string,
     company: CompanyEntity,
     status: number,
-    tables: TableTypeEntity[] | null,
+    tables: RestaurantTableEntity[] | null,
     skipValidation?: boolean,
 
 }
