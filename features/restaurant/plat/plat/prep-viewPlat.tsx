@@ -5,6 +5,7 @@ import { PlatEntity } from "@/types/entity-type/platEntity";
 export const PlatColumnOptions: ColumnConfig<PlatEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" ,href: (row) => `/dishes/${row.dishID}`},
     { key: "dishID", header: "Dishid", sorting: true },
+     { key: "type.name", header: "Type de plat", sorting: true },
     { key: "name", header: "Name", type: "link", sorting: true, 
         href: (row) => `/view/restaurant/plat/detail?dishID=${row.dishID}&dishState=${row.state}`,
     },

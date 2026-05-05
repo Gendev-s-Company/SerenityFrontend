@@ -1,4 +1,5 @@
 import { CompanyEntity } from "./companyEntity";
+import { PlatCatalogueEntity } from "./platCatalogueEntity";
 
 export interface PlatTypeEntity {
     typeID:string |null,
@@ -7,5 +8,5 @@ export interface PlatTypeEntity {
     description: string| null,
     status: number,
     skipValidation: boolean,
-
+    dishes?:PlatCatalogueEntity[]
 }
