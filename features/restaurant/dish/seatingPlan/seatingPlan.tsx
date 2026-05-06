@@ -14,12 +14,14 @@ import {
   Users,
   CircleDot,
   Info,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 export default function SeatingPlan() {
     const router = useRouter();
-    const[tables,setTables]=useState<RestaurantTableEntity[]>([]);
     const[tableTypes,setTableTypes]=useState<TableTypeEntity[]>([]);
+    // Pagination liste des types de table
     const [refresh, setRefresh] = useState<number>(0);
     const [page, setPage] = useState<PaginationState>({
       pageIndex: 0,
@@ -31,6 +33,10 @@ export default function SeatingPlan() {
     });
     const [loading, setLoading] = useState(true)
     const user = getLocalStorage()!;
+
+    // Pagination liste des tables par type de table
+    const [pages, setPages] = useState<Record<string, number>>({});
+    const ITEMS_PER_PAGE = 5;
 
     useEffect(() => {
        // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -64,16 +70,6 @@ export default function SeatingPlan() {
            });
        }
      }, [refresh, page.pageIndex]);
-
-    const renderSeats = (capacity: number) => {
-      return (
-        <div className="flex justify-center flex-wrap gap-1 mt-1">
-          {Array.from({ length: capacity }).map((_, i) => (
-            <Armchair key={i} size={12} className="text-gray-500" />
-          ))}
-        </div>
-      );
-    };
 
     const renderSeatsAround = (capacity: number) => {
       const radius = 26; // distance autour de la table
@@ -119,127 +115,169 @@ export default function SeatingPlan() {
 
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 to-gray-50 min-h-screen">
+  <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 to-gray-50 min-h-screen flex flex-col h-full">
 
-      {/* HEADER */}
-      <div className="bg-orange-100 border border-orange-200 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
-        <div className="bg-orange-500 p-3 rounded-xl text-white">
-          <UtensilsCrossed size={22} />
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Restaurant</p>
-          <h1 className="font-bold text-lg text-orange-700">Plan de table</h1>
-        </div>
+    {/* HEADER */}
+    <div className="bg-orange-100 border border-orange-200 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+      <div className="bg-orange-500 p-3 rounded-xl text-white">
+        <UtensilsCrossed size={22} />
       </div>
-
-      {loading ? (
-        <p>Chargement...</p>
-      ) : (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {tableTypes.map((type) => (
-            <div
-              key={type.tabletypeid}
-              className="bg-white rounded-2xl shadow-md p-5 border hover:shadow-lg transition"
-            >
-              {/* HEADER TYPE */}
-              <div className="flex justify-between items-center mb-4">
-
-                <div className="flex items-center gap-2">
-                  <CircleDot className="text-orange-500" size={18} />
-                  <h2 className="font-semibold text-lg">{type.name}</h2>
-                </div>
-
-                {/* BADGE NB TABLES */}
-                <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                  <Users size={14} />
-                  {type.tables?.length || 0}
-                </div>
-              </div>
-
-              {/* TABLES GRID */}
-                <div className="grid grid-cols-3 gap-3">
-                  {type.tables && type.tables.length > 0 ? (
-                    type.tables.map((table) => (
-                      <div
-                        key={table.tableID}
-                        onClick={() => handleTableClick(table)}
-                        className={`relative rounded-xl p-3 text-center text-xs font-medium shadow-sm cursor-pointer transition hover:scale-105 ${getStatusColor(
-                          table.status
-                        )}`}
-                      >
-                        {/* INFO ICON (top right) */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log("Détails table :", table);
-                          }}
-                          className="absolute top-2 right-2 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition"
-                          title="Voir détails"
-                        >
-                          <Info size={14} />
-                        </button>
-                      
-                        <div className="relative w-16 h-16 mx-auto">
-                      
-                          {/* TABLE (centre) */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center">
-                              <CircleDot size={16} />
-                            </div>
-                          </div>
-                      
-                          {/* CHAISES */}
-                          {renderSeatsAround(table.capacity || 0)}
-                        </div>
-                      
-                        {/* NOM */}
-                        <div className="mt-2 font-semibold">{table.name}</div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-400 text-sm col-span-3 text-center">
-                      Aucune table
-                    </p>
-                  )}
-                </div>
-              
-              {/* FOOTER */}
-              <div className="mt-4 text-center text-xs text-gray-400 border-t pt-2">
-                Page {page.pageIndex + 1}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* PAGINATION */}
-      <div className="flex justify-center gap-4 mt-6">
-        <button
-          disabled={page.pageIndex === 0}
-          onClick={() =>
-            setPage((prev) => ({
-              ...prev,
-              pageIndex: prev.pageIndex - 1,
-            }))
-          }
-          className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
-        >
-          Précédent
-        </button>
-
-        <button
-          disabled={page.pageIndex >= all.totalPage - 1}
-          onClick={() =>
-            setPage((prev) => ({
-              ...prev,
-              pageIndex: prev.pageIndex + 1,
-            }))
-          }
-          className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
-        >
-          Suivant
-        </button>
+      <div>
+        <p className="text-sm text-gray-500">Restaurant</p>
+        <h1 className="font-bold text-lg text-orange-700">Plan de table</h1>
       </div>
     </div>
+
+    {loading ? (
+      <p>Chargement...</p>
+    ) : (
+      <>
+        {/* Container avec hauteur fixe pour 5 éléments */}
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6" style={{ minHeight: '500px' }}>
+          {tableTypes.map((type) => {
+            const currentPage = pages[type.tabletypeid!] || 1;
+            const tables = type.tables || [];
+          
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const paginatedTables = tables.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+            const totalPages = Math.ceil(tables.length / ITEMS_PER_PAGE);
+          
+            return (
+              <div
+                key={type.tabletypeid}
+                className="bg-white rounded-2xl shadow-md p-5 border hover:shadow-lg transition flex flex-col h-full"
+              >
+                {/* HEADER TYPE */}
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <CircleDot className="text-orange-500" size={18} />
+                    <h2 className="font-semibold text-lg">{type.name}</h2>
+                  </div>
+            
+                  <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                    <Users size={14} />
+                    {tables.length}
+                  </div>
+                </div>
+            
+                {/* TABLES GRID */}
+                <div className="flex-1 flex flex-col min-h-[250px]">
+                  {tables.length > 0 ? (
+                    <div className="grid grid-cols-3 gap-3">
+                      {paginatedTables.map((table) => (
+                        <div
+                          key={table.tableID}
+                          onClick={() => handleTableClick(table)}
+                          className={`relative rounded-xl p-3 text-center text-xs font-medium shadow-sm cursor-pointer transition hover:scale-105 ${getStatusColor(
+                            table.status
+                          )}`}
+                        >
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log("Détails table :", table);
+                            }}
+                            className="absolute top-2 right-2 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition"
+                          >
+                            <Info size={14} />
+                          </button>
+                          
+                          <div className="relative w-16 h-16 mx-auto">
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center">
+                                <CircleDot size={16} />
+                              </div>
+                            </div>
+                          
+                            {renderSeatsAround(table.capacity || 0)}
+                          </div>
+                          
+                          <div className="mt-2 font-semibold">{table.name}</div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex-1 flex items-center justify-center border border-dashed rounded-xl bg-gray-50">
+                      <p className="text-gray-400 text-sm text-center">
+                        Aucune table
+                      </p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* FOOTER PAGINATION */}
+                <div className="mt-4 flex justify-between items-center text-xs text-gray-500 border-t pt-2">
+
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() =>
+                      setPages((prev) => ({
+                        ...prev,
+                        [type.tabletypeid!]: currentPage - 1,
+                      }))
+                    }
+                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  
+                  <span className="text-sm font-medium bg-white px-3 py-1 rounded-full border shadow-sm">
+                    Page {currentPage} / {totalPages || 1}
+                  </span>
+                  
+                  <button
+                    disabled={currentPage === totalPages || totalPages === 0}
+                    onClick={() =>
+                      setPages((prev) => ({
+                        ...prev,
+                        [type.tabletypeid!]: currentPage + 1,
+                      }))
+                    }
+                    className="px-2 py-1 rounded bg-gray-100 disabled:opacity-50"
+                  >
+                  <ChevronRight className="h-4 w-4" />
+                  </button>
+                  
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* PAGINATION GLOBALE - Toujours fixée en bas */}
+        <div className="flex justify-center gap-4 mt-6">
+          <button
+            disabled={page.pageIndex === 0}
+            onClick={() =>
+              setPage((prev) => ({
+                ...prev,
+                pageIndex: prev.pageIndex - 1,
+              }))
+            }
+            className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+          >
+            <ChevronLeft className="h-4 w-4" size={14}/>
+          </button>
+
+          <span className="text-sm font-medium bg-white px-3 py-1 rounded-full border shadow-sm">
+                Page {page.pageIndex+1} / {all.totalPage}
+          </span>
+
+          <button
+            disabled={page.pageIndex >= all.totalPage - 1}
+            onClick={() =>
+              setPage((prev) => ({
+                ...prev,
+                pageIndex: prev.pageIndex + 1,
+              }))
+            }
+            className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+          >
+            <ChevronRight className="h-4 w-4" size={14}/>
+          </button>
+        </div>
+      </>
+    )}
+  </div>
   );
 }

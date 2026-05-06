@@ -10,7 +10,7 @@ export const PlatTypeColumnOptions: ColumnConfig<PlatTypeEntity>[] = [
     { key: "description", header: "description", type: "text", sorting: true },
 ];
 export const PlatTypeNamefield: FieldConfig<PlatTypeEntity>[] = [
-    { name: "name", libelle: "Type de chambre:", type: "text", normal: true },
+    { name: "name", libelle: "Type de plat:", type: "text", normal: true },
     { name: "description", libelle: "description :", type: "textarea", normal: false },
       
 ];

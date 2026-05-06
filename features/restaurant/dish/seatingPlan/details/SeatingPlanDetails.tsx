@@ -12,7 +12,6 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   Info,
-
 } from "lucide-react";
 import CreateBox from "@/components/create/create-box";
 import { getAllCustomerByCompany } from "@/infrastructure/hotel/customer/customerRequest";
@@ -21,7 +20,7 @@ import { convertListCustomersToOption } from "@/features/hotel/room/reservation/
 import { TableReservationFields } from "@/features/restaurant/table/tablereservation/prep-view-tableReservation";
 import { getDishOrderByTableoccupation } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
 import { stateLabel } from "../../dishOrderDetails/prep-view-dishOrderDetails";
-import { useRouter } from "next/navigation";
+import Catalogue from "@/features/restaurant/plat/platCatalogue/platCatalogue";
 
 const occupationStateLabels: Record<number, string> = {
   9: "Aucune donnée",
@@ -50,7 +49,6 @@ const occupationstateStyles: Record<number, string> = {
 }
 
 export default function SeatingPlanDetails() {
-    const router = useRouter();
     const idtable = useSearchParams().get('tableID');
     const [tableOccupations, setTableOccupations] = useState<TableReservationEntity[]>([]);
     const [startInput, setStartInput] = useState(getStartOfDay());
@@ -75,6 +73,7 @@ export default function SeatingPlanDetails() {
   const [openModal, setOpenModal] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [occupationDetails, setOccupationDetails] = useState<DishOrderEntity | null>(null);
+  const [showCatalogue, setShowCatalogue] = useState(false);
 
     // Liste des clients pour le choix du client lors de l'occupation d'une table
     useEffect(() => {
@@ -216,17 +215,10 @@ export default function SeatingPlanDetails() {
         }
     };
 
-    const handleButtonClick = () => {
-      router.push(`/view/restaurant/dishOrder/tableOrder`);
-    };
-
-    const order = (idOccupation: string) => {
-      router.push(`/view/restaurant/dishOrder/tableOrder?idOccupation=`+ idOccupation);
-    };
-
     return (     
     <div className="p-6 space-y-6 bg-gradient-to-br from-slate-50 to-gray-50 min-h-screen">
-        {/* HEADER */}
+
+      {/* HEADER */}
       <div className="bg-blue-100 border border-blue-200 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
         <div className="bg-blue-500 p-3 rounded-xl text-white">
           <Clock size={22} />
@@ -236,7 +228,8 @@ export default function SeatingPlanDetails() {
           <h1 className="font-bold text-lg text-blue-700">Occupation de la table {idtable}</h1>
         </div>
       </div>
-        <div className="flex gap-4 items-center bg-white p-4 rounded-xl shadow-sm">
+
+          <div className="flex gap-4 items-center bg-gray-100/70 rounded-xl shadow-md p-4">
                 <div>
                     <label className="text-xs text-gray-500">Date début:</label>
                     <input
@@ -269,25 +262,25 @@ export default function SeatingPlanDetails() {
                     Réinitialiser
                 </button>
 
-        </div>
-        {hasActiveState ? (
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+          </div>
+      {hasActiveState ? (
+      <div className="bg-gray-100/70 rounded-2xl shadow-md p-4">
 
-        <table className="w-full text-sm">
+        <table className="w-full text-sm border border-gray-300 rounded-xl overflow-hidden shadow-md">
 
           {/* HEADER */}
-          <thead className="bg-gray-50 text-gray-600 text-xs uppercase">
+          <thead className="bg-gray-50 text-gray-600 text-xs uppercase border-b">
             <tr>
-              <th className="p-3 text-left font-semibold">ID</th>
-              <th className="p-3 text-left font-semibold">Date début</th>
-              <th className="p-3 text-left font-semibold">Date fin</th>
-              <th className="p-3 text-left font-semibold">Etat</th>
-              <th className="p-3 text-center font-semibold">Action</th>
+              <th className="p-3 text-left font-semibold border-r last:border-r-0">ID</th>
+              <th className="p-3 text-left font-semibold border-r last:border-r-0">Date début</th>
+              <th className="p-3 text-left font-semibold border-r last:border-r-0">Date fin</th>
+              <th className="p-3 text-left font-semibold border-r last:border-r-0">Etat</th>
+              <th className="p-3 text-center font-semibold border-r last:border-r-0">Action</th>
             </tr>
           </thead>
 
           {/* BODY */}
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-gray-200">
 
             {tableOccupations.map((item) => (
               <tr
@@ -296,7 +289,7 @@ export default function SeatingPlanDetails() {
               >
               
                 {/* ID */}
-                <td className="p-3">
+                <td className="p-3 border-r last:border-r-0">
                   <span
                   onClick={() => handleOpenModal(item)}
                   className="text-blue-600 font-medium cursor-pointer hover:underline">
@@ -305,17 +298,17 @@ export default function SeatingPlanDetails() {
                 </td>
             
                 {/* DATE DEBUT */}
-                <td className="p-3 text-gray-600">
+                <td className="p-3 text-gray-600 border-r last:border-r-0">
                   {timestampToText(item.starttime)}
                 </td>
             
                 {/* DATE FIN */}
-                <td className="p-3 text-gray-600">
+                <td className="p-3 text-gray-600 border-r last:border-r-0">
                   {timestampToText(item.endtime)}
                 </td>
             
                 {/* ETAT */}
-                <td className="p-3">
+                <td className="p-3 border-r last:border-r-0">
                   <span className={`px-2 py-1 text-xs rounded-full font-medium
                     ${occupationstateStyles[item.state]}
                   `}>
@@ -324,7 +317,7 @@ export default function SeatingPlanDetails() {
                 </td>
                     
                 {/* ACTION */}
-                <td className="p-3 text-center">
+                <td className="p-3 text-center border-r last:border-r-0">
                   <div className="flex justify-center gap-2">
                     
                     <button
@@ -341,109 +334,113 @@ export default function SeatingPlanDetails() {
 
           </tbody>
           
-        </table>
-          {openModal && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            
-              <div className="bg-white rounded-2xl shadow-2xl w-[95%] max-w-5xl h-[90vh] flex flex-col overflow-hidden">
-          
+          </table>
+          <div
+              onClick={() => setOpenModal(false)}
+              className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300
+                ${openModal 
+                  ? "bg-black/50 backdrop-blur-sm opacity-100" 
+                  : "opacity-0 pointer-events-none"
+                }
+              `}
+            >
+              {/* MODAL */}
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className={`bg-white rounded-2xl shadow-2xl w-[95%] max-w-5xl h-[90vh] flex flex-col overflow-hidden transform transition-all duration-300
+                  ${openModal 
+                    ? "scale-100 translate-y-0 opacity-100" 
+                    : "scale-95 translate-y-6 opacity-0"
+                  }
+                `}
+              >
+              
                 {/* HEADER */}
-                <div className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+                <div className={`flex justify-between items-center px-6 py-4  ${occupationstateStyles[selectedOccupation?.state]}`}>
                   <div>
                     <h2 className="text-lg font-semibold">Détails de l'occupation</h2>
                     <p className="text-xs opacity-80">
                       Table {selectedOccupation?.tableID || ""}
                     </p>
                   </div>
-          
+                
                   <button
                     onClick={() => setOpenModal(false)}
-                    className="bg-white/20 hover:bg-red-500 p-2 rounded-lg transition"
+                    className="bg-white/20 hover:bg-red-500 hover:text-white p-2 rounded-lg transition"
                   >
                     <X size={18} />
                   </button>
                 </div>
-          
+                
                 {/* CONTENT */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
-          
-                  {/* INFOS CARDS */}
+                
+                  {/* INFOS */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          
                     <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-xs text-gray-400">ID</p>
                       <p className="font-semibold text-gray-700">
                         {selectedOccupation?.occupationID}
                       </p>
                     </div>
-          
+                
                     <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-xs text-gray-400">Début</p>
                       <p className="text-sm font-medium">
                         {timestampToText(selectedOccupation?.starttime)}
                       </p>
                     </div>
-          
+                
                     <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-xs text-gray-400">Fin</p>
                       <p className="text-sm font-medium">
                         {timestampToText(selectedOccupation?.endtime)}
                       </p>
                     </div>
-          
+                
                     <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-xs text-gray-400">Etat</p>
-                      <span className="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-600">
+                      <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${occupationstateStyles[selectedOccupation?.state]} text-blue-600`}>
                         {occupationStateLabels[selectedOccupation?.state]}
                       </span>
                     </div>
                   </div>
-          
+                
                   {/* COMMANDE */}
                   <div className="bg-white rounded-2xl shadow-md p-5 space-y-4">
-          
-                  {occupationDetails ? (
-                  
-                    <div className="flex justify-between items-center border-b pb-3">
-                      
-                      <div>
-                        <p className="text-xs text-gray-400">Commande</p>
-                        <p className="font-semibold text-gray-700">
-                          {occupationDetails.orderID}
-                        </p>
-                      </div>
-                  
-                      <div className="text-right">
-                        <p className="text-xs text-gray-400">Date</p>
-                        <p className="text-sm font-medium">
-                          {timestampToText(occupationDetails.dateOrder)}
-                        </p>
-                      </div>
-                  
-                    </div>
-                  
-                  ) : (
-                  
-                    <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed rounded-xl bg-gray-50">
+                
+                    {occupationDetails ? (
+                      <div className="flex justify-between items-center border-b pb-3">
+                        <div>
+                          <p className="text-xs text-gray-400">Commande</p>
+                          <p className="font-semibold text-gray-700">
+                            {occupationDetails.orderID}
+                          </p>
+                        </div>
                     
-                      {/* Icône */}
-                      <div className="bg-gray-200 p-3 rounded-full mb-3">
-                        <Info size={20} className="text-gray-500" />
+                        <div className="text-right">
+                          <p className="text-xs text-gray-400">Date</p>
+                          <p className="text-sm font-medium">
+                            {timestampToText(occupationDetails.dateOrder)}
+                          </p>
+                        </div>
                       </div>
-                  
-                      {/* Texte */}
-                      <p className="text-sm font-medium text-gray-600">
-                        Aucune commande trouvée
-                      </p>
-                  
-                      <p className="text-xs text-gray-400 mt-1">
-                        Cette table n'a pas encore de commande associée
-                      </p>
-                  
-                    </div>
-                  
-                  )}
-          
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed rounded-xl bg-gray-50">
+                        <div className="bg-gray-200 p-3 rounded-full mb-3">
+                          <Info size={20} className="text-gray-500" />
+                        </div>
+                    
+                        <p className="text-sm font-medium text-gray-600">
+                          Aucune commande trouvée
+                        </p>
+                    
+                        <p className="text-xs text-gray-400 mt-1">
+                          Cette table n'a pas encore de commande associée
+                        </p>
+                      </div>
+                    )}
+
                     {/* HEADER TABLE */}
                     <div className="grid grid-cols-4 text-xs text-gray-400 font-medium px-2">
                       <span>Plat</span>
@@ -451,15 +448,14 @@ export default function SeatingPlanDetails() {
                       <span className="text-center">Prix</span>
                       <span className="text-right">Etat</span>
                     </div>
-          
-                    {/* LISTE SCROLLABLE */}
+                  
+                    {/* LISTE */}
                     <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1">
-          
+                  
                       {loadingDetails ? (
                         <p className="text-center text-sm text-gray-400 animate-pulse py-4">
                           Chargement...
                         </p>
-
                       ) : (occupationDetails?.details?.length ?? 0) > 0 ? (
                       
                         occupationDetails?.details.map((d) => (
@@ -496,45 +492,42 @@ export default function SeatingPlanDetails() {
                           <p className="text-center text-sm text-gray-400 py-4">
                             Aucun détail disponible
                           </p>
-                          {/* <div className="flex justify-center pb-4">
+                      
+                          <div className="flex justify-center pb-4">
                             <button
-                              onClick={handleButtonClick}
                               className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+                              onClick={() => setShowCatalogue((prev) => !prev)}
                             >
-                            <Menu size={16} />
-                              Commander des plats
+                              <CookingPot size={16} />
+                              Voir le menu
                             </button>
-                          </div> */}
+                          </div>
                         </div>
                       )}
-
                     </div>
                   </div>
                 </div>
                     
-                {/* FOOTER (TOTAL) */}
-                  <div className="bg-white border-t px-6 py-4 flex justify-between items-center">
-
-                    <div>
-                      <p className="text-xs text-gray-400">Total commande</p>                 
-
-                      {occupationDetails ? (
-                        <p className="text-xl font-bold text-green-600">
-                          {occupationDetails.totalPrice || 0} Ar
-                        </p>
-                      ) : (
-                        <p className="text-sm text-gray-400">
-                          Aucun total disponible
-                        </p>
-                      )}
-                    </div>                  
-
-                  </div>
+                {/* FOOTER */}
+                <div className="bg-white border-t px-6 py-4 flex justify-between items-center">
+                  <div>
+                    <p className="text-xs text-gray-400">Total commande</p>
                     
+                    {occupationDetails ? (
+                      <p className="text-xl font-bold text-green-600">
+                        {occupationDetails.totalPrice || 0} Ar
+                      </p>
+                    ) : (
+                      <p className="text-sm text-gray-400">
+                        Aucun total disponible
+                      </p>
+                    )}
+                  </div>
+                </div>
+                  
               </div>
             </div>
-          )}
-    </div>
+          </div>
         ) : (    
         <div className="flex flex-col items-center h-64 bg-white rounded-2xl shadow-md p-4">
 
@@ -551,20 +544,51 @@ export default function SeatingPlanDetails() {
               <CreateBox body={body} onSubmit={onCreate} fields={namefield} />
 
               {/* Bouton */}
-              <button
+              {/* <button
                 className="flex items-center gap-1 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
-                onClick={handleButtonClick}
+                onClick={() => setShowCatalogue((prev) => !prev)}
               >
                 <CookingPot size={16} />
-                Voir et commander les plats
-              </button>
+                Voir le menu
+              </button> */}
+
             </div>
-
           </div>
-
-        </div>
+        </div>     
         )}
-    </div>
+
+        
+        <div
+          onClick={() => setShowCatalogue(false)}
+          className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300
+            ${showCatalogue 
+              ? "bg-black/50 backdrop-blur-sm opacity-100" 
+              : "opacity-0 pointer-events-none"
+            }
+          `}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto mx-4 transform transition-all duration-300
+              ${showCatalogue 
+                ? "scale-100 translate-y-0 opacity-100" 
+                : "scale-95 translate-y-6 opacity-0"
+              }
+            `}
+          >
+            {/* CLOSE BUTTON */}
+            <button
+              onClick={() => setShowCatalogue(false)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white transition"
+            >
+              <X size={18} />
+            </button>
+            
+            {/* CONTENT */}
+            <Catalogue />
+          </div>
+        </div>
+    </div>  
     );
     
 }
