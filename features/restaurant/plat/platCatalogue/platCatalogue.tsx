@@ -31,9 +31,11 @@ export default function Catalogue({ tableID }: CatalogueProps) {
     }
   }, []);
 
-  // Extrait tous les dishes depuis les types (liste plate pour la pagination)
+  // Extrait tous les dishes depuis les types en injectant le type dans chaque dish
   const allDishes = useMemo<PlatCatalogueEntity[]>(() => {
-    return types.flatMap((type) => type.dishes ?? []);
+    return types.flatMap((type) =>
+      (type.dishes ?? []).map((dish) => ({ ...dish, type }))
+    );
   }, [types]);
 
   const [cart, setCart] = useState<{ [key: string]: number }>({});
@@ -46,8 +48,8 @@ export default function Catalogue({ tableID }: CatalogueProps) {
   // Dishes filtrés selon le type sélectionné
   const filteredDishes = useMemo<PlatCatalogueEntity[]>(() => {
     if (!selectedTypeID) return allDishes;
-    return types.find((t) => t.typeID === selectedTypeID)?.dishes ?? [];
-  }, [allDishes, types, selectedTypeID]);
+    return allDishes.filter((d) => d.type?.typeID === selectedTypeID);
+  }, [allDishes, selectedTypeID]);
 
   const totalPages = Math.ceil(filteredDishes.length / ITEMS_PER_PAGE);
 
@@ -56,17 +58,27 @@ export default function Catalogue({ tableID }: CatalogueProps) {
     setCurrentPage(0);
   }, [selectedTypeID]);
 
-  // Génère exactement 12 slots pour garder la grille 3x4 stable
-  const pageSlots = useMemo(() => {
+  // Grouper les dishes de la page courante par type
+  const pageGroups = useMemo(() => {
     const items = filteredDishes.slice(
       currentPage * ITEMS_PER_PAGE,
-      (currentPage + 1) * ITEMS_PER_PAGE,
+      (currentPage + 1) * ITEMS_PER_PAGE
     );
-    const slots = items.map((item) => ({ ...item, isPlaceholder: false }));
-    while (slots.length < ITEMS_PER_PAGE) {
-      slots.push({ isPlaceholder: true } as any);
-    }
-    return slots;
+
+    const groups: { typeID: string; typeName: string; dishes: PlatCatalogueEntity[] }[] = [];
+    let lastTypeID: string | null = null;
+
+    items.forEach((dish) => {
+      const typeID = dish.type?.typeID ?? "";
+      const typeName = dish.type?.name ?? "";
+      if (typeID !== lastTypeID) {
+        groups.push({ typeID, typeName, dishes: [] });
+        lastTypeID = typeID;
+      }
+      groups[groups.length - 1].dishes.push(dish);
+    });
+
+    return groups;
   }, [currentPage, filteredDishes]);
 
   const updateQuantity = (id: string | null, delta: number) => {
@@ -103,16 +115,15 @@ export default function Catalogue({ tableID }: CatalogueProps) {
     return `data:${type};base64,${buffer}`;
   };
 
-  // envoie de commande
-
   const submit = () => {
     const purchase = {
       tableID: tableID,
-      items: selectedItems
-    }
-    setLocalItem('purchase', JSON.stringify(purchase))
+      items: selectedItems,
+    };
+    setLocalItem("purchase", JSON.stringify(purchase));
     router.push("/view/restaurant/dishOrder/tableOrder");
   };
+
   return (
     <main className="min-h-screen bg-[#ffffff] flex flex-col items-center justify-center p-4 font-serif">
       {/* PANIER FLOTTANT */}
@@ -172,80 +183,91 @@ export default function Catalogue({ tableID }: CatalogueProps) {
           <header className="text-center mb-10">
             <h1 className="text-4xl uppercase tracking-[0.5em] font-light text-gray-900">
               {selectedTypeID
-                ? (types.find((t) => t.typeID === selectedTypeID)?.name ??
-                  "Carte")
+                ? (types.find((t) => t.typeID === selectedTypeID)?.name ?? "Carte")
                 : "Carte"}
             </h1>
             <div className="h-px w-24 bg-[#d4af37] mx-auto mt-4"></div>
           </header>
 
-          {/* GRILLE 3x4 FIXE */}
-          <div className="flex-1 grid grid-cols-3 grid-rows-4 gap-x-8 gap-y-4">
-            {pageSlots.map((item, index) => {
-              const slotKey = item.isPlaceholder
-                ? `empty-${index}`
-                : `dish-${item.dishID}`;
+          {/* GRILLE GROUPÉE PAR TYPE */}
+          <div className="flex-1 flex flex-col">
+            {pageGroups.map((group) => (
+              <div key={group.typeID}>
 
-              return (
-                <div
-                  key={slotKey}
-                  className="flex flex-col items-center justify-start min-h-[220px]"
-                >
-                  {!item.isPlaceholder ? (
-                    <div className="flex flex-col items-center text-center w-full animate-in fade-in duration-500 py-4">
-                      <a
-                        href={`/view/restaurant/plat/detail?dishID=${item.dishID}&dishState=${item.state}`}
-                      >
-                        <div className="relative w-36 h-36 mb-5 overflow-hidden rounded-full border-[5px] border-white shadow-2xl transition-transform hover:scale-110">
-                          <Image
-                            src={
-                              item.photos[0]?.files?.data
-                                ? convertToBase64(
-                                    item.photos[0].files.data,
-                                    item.photos[0].files.type,
-                                  )
-                                : item.photos[0]?.path ||
-                                  "/placeholder-food.jpg"
-                            }
-                            alt={item.name}
-                            fill
-                            className="object-cover"
-                          />
+                {/* Séparateur de section — masqué si un seul type filtré */}
+                {!selectedTypeID && (
+                  <div className="flex items-center gap-3 my-5">
+                    <div className="flex-1 h-px bg-[#e8e0d0]" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />
+                    <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#4a3427] whitespace-nowrap">
+                      {group.typeName}
+                    </span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />
+                    <div className="flex-1 h-px bg-[#e8e0d0]" />
+                  </div>
+                )}
+
+                {/* Grille 3 colonnes — identique à l'original */}
+                <div className="grid grid-cols-3 gap-x-8 gap-y-4">
+                  {group.dishes.map((item) => (
+                    <div
+                      key={`dish-${item.dishID}`}
+                      className="flex flex-col items-center justify-start min-h-[220px]"
+                    >
+                      <div className="flex flex-col items-center text-center w-full animate-in fade-in duration-500 py-4">
+                        <a
+                          href={`/view/restaurant/plat/detail?dishID=${item.dishID}&dishState=${item.state}`}
+                        >
+                          <div className="relative w-36 h-36 mb-5 overflow-hidden rounded-full border-[5px] border-white shadow-2xl transition-transform hover:scale-110">
+                            <Image
+                              src={
+                                item.photos[0]?.files?.data
+                                  ? convertToBase64(
+                                      item.photos[0].files.data,
+                                      item.photos[0].files.type,
+                                    )
+                                  : item.photos[0]?.path ||
+                                    "/placeholder-food.jpg"
+                              }
+                              alt={item.name}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        </a>
+
+                        <h3 className="text-sm md:text-base font-black uppercase text-gray-800 leading-tight h-12 flex items-center justify-center px-4 mb-1">
+                          {item.name}
+                        </h3>
+
+                        <p className="text-sm font-bold text-[#d4af37] mb-4 tracking-tighter">
+                          {item.price.price.toLocaleString()} Ar
+                        </p>
+
+                        <div className="flex items-center justify-center gap-5 bg-white rounded-2xl border-2 border-gray-100 py-2 px-4 shadow-sm group hover:border-[#d4af37]/30 transition-all">
+                          <button
+                            onClick={() => updateQuantity(item.dishID, -1)}
+                            className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                          >
+                            <Minus size={18} strokeWidth={3} />
+                          </button>
+                          <span className="text-base font-sans font-black min-w-[24px] text-center text-gray-900">
+                            {cart[String(item.dishID)] || 0}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.dishID, 1)}
+                            className="text-gray-400 hover:text-green-600 transition-colors p-1"
+                          >
+                            <Plus size={18} strokeWidth={3} />
+                          </button>
                         </div>
-                      </a>
-
-                      <h3 className="text-sm md:text-base font-black uppercase text-gray-800 leading-tight h-12 flex items-center justify-center px-4 mb-1">
-                        {item.name}
-                      </h3>
-
-                      <p className="text-sm font-bold text-[#d4af37] mb-4 tracking-tighter">
-                        {item.price.price.toLocaleString()} Ar
-                      </p>
-
-                      <div className="flex items-center justify-center gap-5 bg-white rounded-2xl border-2 border-gray-100 py-2 px-4 shadow-sm group hover:border-[#d4af37]/30 transition-all">
-                        <button
-                          onClick={() => updateQuantity(item.dishID, -1)}
-                          className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                        >
-                          <Minus size={18} strokeWidth={3} />
-                        </button>
-                        <span className="text-base font-sans font-black min-w-[24px] text-center text-gray-900">
-                          {cart[String(item.dishID)] || 0}
-                        </span>
-                        <button
-                          onClick={() => updateQuantity(item.dishID, 1)}
-                          className="text-gray-400 hover:text-green-600 transition-colors p-1"
-                        >
-                          <Plus size={18} strokeWidth={3} />
-                        </button>
                       </div>
                     </div>
-                  ) : (
-                    <div className="w-full h-full pointer-events-none opacity-0" />
-                  )}
+                  ))}
                 </div>
-              );
-            })}
+
+              </div>
+            ))}
           </div>
 
           <footer className="mt-8 flex justify-center gap-2">
