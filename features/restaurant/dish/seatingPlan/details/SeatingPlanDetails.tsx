@@ -4,7 +4,7 @@ import { PageType } from "@/types/component-type/PageType";
 import { DishOrderEntity } from "@/types/entity-type/dishOrderEntity";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 import { pageSize } from "@/utils/PaginationUtility";
-import { getLocalStorage } from "@/utils/storage";
+import { getLocalStorage, setLocalItem } from "@/utils/storage";
 import { getEndOfDay, getStartOfDay, timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
 import { Clock, CookingPot, X } from "lucide-react";
@@ -494,13 +494,16 @@ export default function SeatingPlanDetails() {
                           </p>
                       
                           <div className="flex justify-center pb-4">
-                            <button
-                              className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
-                              onClick={() => setShowCatalogue((prev) => !prev)}
-                            >
-                              <CookingPot size={16} />
-                              Voir le menu
-                            </button>
+                          <button
+                            className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+                            onClick={() => {
+                              setShowCatalogue((prev) => !prev);
+                                setLocalItem('occupation', JSON.stringify(selectedOccupation));
+                            }}
+                          >
+                            <CookingPot size={16} />
+                            Voir le menu
+                          </button>
                           </div>
                         </div>
                       )}

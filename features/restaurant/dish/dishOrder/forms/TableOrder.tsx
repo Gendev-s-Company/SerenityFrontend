@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { RotateCcw,Plus,Minus,X,ChevronLeft, ChevronRight, Check} from "lucide-react";
-import { getLocalStorage } from "@/utils/storage";
+import { getLocalItem, getLocalStorage, removeLocalItem } from "@/utils/storage";
 import { getPaginateDishes } from "@/infrastructure/restaurant/dish/dishRequest";
 import { DishEntity } from "@/types/entity-type/dishEntity";
 import { PaginationState } from "@tanstack/react-table";
@@ -23,6 +23,7 @@ type OrderItem = {
 
 // ===== COMPONENT =====
 export default function TableOrder() {
+
   // Variables d'état
   const [category, setCategory] = useState("Tous");
   const [search, setSearch] = useState("");
@@ -96,13 +97,16 @@ export default function TableOrder() {
 
       dishOrder.details = dishOrderDetails;
 
-      await createDishOrder(dishOrder);
+      // await createDishOrder(dishOrder);
+      // console.log('Details de la commande:',dishOrder.details);
 
       //succès
       setSuccessMessage("Commande enregistrée avec succès");
       setErrorMessage(null);
 
       setOrder([]);
+      removeLocalItem('purchase');
+      removeLocalItem('occupation');
 
     } catch (error: any) {
       console.error("Erreur commande :", error);
@@ -272,7 +276,6 @@ const addToOrder = (dish: DishEntity) => {
             totalElement: data.totalElements,
             totalPage: data.totalPages,
           });
-
           setLoading(false);
         })
         .catch((err) => {
@@ -281,6 +284,48 @@ const addToOrder = (dish: DishEntity) => {
         });
     }
   }, [refresh, page.pageIndex]);
+
+  // Set directement les items du panier si dans les details commande si la variable n'est pas vide
+  useEffect(() => {
+    const occupation = getLocalItem('occupation');
+    const purchaseRaw = getLocalItem('purchase');
+
+    console.log('Occupation',occupation);
+    const purchase = typeof purchaseRaw === "string"
+      ? JSON.parse(purchaseRaw)
+      : purchaseRaw;
+
+    if (purchase?.items?.length) {
+      const mappedOrder: OrderItem[] = purchase.items.map((item: any) => {
+
+        const dish: DishEntity = {
+          dishID: item.dishID,
+          name: item.name,
+          description: item.description,
+          photo: null,
+          type: item.type || null,
+          price: {
+            price: item.price?.price || 0,
+            dish: null,
+            priceID: item.price?.priceID || null,
+            datechanged: item.price?.dateChanged || null,
+            status: 0,
+          },
+          state:0,
+          skipValidation: false,
+          status: item.status ?? 0,
+        };
+
+        return {
+          dish,
+          quantity: item.quantity || 1,
+        };
+      });
+      setSelectedTable(occupation);
+      setOrder(mappedOrder); 
+    }
+  }, [tableOccupations]);
+
 
   // ===== UI =====
   return (
@@ -351,14 +396,26 @@ const addToOrder = (dish: DishEntity) => {
                   )}
                 </FieldLabel>
 
-                <Select onValueChange={(value) => setSelectedTable(value ? tableOccupations.find(t => t.occupationID === value) || null : null)}>
+                <Select
+                  value={selectedTable?.occupationID || ""}
+                  onValueChange={(value) =>
+                    setSelectedTable(
+                      value
+                        ? tableOccupations.find((t) => t.occupationID === value) || null
+                        : null
+                    )
+                  }
+                >
                   <SelectTrigger className="w-[250px]">
                     <SelectValue placeholder="Choisir une table" />
                   </SelectTrigger>
-
+                
                   <SelectContent>
                     {tableOccupations.map((tableOccupation) => (
-                      <SelectItem key={tableOccupation.occupationID} value={tableOccupation.occupationID!}>
+                      <SelectItem
+                        key={tableOccupation.occupationID}
+                        value={tableOccupation.occupationID!}
+                      >
                         Table : {tableOccupation.table.name}
                       </SelectItem>
                     ))}

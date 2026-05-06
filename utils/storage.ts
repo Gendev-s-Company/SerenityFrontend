@@ -23,3 +23,7 @@ export const getLocalItem = (name: string,) => {
 
   return JSON.parse(local)
 }
+
+export const removeLocalItem = (name: string) => {
+  ls.remove(name);
+};

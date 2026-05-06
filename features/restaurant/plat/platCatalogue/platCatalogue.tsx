@@ -27,7 +27,6 @@ export default function Catalogue({ tableID }: CatalogueProps) {
     if (user && user.profil.company.companyID) {
       getDishGroupByType(user.profil.company.companyID)
         .then((data) => setTypes(data))
-        .catch((error) => console.error("Error fetching dishes:", error));
     }
   }, []);
 
