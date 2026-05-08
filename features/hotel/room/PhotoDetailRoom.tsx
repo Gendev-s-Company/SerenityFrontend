@@ -262,8 +262,10 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
                   </Card>
                 ))}
                 {displayPhotos.length <= 0 && (
-                  <div className="col-span-2 flex items-center justify-center text-muted-foreground">
-                    Aucune photo détectée
+                  <div className="col-span-2 flex items-center justify-center border border-dashed rounded-xl bg-gray-50">
+                      <p className="text-gray-400 text-sm text-center">
+                        Aucune photo détectée
+                      </p>
                   </div>
                 )}
               </div>

@@ -1,7 +1,6 @@
 "use client";
 import { getPaginategroupTableTypes } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
 import { PageType } from "@/types/component-type/PageType";
-import { RestaurantTableEntity } from "@/types/entity-type/restauranTableEntity";
 import { TableTypeEntity } from "@/types/entity-type/tableTypeEntity";
 import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
@@ -133,7 +132,7 @@ export default function SeatingPlan() {
     ) : (
       <>
         {/* Container avec hauteur fixe pour 5 éléments */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6" style={{ minHeight: '500px' }}>
+        <div title="Plan de table" className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 min-h-[500px]" >
           {tableTypes.map((type) => {
             const currentPage = pages[type.tabletypeid!] || 1;
             const tables = type.tables || [];
@@ -155,7 +154,7 @@ export default function SeatingPlan() {
                   </div>
             
                   <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                    <Users size={14} />
+                    <Users textRendering={`Nombre de tables : ${tables.length}`} size={14} />
                     {tables.length}
                   </div>
                 </div>
@@ -173,9 +172,11 @@ export default function SeatingPlan() {
                           )}`}
                         >
                           <button
+                          title={`Détails de la table : ${table.name}`}
                             onClick={(e) => {
                               e.stopPropagation();
                               console.log("Détails table :", table);
+                              handleTableClick(table);
                             }}
                             className="absolute top-2 right-2 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition"
                           >
@@ -209,6 +210,7 @@ export default function SeatingPlan() {
                 <div className="mt-4 flex justify-between items-center text-xs text-gray-500 border-t pt-2">
 
                   <button
+                  title="Page précédente"
                     disabled={currentPage === 1}
                     onClick={() =>
                       setPages((prev) => ({
@@ -226,6 +228,7 @@ export default function SeatingPlan() {
                   </span>
                   
                   <button
+                  title="Page suivante"
                     disabled={currentPage === totalPages || totalPages === 0}
                     onClick={() =>
                       setPages((prev) => ({
@@ -247,6 +250,7 @@ export default function SeatingPlan() {
         {/* PAGINATION GLOBALE - Toujours fixée en bas */}
         <div className="flex justify-center gap-4 mt-6">
           <button
+            title="Page précédente"
             disabled={page.pageIndex === 0}
             onClick={() =>
               setPage((prev) => ({
@@ -264,6 +268,7 @@ export default function SeatingPlan() {
           </span>
 
           <button
+            title="Page suivante"
             disabled={page.pageIndex >= all.totalPage - 1}
             onClick={() =>
               setPage((prev) => ({

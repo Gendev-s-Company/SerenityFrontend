@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, MoreVertical, Trash2,Edit2,Info } from "lucide-react"
+import { ChevronLeft, ChevronRight, MoreVertical, Trash2,Edit2,Info,Clock,Moon } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -247,7 +247,7 @@ return (
                 {room.roomPrice?.nightPrice && (
                   <div>
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
-                    🌙 {getCurrency(room.roomPrice.nightPrice)}/nuit
+                    <Moon size={14} style={{ marginRight: '8px' }}/>  {getCurrency(room.roomPrice.nightPrice)}/nuit
                     </span>
                   </div>
                 )}
@@ -255,7 +255,7 @@ return (
                 {room.roomPrice?.hourPrice && (
                   <div>
                      <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
-                      ⏰ {getCurrency(room.roomPrice.hourPrice)}/heure
+                     <Clock size={14} style={{ marginRight: '8px' }} />  {getCurrency(room.roomPrice.hourPrice)}/heure
                     </span>
                   </div>
                 )}

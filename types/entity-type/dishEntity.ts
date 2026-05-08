@@ -1,3 +1,4 @@
+import { DishPhotoEntity } from "./dishphotoEntity";
 import { DishPriceEntity } from "./dishPriceEntity";
 import { DishTypeEntity } from "./dishTypeEntity";
 
@@ -8,7 +9,7 @@ export interface DishEntity {
     type: DishTypeEntity |null,
     state: number
     status: number,
-    photo: string | null,
+    photo: DishPhotoEntity[],
     price:DishPriceEntity|null,
     skipValidation: boolean,
 }

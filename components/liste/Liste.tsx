@@ -16,9 +16,9 @@ export default function Liste<TData>({
       {/* HEADER */}
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id} className="text-start">
+          <TableRow key={headerGroup.id} className="text-start text-center">
             {headerGroup.headers.map((header) => (
-              <TableHead key={header.id} className="text-start">
+              <TableHead key={header.id} className="text-start ">
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -38,7 +38,7 @@ export default function Liste<TData>({
           Array.from({ length: rowCount }).map((_, rowIndex) => (
             <TableRow key={rowIndex} className="animate-pulse text-center">
               {Array.from({ length: columnCount }).map((_, colIndex) => (
-                <TableCell key={colIndex}>
+                <TableCell key={colIndex} >
                   <div className="h-4 w-full rounded-md bg-muted" />
                 </TableCell>
               ))}

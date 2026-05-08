@@ -20,10 +20,10 @@ const translations: Record<string, string> = {
   "calendar": "Calendrier",
   "settings": "Paramètres",
   "dashboard": "Tableau de bord",
-  "profil": "Profile",
+  "profil": "Profil",
   "hotel": "Hôtel",
   "restaurant": "Restaurant",
-  "company": "société",
+  "company": "Société",
 
 };
 

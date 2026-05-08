@@ -96,29 +96,38 @@ export default function TableOrder() {
       );
 
       dishOrder.details = dishOrderDetails;
-
-      // await createDishOrder(dishOrder);
-      // console.log('Details de la commande:',dishOrder.details);
+        
+      await createDishOrder(dishOrder);
+      console.log('Details de plat validée:',dishOrder.details);
 
       //succès
       setSuccessMessage("Commande enregistrée avec succès");
       setErrorMessage(null);
 
       setOrder([]);
+      setSelectedTable(null);
       removeLocalItem('purchase');
       removeLocalItem('occupation');
 
-    } catch (error: any) {
-      console.error("Erreur commande :", error);
+    // } catch (error: unknown) {
 
-      // message venant du backend (si dispo)
+    //   // Erreur
+    //   if (error instanceof Error) {
+    //     console.log(error.message);    // Message d'erreur
+    //     console.log(error.name);       // Type d'erreur
+    //     console.log(error.stack);      // Stack trace
+    //   } else if (typeof error === 'string') {
+    //   } else {
+    //     console.log('Erreur inconnue:', error);
+    //   }
+    //   setErrorMessage(errorMessage);
+    // }
+    } catch (err: any) {
       const message =
-        error?.response?.data?.message ||
-        "Impossible de créer la commande (table déjà occupée ?)";
-
+      err.response?.data || err.message || "Erreur inconnue";   
       setErrorMessage(message);
-      setSuccessMessage(null);
-    } finally {
+    }
+     finally {
       setTimeout(() => {
         setSuccessMessage(null);
         setErrorMessage(null);
@@ -142,12 +151,7 @@ export default function TableOrder() {
 
 
   // ===== PAGINATION =====
-  // const paginatedDishes = useMemo(() => {
-  //   const start = (dishPage - 1) * DISHES_PER_PAGE;
-  //   return filteredDishes.slice(start, start + DISHES_PER_PAGE);
-  // }, [filteredDishes, dishPage]);
 
-  // const totalDishPages = Math.ceil(filteredDishes.length / DISHES_PER_PAGE);
 
   const paginatedOrder = useMemo(() => {
     const start = (orderPage - 1) * ORDER_PER_PAGE;
@@ -290,7 +294,8 @@ const addToOrder = (dish: DishEntity) => {
     const occupation = getLocalItem('occupation');
     const purchaseRaw = getLocalItem('purchase');
 
-    console.log('Occupation',occupation);
+    // console.log('Occupation',occupation);
+    console.log('Details de plat',purchaseRaw);
     const purchase = typeof purchaseRaw === "string"
       ? JSON.parse(purchaseRaw)
       : purchaseRaw;
@@ -302,19 +307,17 @@ const addToOrder = (dish: DishEntity) => {
           dishID: item.dishID,
           name: item.name,
           description: item.description,
-          photo: null,
+          photo: [],
           type: item.type || null,
-          price: {
-            price: item.price?.price || 0,
-            dish: null,
-            priceID: item.price?.priceID || null,
-            datechanged: item.price?.dateChanged || null,
-            status: 0,
-          },
+          price: item.price,
           state:0,
           skipValidation: false,
           status: item.status ?? 0,
         };
+
+        if (dish?.type) {
+          dish.type.dishes = null;
+        }
 
         return {
           dish,
@@ -346,6 +349,7 @@ const addToOrder = (dish: DishEntity) => {
                 Date début
               </label>
                 <input
+                  title="Date début"
                   type="datetime-local"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
@@ -359,6 +363,7 @@ const addToOrder = (dish: DishEntity) => {
                 Date fin
               </label>
                 <input
+                  title="Date fin"
                   type="datetime-local"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
@@ -368,6 +373,7 @@ const addToOrder = (dish: DishEntity) => {
           
             {/* BOUTON */}
               <button
+              title="Rechercher les tables disponibles"
                 onClick={handleSearch}
                 disabled={!startDate || !endDate}
                 className="px-5 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
@@ -377,7 +383,7 @@ const addToOrder = (dish: DishEntity) => {
           
           </div>
         </div>
-        <div className="w-full max-w-6xl mx-auto p-5 border rounded-xl bg-slate-50/50 shadow-sm h-[110vh] flex flex-col">
+        <div className="w-full max-w-6xl mx-auto p-5 border rounded-xl bg-slate-50/50 shadow-sm h-[120vh] flex flex-col">
           <div className="space-y-4 flex flex-col h-full">
 
             {/* HEADER */}
@@ -395,7 +401,6 @@ const addToOrder = (dish: DishEntity) => {
                     </p>
                   )}
                 </FieldLabel>
-
                 <Select
                   value={selectedTable?.occupationID || ""}
                   onValueChange={(value) =>
@@ -407,9 +412,15 @@ const addToOrder = (dish: DishEntity) => {
                   }
                 >
                   <SelectTrigger className="w-[250px]">
-                    <SelectValue placeholder="Choisir une table" />
+                    <SelectValue 
+                      placeholder="Choisir une table"
+                    >
+                      {selectedTable?.table?.name 
+                        ? `Table : ${selectedTable.table.name}` 
+                        : "Choisir une table"}
+                    </SelectValue>
                   </SelectTrigger>
-                
+                      
                   <SelectContent>
                     {tableOccupations.map((tableOccupation) => (
                       <SelectItem
@@ -453,6 +464,7 @@ const addToOrder = (dish: DishEntity) => {
 
                 {/* LEFT */}
                 <button
+                  title="Page précédente"
                   onClick={() => setCategoryStart((prev) => Math.max(prev - 1, 0))}
                   disabled={!canGoLeft}
                   className={`w-10 h-10 flex items-center justify-center border rounded-md bg-white flex-shrink-0 ${
@@ -470,6 +482,7 @@ const addToOrder = (dish: DishEntity) => {
                   
                     return (
                       <button
+                        title={`Catégorie : ${cat.name}`}
                         key={value}
                         onClick={() => setCategory(value!)}
                          className={`w-25 px-2 py-2 rounded-md border text-sm text-center truncate whitespace-nowrap overflow-hidden ${
@@ -486,6 +499,7 @@ const addToOrder = (dish: DishEntity) => {
                 
                 {/* RIGHT */}
                 <button
+                  title="Page suivante"
                   onClick={() =>
                     setCategoryStart((prev) =>
                       Math.min(prev + 1, ALL_CATEGORIES.length - MAX_VISIBLE)
@@ -508,6 +522,7 @@ const addToOrder = (dish: DishEntity) => {
                   }`}
                 >
                 <button
+                  title="Réinitialiser la commande"
                   onClick={() => setShowConfirmModal(true)}
                   disabled={order.length === 0}
                   className="p-2 border rounded-md bg-white disabled:opacity-50"
@@ -516,6 +531,7 @@ const addToOrder = (dish: DishEntity) => {
                 </button>
 
                 <button
+                  title="Réinitialiser la commande"
                   onClick={handleSubmitOrder}
                  disabled={order.length === 0}                
                   className="px-4 py-2 rounded-md bg-blue-800 text-white disabled:bg-slate-400"
@@ -602,11 +618,11 @@ const addToOrder = (dish: DishEntity) => {
                               className={`relative border rounded-lg p-3 bg-white cursor-pointer hover:border-blue-500
                                 ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                              <span className="absolute top-2 right-2 text-xs bg-slate-100 px-2 py-1 rounded">
-                                {dish.type?.name}
-                              </span>
+                            <span className="absolute bottom-2 right-2 text-xs bg-slate-100 px-2 py-1 rounded max-w-[150px] ">
+                              {dish.type?.name}
+                            </span>
                               
-                              <p>{dish.name}</p>
+                              <p title={dish.name} className="truncate whitespace-nowrap overflow-hidden">{dish.name}</p> 
                               <p className="text-sm text-gray-500">
                                 {dish.price?.price.toLocaleString()} Ar
                               </p>                                              
@@ -630,6 +646,7 @@ const addToOrder = (dish: DishEntity) => {
                       <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 border-t bg-slate-50/50">
                         
                         <button
+                        title="Page précédente"
                           onClick={() =>
                             setPage((prev) => ({
                               ...prev,
@@ -647,6 +664,7 @@ const addToOrder = (dish: DishEntity) => {
                         </span>
                         
                         <button
+                        title="Page suivante"
                           onClick={() =>
                             setPage((prev) => ({
                               ...prev,
@@ -684,14 +702,14 @@ const addToOrder = (dish: DishEntity) => {
                       </div>
 
                       <div className="flex gap-1 items-center">
-                        <button onClick={() => decrease(item.dish.dishID!)} className="w-6 h-6 flex items-center justify-center px-1 bg-gray-200 rounded" > 
+                        <button title="Diminuer la quantité" onClick={() => decrease(item.dish.dishID!)} className="w-6 h-6 flex items-center justify-center px-1 bg-gray-200 rounded" > 
                           <Minus size={15}/> 
                         </button>
                         {item.quantity}
-                        <button onClick={() => increase(item.dish.dishID!)} className="w-6 h-6 flex items-center justify-center px-1 bg-gray-200 rounded" > 
+                        <button title="Augmenter la quantité" onClick={() => increase(item.dish.dishID!)} className="w-6 h-6 flex items-center justify-center px-1 bg-gray-200 rounded" > 
                           <Plus size={15} /> 
                         </button>
-                        <button onClick={() => removeItem(item.dish.dishID!)} className="text-red-500 text-xs" > 
+                        <button title="Supprimer l'item" onClick={() => removeItem(item.dish.dishID!)} className="text-red-500 text-xs" > 
                           <X size={15} className="w-6 h-6 text-white bg-red-500 rounded" />
                         </button>
                       </div>
@@ -702,11 +720,11 @@ const addToOrder = (dish: DishEntity) => {
                 {/* PAGINATION ORDER */}
                 {totalOrderPages > 1 && (
                   <div className="flex justify-center gap-2 mt-2">
-                    <button onClick={() => setOrderPage((p) => Math.max(p - 1, 1))} className="px-3 py-1 border rounded">
+                    <button title="Page précédente" onClick={() => setOrderPage((p) => Math.max(p - 1, 1))} className="px-3 py-1 border rounded">
                       <ChevronLeft size={14} />
                     </button>
                     <span>{orderPage} / {totalOrderPages}</span>
-                    <button onClick={() => setOrderPage((p) => Math.min(p + 1, totalOrderPages))} className="px-3 py-1 border rounded">
+                    <button  title="Page suivante" onClick={() => setOrderPage((p) => Math.min(p + 1, totalOrderPages))} className="px-3 py-1 border rounded">
                       <ChevronRight size={14} />
                     </button>
                   </div>

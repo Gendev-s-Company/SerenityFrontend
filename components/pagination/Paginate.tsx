@@ -49,6 +49,7 @@ export function Paginate<TData>({table}:PaginateProps<TData>) {
         {/* Bouton Précédent */}
         <PaginationItem>
           <PaginationPrevious
+          title="Précedent"
             onClick={() => table.previousPage()}
             aria-disabled={!table.getCanPreviousPage()}
             className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : "cursor-pointer"}
@@ -61,6 +62,7 @@ export function Paginate<TData>({table}:PaginateProps<TData>) {
         {/* Bouton Suivant */}
         <PaginationItem>
           <PaginationNext
+            title="Suivant"
             onClick={() => table.nextPage()}
             aria-disabled={!table.getCanNextPage()}
             className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : "cursor-pointer"}

@@ -120,6 +120,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
       tableID: tableID,
       items: selectedItems,
     };
+    console.log('Items selectionnees:',selectedItems);
     setLocalItem("purchase", JSON.stringify(purchase));
     router.push("/view/restaurant/dishOrder/tableOrder");
   };
@@ -129,10 +130,11 @@ export default function Catalogue({ tableID }: CatalogueProps) {
       {/* PANIER FLOTTANT */}
       <div className="fixed top-24 right-8 z-50">
         <button
+          title="Ouvrir le panier"
           onClick={() => setIsModalOpen(true)}
           className="bg-[#4a3427] text-white p-4 rounded-2xl shadow-2xl flex items-center border-b-4 border-black/30 active:translate-y-1 transition-all"
         >
-          <ShoppingCart size={24} className="text-[#d4af37]" />
+          <ShoppingCart size={20} className="text-[#d4af37]" />
           {totalItems > 0 && (
             <span className="ml-3 bg-red-600 text-white text-xs font-sans font-bold px-2 py-0.5 rounded-full">
               {totalItems}
@@ -172,6 +174,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
 
       <div className="relative flex items-center max-w-6xl w-full gap-4">
         <button
+        title="Page précédente"
           onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
           disabled={currentPage === 0}
           className="p-3 disabled:opacity-0 text-[#4a3427]"
@@ -246,6 +249,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
 
                         <div className="flex items-center justify-center gap-5 bg-white rounded-2xl border-2 border-gray-100 py-2 px-4 shadow-sm group hover:border-[#d4af37]/30 transition-all">
                           <button
+                          title="Diminuer la quantité"
                             onClick={() => updateQuantity(item.dishID, -1)}
                             className="text-gray-400 hover:text-red-500 transition-colors p-1"
                           >
@@ -255,6 +259,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                             {cart[String(item.dishID)] || 0}
                           </span>
                           <button
+                          title="Augmenter la quantité"
                             onClick={() => updateQuantity(item.dishID, 1)}
                             className="text-gray-400 hover:text-green-600 transition-colors p-1"
                           >
@@ -273,6 +278,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
           <footer className="mt-8 flex justify-center gap-2">
             {[...Array(totalPages)].map((_, i) => (
               <button
+              title="Page suivante"
                 key={i}
                 onClick={() => setCurrentPage(i)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
@@ -286,6 +292,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
         </div>
 
         <button
+        title="Page suivante"
           onClick={() => setCurrentPage((p) => Math.min(totalPages - 1, p + 1))}
           disabled={currentPage === totalPages - 1}
           className="p-3 disabled:opacity-0 text-[#4a3427]"
@@ -301,7 +308,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
               <h2 className="text-xl uppercase tracking-widest flex items-center gap-3">
                 <ShoppingCart className="text-[#d4af37]" /> Récapitulatif
               </h2>
-              <button onClick={() => setIsModalOpen(false)}>
+              <button title="Fermer le panier" onClick={() => setIsModalOpen(false)}>
                 <X size={24} />
               </button>
             </div>
@@ -341,13 +348,13 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                         </div>
                       </div>
                       <div className="flex items-center gap-3 bg-gray-50 px-3 py-1.5 rounded-xl border">
-                        <button onClick={() => updateQuantity(item.dishID, -1)}>
+                        <button title="Diminuer la quantité" onClick={() => updateQuantity(item.dishID, -1)}>
                           <Minus size={14} />
                         </button>
                         <span className="font-bold text-sm">
                           {item.quantity}
                         </span>
-                        <button onClick={() => updateQuantity(item.dishID, 1)}>
+                        <button title="Augmenter la quantité" onClick={() => updateQuantity(item.dishID, 1)}>
                           <Plus size={14} />
                         </button>
                       </div>
@@ -371,6 +378,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
 
             <div className="p-6 bg-gray-50 border-t flex gap-4">
               <button
+              title="Retour"
                 onClick={() => setIsModalOpen(false)}
                 className="flex-1 py-4 border-2 border-[#4a3427] text-[#4a3427] rounded-xl font-bold uppercase text-[10px]"
               >

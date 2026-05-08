@@ -12,6 +12,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   Info,
+  Search,
+  RotateCcw
 } from "lucide-react";
 import CreateBox from "@/components/create/create-box";
 import { getAllCustomerByCompany } from "@/infrastructure/hotel/customer/customerRequest";
@@ -69,7 +71,7 @@ export default function SeatingPlanDetails() {
     const user = getLocalStorage()!;
     const [customers, setCustomers] = useState<FieldOptions[]>([]);
 
-  const [selectedOccupation, setSelectedOccupation] = useState<any>(null);
+  const [selectedOccupation, setSelectedOccupation] = useState<TableReservationEntity|null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [occupationDetails, setOccupationDetails] = useState<DishOrderEntity | null>(null);
@@ -185,16 +187,15 @@ export default function SeatingPlanDetails() {
       setRefresh((prev) => prev + 1);
     };
 
-    const handleOpenModal = async (item: any) => {
+    const handleOpenModal = async (item: TableReservationEntity) => {
         setSelectedOccupation(item);
         setOpenModal(true);
         setLoadingDetails(true);
     
         try {
-            const data = await getDishOrderByTableoccupation(item.occupationID);
+            const data = await getDishOrderByTableoccupation(item.occupationID!);
         
             if (!data) {
-                // cas commande inexistante
                 setOccupationDetails(null);
                 return;
             }
@@ -206,7 +207,7 @@ export default function SeatingPlanDetails() {
           if (error?.response?.status === 404) {
                 setOccupationDetails(null);
             } else {
-                // optionnel : autre erreur
+                alert("Aucune commande trouvée")
                 setOccupationDetails(null);
             }
           
@@ -233,6 +234,7 @@ export default function SeatingPlanDetails() {
                 <div>
                     <label className="text-xs text-gray-500">Date début:</label>
                     <input
+                    title="Date début"
                         type="datetime-local"
                         value={startInput}
                         onChange={(e) => setStartInput(e.target.value)}
@@ -243,6 +245,7 @@ export default function SeatingPlanDetails() {
                 <div>
                     <label className="text-xs text-gray-500">Date fin:</label>
                     <input
+                    title="Date fin"
                         type="datetime-local"
                         value={endInput}
                         onChange={(e) => setEndInput(e.target.value)}
@@ -250,16 +253,18 @@ export default function SeatingPlanDetails() {
                     />
                 </div>
                 <button
+                    title="Rechercher"
                     onClick={handleSearch}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
                          >
-                    Rechercher
+                    <Search size={16} />
                 </button>
                 <button
+                    title="Réinitialiser"
                     onClick={handleReset}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-xl text-sm"
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
                 >
-                    Réinitialiser
+                    <RotateCcw size={16} />
                 </button>
 
           </div>
@@ -291,6 +296,7 @@ export default function SeatingPlanDetails() {
                 {/* ID */}
                 <td className="p-3 border-r last:border-r-0">
                   <span
+                  title="Voir les détails de l'occupation"
                   onClick={() => handleOpenModal(item)}
                   className="text-blue-600 font-medium cursor-pointer hover:underline">
                     {item.occupationID}
@@ -321,6 +327,7 @@ export default function SeatingPlanDetails() {
                   <div className="flex justify-center gap-2">
                     
                     <button
+                      title="Voir commande"
                       onClick={() => handleOpenModal(item)}
                       className="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg transition"
                     >
@@ -337,7 +344,7 @@ export default function SeatingPlanDetails() {
           </table>
           <div
               onClick={() => setOpenModal(false)}
-              className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300
+              className={`fixed inset-0 z-50 flex items-center justify-center 
                 ${openModal 
                   ? "bg-black/50 backdrop-blur-sm opacity-100" 
                   : "opacity-0 pointer-events-none"
@@ -356,15 +363,16 @@ export default function SeatingPlanDetails() {
               >
               
                 {/* HEADER */}
-                <div className={`flex justify-between items-center px-6 py-4  ${occupationstateStyles[selectedOccupation?.state]}`}>
+                <div className={`flex justify-between items-center px-6 py-4  ${selectedOccupation && occupationstateStyles[selectedOccupation.state]}`}>
                   <div>
-                    <h2 className="text-lg font-semibold">Détails de l'occupation</h2>
+                    <h2 className="text-lg font-semibold">Détails de l&apos;occupation</h2>
                     <p className="text-xs opacity-80">
                       Table {selectedOccupation?.tableID || ""}
                     </p>
                   </div>
                 
                   <button
+                    title="Fermer les détails de l'occupation"
                     onClick={() => setOpenModal(false)}
                     className="bg-white/20 hover:bg-red-500 hover:text-white p-2 rounded-lg transition"
                   >
@@ -400,8 +408,11 @@ export default function SeatingPlanDetails() {
                 
                     <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-xs text-gray-400">Etat</p>
-                      <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${occupationstateStyles[selectedOccupation?.state]} text-blue-600`}>
-                        {occupationStateLabels[selectedOccupation?.state]}
+                      <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full 
+                      ${selectedOccupation && occupationStateLabels[selectedOccupation.state]}
+                        text-blue-600`}>
+                      {selectedOccupation && occupationStateLabels[selectedOccupation.state]}
+
                       </span>
                     </div>
                   </div>
@@ -436,7 +447,7 @@ export default function SeatingPlanDetails() {
                         </p>
                     
                         <p className="text-xs text-gray-400 mt-1">
-                          Cette table n'a pas encore de commande associée
+                          Cette table n&apos;a pas encore de commande associée
                         </p>
                       </div>
                     )}
@@ -472,7 +483,7 @@ export default function SeatingPlanDetails() {
                             </span>
                         
                             <span className="text-center text-gray-600">
-                              {d.unitPrice} Ar
+                              {d.unitPrice.toLocaleString()} Ar
                             </span>
                         
                             <span className="flex justify-end">
@@ -495,10 +506,12 @@ export default function SeatingPlanDetails() {
                       
                           <div className="flex justify-center pb-4">
                           <button
+                          title="Voir le menu"
                             className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
                             onClick={() => {
                               setShowCatalogue((prev) => !prev);
                                 setLocalItem('occupation', JSON.stringify(selectedOccupation));
+                                alert(selectedOccupation?.table.tabletype.name);
                             }}
                           >
                             <CookingPot size={16} />
@@ -518,7 +531,7 @@ export default function SeatingPlanDetails() {
                     
                     {occupationDetails ? (
                       <p className="text-xl font-bold text-green-600">
-                        {occupationDetails.totalPrice || 0} Ar
+                        {occupationDetails.totalPrice.toLocaleString() || 0} Ar
                       </p>
                     ) : (
                       <p className="text-sm text-gray-400">
@@ -536,7 +549,7 @@ export default function SeatingPlanDetails() {
 
           {/* Texte */}
           <p className="text-center text-sm text-gray-400">
-            Cette table n'est pas occupée pour aujourd'hui
+            Cette table n&apos;est pas occupée pour aujourd&apos;hui
           </p>
 
           {/* Zone centrale */}
@@ -581,8 +594,9 @@ export default function SeatingPlanDetails() {
           >
             {/* CLOSE BUTTON */}
             <button
+              title="Fermer le catalogue"
               onClick={() => setShowCatalogue(false)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white transition"
+              className="absolute top-4 right-4 p-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white transition"
             >
               <X size={18} />
             </button>

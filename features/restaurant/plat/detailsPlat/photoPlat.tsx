@@ -271,7 +271,12 @@ export default function PhotoDetailPlat({ platID }: PhotoDetailPlatProps) {
                       </CardContent>
                     </Card>
                   ))}
-                  {displayPhotos.length<=0 && "Aucune photo détectée"}
+                  {displayPhotos.length<=0 && (                    
+                    <div className="col-span-2 flex items-center justify-center border border-dashed rounded-xl bg-gray-50">
+                      <p className="text-gray-400 text-sm text-center">
+                        Aucune photo détectée
+                      </p>
+                    </div>)}
                 </div>
               </CarouselItem>
             </CarouselContent>

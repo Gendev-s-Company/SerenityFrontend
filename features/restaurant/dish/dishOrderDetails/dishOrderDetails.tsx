@@ -129,7 +129,7 @@ export default function DishOrderDetails() {
       name: "",
       description: "",
       price: null,
-      photo: null,
+      photo: [],
       status: 0,
       state: 0,
     };
