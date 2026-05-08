@@ -4,16 +4,19 @@ import { PageType } from "@/types/component-type/PageType";
 import { DishOrderEntity } from "@/types/entity-type/dishOrderEntity";
 import { TableReservationEntity } from "@/types/entity-type/tableReservationEntity";
 import { pageSize } from "@/utils/PaginationUtility";
-import { getLocalStorage, setLocalItem } from "@/utils/storage";
+import { getLocalStorage, removeLocalItem, setLocalItem } from "@/utils/storage";
 import { getEndOfDay, getStartOfDay, timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
-import { Clock, CookingPot, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   Info,
   Search,
-  RotateCcw
+  RotateCcw,
+  FileDown,
+  Clock, 
+  CookingPot, 
+  X 
 } from "lucide-react";
 import CreateBox from "@/components/create/create-box";
 import { getAllCustomerByCompany } from "@/infrastructure/hotel/customer/customerRequest";
@@ -123,7 +126,7 @@ export default function SeatingPlanDetails() {
              )
                .then((data) => {
                  setTableOccupations(data.content);
-                 console.log(data.content);
+                 console.log('Disponibilite',data.content);
                     setPage((prevPage) => ({
                   ...prevPage,
                   pageIndex: data.pageable.pageNumber,
@@ -152,9 +155,12 @@ export default function SeatingPlanDetails() {
         setEndInput(getEndOfDay());
     };
 
-    const hasActiveState = tableOccupations.some(
-        (item) => ![0, 5, 6, 8].includes(item.state)
+
+    const filteredOccupations = tableOccupations.filter(
+      (item) => ![0, 5, 6, 8].includes(item.state)
     );
+
+    const hasActiveState = filteredOccupations.length > 0;
 
     const body: TableReservationEntity = {
         occupationID: null,
@@ -179,12 +185,13 @@ export default function SeatingPlanDetails() {
           typeof formData.customerID === "object" && formData.customerID !== null
             ? (formData.customerID as any).customerID
             : formData.customerID,
-      };
+    };
     
       console.log("Après transformation :", formattedData);
     
       await create(formattedData);
       setRefresh((prev) => prev + 1);
+      window.location.reload();
     };
 
     const handleOpenModal = async (item: TableReservationEntity) => {
@@ -277,6 +284,7 @@ export default function SeatingPlanDetails() {
           <thead className="bg-gray-50 text-gray-600 text-xs uppercase border-b">
             <tr>
               <th className="p-3 text-left font-semibold border-r last:border-r-0">ID</th>
+              <th className="p-3 text-left font-semibold border-r last:border-r-0">Occupé par</th>
               <th className="p-3 text-left font-semibold border-r last:border-r-0">Date début</th>
               <th className="p-3 text-left font-semibold border-r last:border-r-0">Date fin</th>
               <th className="p-3 text-left font-semibold border-r last:border-r-0">Etat</th>
@@ -287,7 +295,7 @@ export default function SeatingPlanDetails() {
           {/* BODY */}
           <tbody className="divide-y divide-gray-200">
 
-            {tableOccupations.map((item) => (
+            {filteredOccupations.map((item) => (
               <tr
                 key={item.occupationID}
                 className="hover:bg-gray-50 transition"
@@ -302,7 +310,12 @@ export default function SeatingPlanDetails() {
                     {item.occupationID}
                   </span>
                 </td>
-            
+
+                {/* Occupant */}
+                <td className="p-3 text-gray-600 border-r last:border-r-0">
+                  {item.customer.name}
+                </td>
+
                 {/* DATE DEBUT */}
                 <td className="p-3 text-gray-600 border-r last:border-r-0">
                   {timestampToText(item.starttime)}
@@ -511,7 +524,7 @@ export default function SeatingPlanDetails() {
                             onClick={() => {
                               setShowCatalogue((prev) => !prev);
                                 setLocalItem('occupation', JSON.stringify(selectedOccupation));
-                                alert(selectedOccupation?.table.tabletype.name);
+
                             }}
                           >
                             <CookingPot size={16} />
@@ -526,19 +539,31 @@ export default function SeatingPlanDetails() {
                     
                 {/* FOOTER */}
                 <div className="bg-white border-t px-6 py-4 flex justify-between items-center">
-                  <div>
-                    <p className="text-xs text-gray-400">Total commande</p>
-                    
                     {occupationDetails ? (
-                      <p className="text-xl font-bold text-green-600">
-                        {occupationDetails.totalPrice.toLocaleString() || 0} Ar
-                      </p>
+                      <>
+                        <div>
+                          <p className="text-xs text-gray-400">Total commande</p>
+                          
+                            <p className="text-xl font-bold text-green-600">
+                              {occupationDetails.totalPrice.toLocaleString() || 0} Ar
+                            </p>
+                        </div>
+                        <div>
+                            <button 
+                            title="Imprimer"
+                            className="flex items-center gap-2 bg-gray-100 text-black text-sm px-3 py-3 rounded-xl hover:bg-blue-700 hover:text-white transition"                    >
+                            <FileDown  size={16}/>
+                            </button>
+                        </div>
+                      </>
                     ) : (
-                      <p className="text-sm text-gray-400">
-                        Aucun total disponible
-                      </p>
+                      <div>
+                        <p className="text-sm text-gray-400">
+                          Aucun total disponible
+                        </p>
+                      </div>
                     )}
-                  </div>
+                  
                 </div>
                   
               </div>
@@ -595,7 +620,10 @@ export default function SeatingPlanDetails() {
             {/* CLOSE BUTTON */}
             <button
               title="Fermer le catalogue"
-              onClick={() => setShowCatalogue(false)}
+              onClick={() => {setShowCatalogue(false);
+                  removeLocalItem('occupation')
+                }
+              }
               className="absolute top-4 right-4 p-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white transition"
             >
               <X size={18} />
