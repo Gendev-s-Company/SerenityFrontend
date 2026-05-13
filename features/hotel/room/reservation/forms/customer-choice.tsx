@@ -126,6 +126,7 @@ const CustomerChoice = ({
           Créé un nouveau client ?
         </FieldLabel>
       </Field>
+      {!toogle &&
       <div className="flex flex-col gap-6 p-3">
         <Field data-invalid={getValidator("customerID") ? true : false}>
           <FieldLabel htmlFor={"end"}>
@@ -142,7 +143,7 @@ const CustomerChoice = ({
             disable={toogle}
           />
         </Field>
-      </div>
+      </div>}
       {toogle && (
         <div>
           <Forms forms={forms} fields={CustomerNamefield} />
