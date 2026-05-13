@@ -11,6 +11,7 @@ export interface ActivityOrderEntity {
     state:string,
     skipValidation: boolean,
     totalPrice?: number,
+    totalPerson?:number
 }
 
 export interface ActivitySearchedField {

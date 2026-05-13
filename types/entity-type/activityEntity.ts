@@ -7,4 +7,6 @@ export interface ActivityEntity {
     description: string,
     status: number,
     skipValidation: boolean,
+    isIndividual?: string,
+    isindividual?: string,
 }
