@@ -24,12 +24,12 @@ export const getPaginateworkSC = async (page:number,size:number) => {
 export const getworkSCById = async (id: string) => {
     return await getCall<WorkSchedule>(`${workPath}/${id}`);
 }
-export const createworkSC = async (user: WorkSchedule) => {
-    return await postCall<WorkSchedule>(workPath, user);
+export const createworkSC = async (workschedule: WorkSchedule) => {
+    return await postCall<WorkSchedule>(workPath, workschedule);
 }
 
-export const updateworkSC = async (user: WorkSchedule) => {
-    return await putCall<WorkSchedule>(`${workPath}/${user.userID}`, user);
+export const updateworkSC = async (workschedule: WorkSchedule) => {
+    return await putCall<WorkSchedule>(`${workPath}/${workschedule.scheduleID}`, workschedule);
 }
 export const deleteworkSC = async (id: string) => {
     return await deleteCall<WorkSchedule>(`${workPath}/${id}`);

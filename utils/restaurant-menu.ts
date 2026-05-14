@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Map, ListOrdered, Pen, BookImage, BookText, Calendar, CalendarArrowUp, Grid3x3, Inbox, Armchair, Table2, UtensilsCrossed, Menu, BookMarked, CookingPot, Utensils, SquareMenu, Beef } from "lucide-react";
+import { Map, ListOrdered, Pen, BookText, Inbox, Table2, UtensilsCrossed, BookMarked, CookingPot, Utensils, SquareMenu, Soup } from "lucide-react";
 
 export const RestoItems: PMenu =
 {
@@ -93,7 +93,7 @@ export const RestoItems: PMenu =
         dropdown: false,
         isSubmenu: false,
         subMenu: [],
-        icon: Beef,
+        icon: Soup,
         minAuthority: 4
       }
       ],

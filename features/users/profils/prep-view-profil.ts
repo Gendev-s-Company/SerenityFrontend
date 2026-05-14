@@ -12,6 +12,7 @@ export const ProfilColumnOptions: ColumnConfig<ProfilEntity>[] = [
         type: "text",
         href: (row) => `/profil/${row?.profilID}`,
         hiding: false,
+        sorting:true,
     },
     { key: "authority", header: "Autorité", type: "text", sorting: true },
 ];

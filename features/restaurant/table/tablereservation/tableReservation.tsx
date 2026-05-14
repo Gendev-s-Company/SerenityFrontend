@@ -12,11 +12,9 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 
 import { TableReservationColumnOptions, TableReservationFields } from "./prep-view-tableReservation"; 
-import { id } from "zod/v4/locales";
-import { Label } from "@radix-ui/react-label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 
-import { BookmarkCheck, BookmarkX, DoorClosedLocked, DoorOpenIcon, Lock, LockOpen, UserX2 } from "lucide-react";
+import { BookmarkCheck, BookmarkX, DoorClosedLocked, DoorOpenIcon, UserX2 } from "lucide-react";
 
 import {
   Tooltip,
@@ -452,7 +450,8 @@ const reset = async () => {
               <label className="text-sm font-bold text-slate-600 uppercase tracking-tight min-w-[50px]">
                 Début
               </label>
-              <input 
+              <input
+                aria-label="Date Début" 
                 type="date" 
                 value={startDate}
                 className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
@@ -464,6 +463,7 @@ const reset = async () => {
                 Fin
               </label>
               <input 
+                aria-label="Date Fin"
                 type="date" 
                 value={endDate}
                 className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"

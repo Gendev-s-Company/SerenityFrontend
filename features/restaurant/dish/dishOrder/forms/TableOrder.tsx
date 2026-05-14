@@ -223,13 +223,13 @@ const addToOrder = (dish: DishEntity) => {
     
       getAllTableAvalaible(
         user.profil.company.companyID,
-        [0],
+        [0,5,6,8],
         startDate,
         endDate
       )
         .then((data) => {
           setTableOccupations(data);
-        setTablesdisponibles(data.length);
+          setTablesdisponibles(data.length);
         })
         .catch((err) => console.error("Erreur tables :", err));
     };
@@ -271,6 +271,7 @@ const addToOrder = (dish: DishEntity) => {
 
     if (user && user.profil.company.companyID) {
       getPaginateDishes(
+        user.profil.company.companyID,
         page.pageIndex,
         page.pageSize
       )

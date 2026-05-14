@@ -148,13 +148,13 @@ export default function SeatingPlan() {
               >
                 {/* HEADER TYPE */}
                 <div className="flex justify-between items-center mb-4">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1" title={type.name}>
                     <CircleDot className="text-orange-500" size={18} />
-                    <h2 className="font-semibold text-lg">{type.name}</h2>
+                    <h2 className="font-semibold text-lg truncate max-w-[250px]">{type.name}</h2>
                   </div>
             
                   <div className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                    <Users textRendering={`Nombre de tables : ${tables.length}`} size={14} />
+                    <CircleDot textRendering={`Nombre de tables : ${tables.length}`} size={14} />
                     {tables.length}
                   </div>
                 </div>

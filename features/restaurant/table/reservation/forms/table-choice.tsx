@@ -1,4 +1,4 @@
-import Forms, { formatDateForInput } from "@/components/form-component/Forms";
+import  { formatDateForInput } from "@/components/form-component/Forms";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
@@ -8,7 +8,7 @@ import { getLocalStorage } from "@/utils/storage";
 import React, { useEffect, useState } from "react";
 import { ReservationFieldValidator } from "../reservation";
 import { ReservationTableEntity } from "@/types/entity-type/reservationTableEntity";
-import { RestaurantTableEntity } from "@/types/entity-type/restauranTableEntity";
+import { DisponibilityEntity } from "@/types/entity-type/restauranTableEntity";
 import { getAllTableAvalaible } from "@/infrastructure/restaurant/table/restauranttable/restaurantTableRequest";
 
 interface Form {
@@ -47,13 +47,15 @@ const TableChoice = ({
     ) {
       getAllTableAvalaible(
         user.profil.company.companyID,
-        [0, 1],
+        [0,5,6,8],
         forms.getForm.starttime,
         forms.getForm.endtime,
       )
         .then((data) => {
+          console.log('Donnees recues:',data);
           const list = convertListtablesToOption(data);
           settables(list);
+          console.log(data);
           const choosed = list.find((c) => c.id === init.tableID);
           if (choosed) {
             setFilters([choosed]);
@@ -181,11 +183,11 @@ export const tableResaField: FieldConfig<TableChoice>[] = [
   },
 ];
 
-const convertListtablesToOption = (list: RestaurantTableEntity[]): FieldOptions[] => {
+const convertListtablesToOption = (list: DisponibilityEntity[]): FieldOptions[] => {
   const result: FieldOptions[] = [];
   list?.map((row) => {
     if (row.tableID) {
-      result.push({ id: row.tableID, label: row.name! });
+      result.push({ id: row.tableID, label: row.table_name! });
     }
   });
   return result;

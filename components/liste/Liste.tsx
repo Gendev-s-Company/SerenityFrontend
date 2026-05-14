@@ -16,9 +16,9 @@ export default function Liste<TData>({
       {/* HEADER */}
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id} className="text-start text-center">
+          <TableRow key={headerGroup.id} className="text-center">
             {headerGroup.headers.map((header) => (
-              <TableHead key={header.id} className="text-start ">
+              <TableHead key={header.id} className="text-center ">
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -53,7 +53,7 @@ export default function Liste<TData>({
               className="normal-case"
             >
               {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} className="normal-case text-start">
+                <TableCell key={cell.id} className="normal-case text-center">
                   {flexRender(
                     cell.column.columnDef.cell,
                     cell.getContext()

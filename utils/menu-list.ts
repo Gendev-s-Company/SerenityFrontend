@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Calendar, LayoutDashboard } from "lucide-react";
+import { Calendar, LayoutDashboard, User } from "lucide-react";
 import { HotelItems } from "./hotel-menu";
 import { RestoItems } from "./restaurant-menu";
 import { UsersItems } from "./users-menu";
@@ -22,7 +22,7 @@ export const items: PMenu[] = [
     dropdown: false,
     isSubmenu: false,
     subMenu: [],
-    icon: Calendar,
+    icon: User,
     minAuthority: 4,
   },
   RestoItems,

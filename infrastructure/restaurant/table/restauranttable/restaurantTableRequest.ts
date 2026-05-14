@@ -41,5 +41,5 @@ export const getAllTableAvalaible = async (company: string,state: number[] = [],
         param += '&state='+row
     })
 
-  return await getCall<RestaurantTableEntity[]>(`${restaurantTablePath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
+  return await getCall<DisponibilityEntity[]>(`${restaurantTablePath}/avalaible?company=${company}&start=${start}&end=${end}${param}`);
 }

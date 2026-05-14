@@ -12,6 +12,7 @@ export const WSCColumnOptions: ColumnConfig<WorkSchedule>[] = [
         type: "datetime",
         href: (row) => `/schedule/${row?.scheduleID}`,
         hiding: false,
+        sorting:true,
     },
     {
         key: "endtime",
@@ -19,6 +20,7 @@ export const WSCColumnOptions: ColumnConfig<WorkSchedule>[] = [
         type: "datetime",
         href: (row) => `/schedule/${row?.scheduleID}`,
         hiding: false,
+        sorting:true,
     },
     { key: "status", header: "Statut", type: "text", sorting: true },
 ];

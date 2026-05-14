@@ -214,7 +214,6 @@ export default function SeatingPlanDetails() {
           if (error?.response?.status === 404) {
                 setOccupationDetails(null);
             } else {
-                alert("Aucune commande trouvée")
                 setOccupationDetails(null);
             }
           
@@ -378,15 +377,18 @@ export default function SeatingPlanDetails() {
                 {/* HEADER */}
                 <div className={`flex justify-between items-center px-6 py-4  ${selectedOccupation && occupationstateStyles[selectedOccupation.state]}`}>
                   <div>
-                    <h2 className="text-lg font-semibold">Détails de l&apos;occupation</h2>
-                    <p className="text-xs opacity-80">
-                      Table {selectedOccupation?.tableID || ""}
+                    <h2 className="text-lg font-semibold ">Détails de l&apos;occupation de la table: {selectedOccupation?.table.name || ""}</h2>
+                    <p className="text-xs opacity-100 font-medium">
+                    Capacité:  {selectedOccupation?.table.capacity || ""}
                     </p>
                   </div>
                 
                   <button
                     title="Fermer les détails de l'occupation"
-                    onClick={() => setOpenModal(false)}
+                    onClick={() => {setOpenModal(false);
+                      removeLocalItem('occupation')
+                      removeLocalItem('purchase')
+                    }}
                     className="bg-white/20 hover:bg-red-500 hover:text-white p-2 rounded-lg transition"
                   >
                     <X size={18} />
@@ -421,8 +423,8 @@ export default function SeatingPlanDetails() {
                 
                     <div className="bg-white p-4 rounded-xl shadow-sm">
                       <p className="text-xs text-gray-400">Etat</p>
-                      <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full 
-                      ${selectedOccupation && occupationStateLabels[selectedOccupation.state]}
+                      <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full font-medium
+                      ${selectedOccupation && occupationstateStyles[selectedOccupation.state]}
                         text-blue-600`}>
                       {selectedOccupation && occupationStateLabels[selectedOccupation.state]}
 
@@ -518,18 +520,18 @@ export default function SeatingPlanDetails() {
                           </p>
                       
                           <div className="flex justify-center pb-4">
-                          <button
-                          title="Voir le menu"
-                            className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
-                            onClick={() => {
-                              setShowCatalogue((prev) => !prev);
-                                setLocalItem('occupation', JSON.stringify(selectedOccupation));
-
-                            }}
-                          >
-                            <CookingPot size={16} />
-                            Voir le menu
-                          </button>
+                            <button
+                            title="Voir le menu"
+                              className="flex items-center gap-2 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
+                              onClick={() => {
+                                setShowCatalogue((prev) => !prev);
+                                  setLocalItem('occupation', JSON.stringify(selectedOccupation));
+                              
+                              }}
+                            >
+                              <CookingPot size={16} />
+                              Voir le menu
+                            </button>
                           </div>
                         </div>
                       )}
@@ -600,7 +602,12 @@ export default function SeatingPlanDetails() {
 
         
         <div
-          onClick={() => setShowCatalogue(false)}
+          onClick={() => {setShowCatalogue(false);
+            removeLocalItem('occupation')
+            removeLocalItem('purchase')
+          }
+            
+          }
           className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-300
             ${showCatalogue 
               ? "bg-black/50 backdrop-blur-sm opacity-100" 
@@ -608,31 +615,97 @@ export default function SeatingPlanDetails() {
             }
           `}
         >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto mx-4 transform transition-all duration-300
-              ${showCatalogue 
-                ? "scale-100 translate-y-0 opacity-100" 
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className={`
+            relative
+            bg-[#f8f8f7]
+            rounded-[32px]
+            shadow-2xl
+            w-[96vw]
+            max-w-[1200px]
+            h-[92vh]
+            mx-4
+            overflow-hidden
+            border border-white/40
+            transform transition-all duration-300
+            flex flex-col
+            ${
+              showCatalogue
+                ? "scale-100 translate-y-0 opacity-100"
                 : "scale-95 translate-y-6 opacity-0"
-              }
-            `}
+            }
+          `}
+        >
+
+          {/* HEADER */}
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              px-8
+              py-5
+              bg-white/90
+              backdrop-blur-md
+              border-b
+              border-gray-200
+              flex-shrink-0
+            "
           >
+          
+            <div>
+              <h2 className="text-2xl font-bold tracking-wide text-[#4a3427]">
+                Catalogue
+              </h2>
+          
+              <p className="text-sm text-gray-500 mt-1">
+                Découvrez notre sélection de plats
+              </p>
+            </div>
+          
             {/* CLOSE BUTTON */}
             <button
               title="Fermer le catalogue"
-              onClick={() => {setShowCatalogue(false);
-                  removeLocalItem('occupation')
-                }
-              }
-              className="absolute top-4 right-4 p-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white transition"
+              onClick={() => {
+                setShowCatalogue(false);
+                removeLocalItem("occupation");
+                removeLocalItem("purchase");
+              }}
+              className="
+                h-11
+                w-11
+                flex
+                items-center
+                justify-center
+                rounded-2xl
+                bg-gray-100
+                text-gray-600
+                hover:bg-red-500
+                hover:text-white
+                transition-all
+                duration-300
+              "
             >
-              <X size={18} />
+              <X size={20} />
             </button>
             
-            {/* CONTENT */}
+          </div>
+            
+          {/* CONTENT */}
+          <div
+            className="
+              flex-1
+              overflow-y-auto
+              px-8
+              py-6
+            "
+          >
             <Catalogue />
           </div>
+            
         </div>
+      </div>
     </div>  
     );
     

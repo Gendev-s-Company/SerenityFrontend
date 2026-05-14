@@ -38,7 +38,7 @@ export default function CalendarDialog<T>({ selectedSlot, setSelectedSlot, handl
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold tracking-tight">
-                        Create Event
+                        Créer un évenement
                     </DialogTitle>
                 </DialogHeader>
                 {selectedSlot && (

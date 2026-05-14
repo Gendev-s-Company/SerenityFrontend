@@ -11,6 +11,7 @@ export const UsersColumnOptions: ColumnConfig<UserEntity>[] = [
         type: "text",
         href: (row) => `/profil/${row?.userID}`,
         hiding: false,
+        sorting:true,
     },
     { key: "profil.name", header: "profil", type: "text", sorting: true },
     { key: "phone", header: "Téléphone", type: "text", sorting: true },

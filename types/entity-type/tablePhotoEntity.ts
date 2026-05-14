@@ -1,7 +1,7 @@
 export interface TablePhotoEntity {
     content: never[];
     photoID: string;
-    roomID: string;
+    tableID: string;
     path: string;
     files: FileData;
 }

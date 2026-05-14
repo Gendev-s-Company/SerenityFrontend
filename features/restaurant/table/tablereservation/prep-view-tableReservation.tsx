@@ -25,8 +25,8 @@ const stateOption: FieldOptions[] = [
 
 export const TableReservationColumnOptions: ColumnConfig<TableReservationEntity>[] = [
   { key: "occupationID", header: "ID", sorting: true },
+  { key: "table.name", header: "Table", type: "link", href: (row) => `/view/restaurant/table/details?TableID=${row.tableID}`,sorting:true },
   { key: "customer.name", header: "Client", type: "text", sorting: true },
-//   { key: "Table.name", header: "Table", type: "link", href: (row) => `/view/restaurant/details/detail?TableID=${row.TableID}` },
   { key: "starttime", header: "Début", type: "datetime", sorting: true },
   { key: "endtime", header: "Fin", type: "datetime", sorting: true },
    {

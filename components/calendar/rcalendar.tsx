@@ -159,33 +159,48 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
         setSelectedSlot(slotInfo)
     }
     return (
-        <div className="container py-2 px-5">
-            {/* <section> */}
-            <div className="flex flex-wrap items-center gap-3 justify-between">
-                <p className="text-muted-foreground">
-                    Add a meeting, workshop, or reminder to the demo.
+        <div className="container py-6 px-5 space-y-6">
+            
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+            
+            <div className="space-y-1">
+                <h1 className="text-2xl font-bold tracking-tight text-gray-800">
+                    Calendrier
+                </h1>
+            
+                <p className="text-sm text-muted-foreground max-w-xl">
+                    Ajouter des notes, des rappels ou des tâches à faire dans ce calendrier.
                 </p>
-                <Button
-                    aria-label="Create a new calendar event"
-                    onClick={createEvent}
-                >
-                    <Plus />
-                    Create Event
-                </Button>
             </div>
-            <CalendarDialog
-                handleCreateEvent={handleCreateEvent}
-                selectedSlot={selectedSlot}
-                setSelectedSlot={setSelectedSlot}
-                convertionToCalendar={convertionToCalendar}
-                fields={fields}
-                body={body}
-            />
-            {/* <div className="h-[700px]"> */}
+            
+            <Button
+                aria-label="Create a new calendar event"
+                onClick={createEvent}
+                className="rounded-xl px-5 shadow-sm"
+            >
+                <Plus className="mr-2 h-4 w-4" />
+                Créer un événement
+            </Button>
+        </div>
+            
+        {/* Dialog */}
+        <CalendarDialog
+            handleCreateEvent={handleCreateEvent}
+            selectedSlot={selectedSlot}
+            setSelectedSlot={setSelectedSlot}
+            convertionToCalendar={convertionToCalendar}
+            fields={fields}
+            body={body}
+        />
+            
+        {/* Calendar Container */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm overflow-hidden">
+            
             <DnDCalendar
                 localizer={localizer}
-                style={{ height: 600, width: "100%" }}
-                className="border-border border-rounded-md border-solid border-2 rounded-lg"
+                style={{ height: 650, width: "100%" }}
+                className="rounded-xl"
                 selectable
                 date={date}
                 min={minTime}
@@ -202,8 +217,9 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
                 onEventDrop={handleEventDrop}
                 onEventResize={handleEventResize}
             />
-            {/* </div> */}
-            {/* </section> */}
+        
+        </div>
+            
         </div>
     );
 };

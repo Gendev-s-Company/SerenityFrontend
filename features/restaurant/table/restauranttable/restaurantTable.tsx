@@ -141,6 +141,7 @@ export default function RestaurantTable() {
     };
     const onCreate = async (formData: RestaurantTableEntity) => {
       const body = formData;
+      console.log('Donnees envoyes:',formData)
       await createTable(body);
       setRefresh((prev) => prev + 1);
     };

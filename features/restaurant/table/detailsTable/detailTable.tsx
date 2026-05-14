@@ -5,7 +5,6 @@ import PhotoDetailTable from './PhotoDetailTable';
 
 
 import { Button } from '@/components/ui/button';
-import { getCurrency } from '@/utils/Util';
 import { getTableById } from '@/infrastructure/restaurant/table/tabledetail/tableRequest';
 import { RestaurantTableEntity } from '@/types/entity-type/restauranTableEntity';
 
@@ -13,7 +12,7 @@ export default function Detailtable() {
     const tableID = useSearchParams().get('tableID');
     const [refresh, setRefresh] = useState<number>(0);
     const router = useRouter();
-    // const navigate = () => router.push('/view/hotel/table/reservation/create?tableid='+tableID)
+    const navigate = () => router.push('/view/restaurant/table/createResa')
 // ###############################################################################################################
 
     const [table, settable] = useState<RestaurantTableEntity | null>(null);
@@ -86,8 +85,11 @@ export default function Detailtable() {
 
             {/* BOUTON RÉSERVER - Version Mobile (visible seulement sur petit écran) */}
             <div className="mt-8 md:hidden">
-                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-6 rounded-xl shadow-lg shadow-indigo-100 transition-transform active:scale-[0.98]">
-                Réserver
+                <Button 
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-6 rounded-xl shadow-lg shadow-indigo-100 transition-transform active:scale-[0.98]"
+                    // onClick={navigate}
+                >
+                    Réserver
                 </Button>
             </div>
             </div>

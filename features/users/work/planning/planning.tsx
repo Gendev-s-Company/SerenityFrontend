@@ -45,7 +45,10 @@ const Planning = () => {
     if (user) {
       if (user.profil.authority >= 4 && user.profil.company.companyID) {
         getAllUser(user.profil.company.companyID)
-          .then((data) => setUsers(convertListUsersToOption(data)))
+          .then((data) => {
+              console.log('Liste utilisateur:',data)
+              setUsers(convertListUsersToOption(data))
+            })
           .catch((error) => console.log(error));
       } else {
         getUserById(user.userID!)
@@ -83,10 +86,10 @@ const Planning = () => {
       type: "select",
       normal: false,
       items: users,
-      // objectMapping: {
-      //     idKey: "userID",
-      //     labelKey: "name"
-      // }
+      objectMapping: {
+          idKey: "userID",
+          labelKey: "name"
+      }
     }),
     [users],
   );
@@ -104,15 +107,23 @@ const Planning = () => {
 
     return value;
   };
+
   const onCreate = async (formData: WorkSchedule) => {
-    await createworkSC(formData);
+    const dataToSend = {
+      ...formData,
+      userID: formData.userID?.userID || formData.userID
+    };
+    // console.log('Donnees envoyees:',formData);
+    await createworkSC(dataToSend);
     setRefresh((prev) => prev + 1);
   };
+
   const initForm = (body: WorkSchedule, slot: SlotInfo) => {
     body.starttime = slot.start;
     body.endtime = slot.end;
     setForm(body);
   };
+   
   const updateFilter = (filters:FieldOptions[]) => {
     setFilters(filters)
     if (filters.length<=0) {
@@ -121,41 +132,73 @@ const Planning = () => {
     }
   }
   return (
-    <div>
-      <div className="container py-2 px-5">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <div className="flex items-center gap-3">
-            <div className="w-full max-w-md py-2">
-              <MultiSelect
-                setOpts={updateFilter}
-                safidy={filters}
-                opts={users}
-                placeholder="Choisir les utilisateurs"
-              />
-            </div>
-            <Button
-              className="min-h-10"
-              style={{ marginTop: "-5px" }}
-              aria-label="Afficher le filtre"
-              variant={"outline"}
+        <div className="space-y-6">
+          
+        {/* Filter Section */}
+        <div className="container px-5 pt-5">
+          
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+          
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="flex flex-col lg:flex-row lg:items-end gap-4"
             >
-              <Search />
-              Afficher
-            </Button>
+            
+              {/* Multi Select */}
+              <div className="flex-1 space-y-2">
+          
+                <label className="text-sm font-medium text-gray-700 block">
+                  Utilisateurs
+                </label>
+          
+                <MultiSelect
+                  setOpts={updateFilter}
+                  safidy={filters}
+                  opts={users}
+                  placeholder="Choisir les utilisateurs"
+                />
+        
+              </div>
+          
+              {/* Button */}
+              <Button
+                aria-label="Afficher le filtre"
+                variant="outline"
+                className="
+                  h-10
+                  px-5
+                  rounded-xl
+                  border-gray-300
+                  hover:bg-blue-600
+                  hover:text-white
+                  transition-all
+                  duration-200
+                  shadow-sm
+                  self-end
+                "
+              >
+                <Search className="mr-2 h-4 w-4" />
+                Afficher
+              </Button>
+          
+            </form>
+          
           </div>
-        </form>
-      </div>
-
-      <Rcalendar
-        list={users}
-        initForm={initForm}
-        saveToDb={onCreate}
-        body={form}
-        convertionToCalendar={convertionToCalendar}
-        fields={namefield}
-        works={works}
-      />
-    </div>
+          
+        </div>
+          
+        {/* Calendar */}
+        <Rcalendar
+          list={users}
+          initForm={initForm}
+          saveToDb={onCreate}
+          body={form}
+          convertionToCalendar={convertionToCalendar}
+          fields={namefield}
+          works={works}
+        />
+          
+        </div>
   );
 };
 

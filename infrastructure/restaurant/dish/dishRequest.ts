@@ -7,8 +7,8 @@ export const getAllDishes = async (company:string) => {
     return await getCall<DishEntity[]>(`${dishPath}/all?company=${company}`);
 }
 
-export const getPaginateDishes = async (page:number, size:number) => {
-    return await getCall<Page<DishEntity>>(`${dishPath}/${page}/${size}` );
+export const getPaginateDishes = async (company:string,page:number, size:number) => {
+    return await getCall<Page<DishEntity>>(`${dishPath}/all/${page}/${size}?company=${company}` );
 }
 
 export const getDishById = async (id: string) => {

@@ -172,134 +172,287 @@ export default function Catalogue({ tableID }: CatalogueProps) {
         </div>
       )}
 
-      <div className="relative flex items-center max-w-6xl w-full gap-4">
-        <button
-        title="Page précédente"
-          onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
-          disabled={currentPage === 0}
-          className="p-3 disabled:opacity-0 text-[#4a3427]"
-        >
-          <ChevronLeft size={44} />
-        </button>
-
-        <div className="bg-white rounded-xl p-10 min-h-[850px] min-w-[500] flex flex-col border border-gray-100">
-          <header className="text-center mb-10">
-            <h1 className="text-4xl uppercase tracking-[0.5em] font-light text-gray-900">
-              {selectedTypeID
-                ? (types.find((t) => t.typeID === selectedTypeID)?.name ?? "Carte")
-                : "Carte"}
-            </h1>
-            <div className="h-px w-24 bg-[#d4af37] mx-auto mt-4"></div>
-          </header>
-
-          {/* GRILLE GROUPÉE PAR TYPE */}
-          <div className="flex-1 flex flex-col">
-            {pageGroups.map((group) => (
-              <div key={group.typeID}>
-
-                {/* Séparateur de section — masqué si un seul type filtré */}
-                {!selectedTypeID && (
-                  <div className="flex items-center gap-3 my-5">
-                    <div className="flex-1 h-px bg-[#e8e0d0]" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />
-                    <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#4a3427] whitespace-nowrap">
-                      {group.typeName}
-                    </span>
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />
-                    <div className="flex-1 h-px bg-[#e8e0d0]" />
-                  </div>
-                )}
-
-                {/* Grille 3 colonnes — identique à l'original */}
-                <div className="grid grid-cols-3 gap-x-8 gap-y-4">
-                  {group.dishes.map((item) => (
-                    <div
-                      key={`dish-${item.dishID}`}
-                      className="flex flex-col items-center justify-start min-h-[220px]"
-                    >
-                      <div className="flex flex-col items-center text-center w-full animate-in fade-in duration-500 py-4">
-                        <a
-                          href={`/view/restaurant/plat/detail?dishID=${item.dishID}&dishState=${item.state}`}
-                        >
-                          <div className="relative w-36 h-36 mb-5 overflow-hidden rounded-full border-[5px] border-white shadow-2xl transition-transform hover:scale-110">
-                            <Image
-                              src={
-                                item.photos[0]?.files?.data
-                                  ? convertToBase64(
-                                      item.photos[0].files.data,
-                                      item.photos[0].files.type,
-                                    )
-                                  : item.photos[0]?.path ||
-                                    "/placeholder-food.jpg"
-                              }
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        </a>
-
-                        <h3 className="text-sm md:text-base font-black uppercase text-gray-800 leading-tight h-12 flex items-center justify-center px-4 mb-1">
-                          {item.name}
-                        </h3>
-
-                        <p className="text-sm font-bold text-[#d4af37] mb-4 tracking-tighter">
-                          {item.price.price.toLocaleString()} Ar
-                        </p>
-
-                        <div className="flex items-center justify-center gap-5 bg-white rounded-2xl border-2 border-gray-100 py-2 px-4 shadow-sm group hover:border-[#d4af37]/30 transition-all">
-                          <button
-                          title="Diminuer la quantité"
-                            onClick={() => updateQuantity(item.dishID, -1)}
-                            className="text-gray-400 hover:text-red-500 transition-colors p-1"
-                          >
-                            <Minus size={18} strokeWidth={3} />
-                          </button>
-                          <span className="text-base font-sans font-black min-w-[24px] text-center text-gray-900">
-                            {cart[String(item.dishID)] || 0}
+          <div className="w-full flex justify-center py-8">
+              
+            {/* Container principal */}
+            <div className="relative flex items-center justify-center w-[1000px] ">
+              
+              {/* Bouton gauche */}
+              <button
+                title="Page précédente"
+                onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
+                disabled={currentPage === 0}
+                className="
+                  absolute
+                  left-[-80px]
+                  z-10
+                  p-4
+                  rounded-full
+                  bg-white
+                  shadow-lg
+                  border
+                  border-gray-200
+                  text-[#4a3427]
+                  hover:bg-[#4a3427]
+                  hover:text-white
+                  transition-all
+                  duration-300
+                  disabled:opacity-30
+                  disabled:hover:bg-white
+                  disabled:hover:text-[#4a3427]
+                "
+              >
+                <ChevronLeft size={34} />
+              </button>
+              
+              {/* Carte/Menu */}
+              <div
+                className="
+                  bg-white
+                  rounded-3xl
+                  px-12
+                  py-10
+                  h-[1500px]
+                  w-[1000px]
+                  flex
+                  flex-col
+                  border
+                  border-gray-100
+                  shadow-2xl
+                  overflow-hidden
+                  flex-shrink-0
+                "
+              >
+              
+                {/* HEADER */}
+                <header className="text-center mb-10 flex-shrink-0">
+              
+                  <h1 className="text-4xl uppercase tracking-[0.5em] font-light text-gray-900">
+                    {selectedTypeID
+                      ? (
+                          types.find((t) => t.typeID === selectedTypeID)?.name ??
+                          "Carte"
+                        )
+                      : "Carte"}
+                  </h1>
+                      
+                  <div className="h-px w-24 bg-[#d4af37] mx-auto mt-4"></div>
+                      
+                </header>
+                      
+                {/* CONTENU */}
+                <div className="flex-1 overflow-y-auto pr-2">
+                      
+                  {pageGroups.map((group) => (
+                    <div key={group.typeID}>
+                    
+                      {/* Séparateur */}
+                      {!selectedTypeID && (
+                        <div className="flex items-center gap-3 my-5">
+                        
+                          <div className="flex-1 h-px bg-[#e8e0d0]" />
+                      
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />
+                      
+                          <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#4a3427] whitespace-nowrap">
+                            {group.typeName}
                           </span>
-                          <button
-                          title="Augmenter la quantité"
-                            onClick={() => updateQuantity(item.dishID, 1)}
-                            className="text-gray-400 hover:text-green-600 transition-colors p-1"
-                          >
-                            <Plus size={18} strokeWidth={3} />
-                          </button>
+                      
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] flex-shrink-0" />
+                      
+                          <div className="flex-1 h-px bg-[#e8e0d0]" />
+                      
                         </div>
+                      )}
+          
+                      {/* GRILLE */}
+                      <div className="grid grid-cols-3 gap-x-8 gap-y-6">
+                    
+                        {group.dishes.map((item) => (
+                        
+                          <div
+                            key={`dish-${item.dishID}`}
+                            className="flex flex-col items-center justify-start min-h-[250px]"
+                          >
+                          
+                            <div className="flex flex-col items-center text-center w-full animate-in fade-in duration-500 py-4">
+                        
+                              <a
+                                href={`/view/restaurant/plat/detail?dishID=${item.dishID}&dishState=${item.state}`}
+                              >
+                              
+                                <div
+                                  className="
+                                    relative
+                                    w-36
+                                    h-36
+                                    mb-5
+                                    overflow-hidden
+                                    rounded-full
+                                    border-[5px]
+                                    border-white
+                                    shadow-2xl
+                                    transition-transform
+                                    duration-300
+                                    hover:scale-110
+                                  "
+                                >
+                                
+                                  <Image
+                                    src={
+                                      item.photos[0]?.files?.data
+                                        ? convertToBase64(
+                                            item.photos[0].files.data,
+                                            item.photos[0].files.type,
+                                          )
+                                        : item.photos[0]?.path ||
+                                          "/placeholder-food.jpg"
+                                    }
+                                    alt={item.name}
+                                    fill
+                                    className="object-cover"
+                                  />
+          
+                                </div>
+                                  
+                              </a>
+                                  
+                              <h3
+                                className="
+                                  text-sm
+                                  md:text-base
+                                  font-black
+                                  uppercase
+                                  text-gray-800
+                                  leading-tight
+                                  h-12
+                                  flex
+                                  items-center
+                                  justify-center
+                                  px-4
+                                  mb-1
+                                "
+                              >
+                                {item.name}
+                              </h3>
+                                  
+                              <p className="text-sm font-bold text-[#d4af37] mb-4 tracking-tighter">
+                                {item.price.price.toLocaleString()} Ar
+                              </p>
+                                  
+                              {/* Quantité */}
+                              <div
+                                className="
+                                  flex
+                                  items-center
+                                  justify-center
+                                  gap-5
+                                  bg-white
+                                  rounded-2xl
+                                  border-2
+                                  border-gray-100
+                                  py-2
+                                  px-4
+                                  shadow-sm
+                                  hover:border-[#d4af37]/30
+                                  transition-all
+                                "
+                              >
+                              
+                                <button
+                                  title="Diminuer la quantité"
+                                  onClick={() => updateQuantity(item.dishID, -1)}
+                                  className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                                >
+                                  <Minus size={18} strokeWidth={3} />
+                                </button>
+                                  
+                                <span className="text-base font-sans font-black min-w-[24px] text-center text-gray-900">
+                                  {cart[String(item.dishID)] || 0}
+                                </span>
+                                  
+                                <button
+                                  title="Augmenter la quantité"
+                                  onClick={() => updateQuantity(item.dishID, 1)}
+                                  className="text-gray-400 hover:text-green-600 transition-colors p-1"
+                                >
+                                  <Plus size={18} strokeWidth={3} />
+                                </button>
+                                  
+                              </div>
+                                  
+                            </div>
+                                  
+                          </div>
+          
+                        ))}
+          
                       </div>
+                      
                     </div>
                   ))}
+          
                 </div>
-
+                
+                {/* FOOTER */}
+                <footer className="mt-8 flex justify-center gap-2 flex-shrink-0">
+                
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      title="Page suivante"
+                      key={i}
+                      onClick={() => setCurrentPage(i)}
+                      className={`
+                        h-1.5
+                        rounded-full
+                        transition-all
+                        duration-300
+                        ${
+                          currentPage === i
+                            ? "w-10 bg-[#4a3427]"
+                            : "w-2 bg-gray-200 hover:bg-gray-300"
+                        }
+                      `}
+                    />
+                  ))}
+          
+                </footer>
+                
               </div>
-            ))}
-          </div>
-
-          <footer className="mt-8 flex justify-center gap-2">
-            {[...Array(totalPages)].map((_, i) => (
+                
+              {/* Bouton droite */}
               <button
-              title="Page suivante"
-                key={i}
-                onClick={() => setCurrentPage(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentPage === i
-                    ? "w-10 bg-[#4a3427]"
-                    : "w-2 bg-gray-200 hover:bg-gray-300"
-                }`}
-              />
-            ))}
-          </footer>
-        </div>
-
-        <button
-        title="Page suivante"
-          onClick={() => setCurrentPage((p) => Math.min(totalPages - 1, p + 1))}
-          disabled={currentPage === totalPages - 1}
-          className="p-3 disabled:opacity-0 text-[#4a3427]"
-        >
-          <ChevronRight size={44} />
-        </button>
-      </div>
+                title="Page suivante"
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(totalPages - 1, p + 1))
+                }
+                disabled={currentPage === totalPages - 1}
+                className="
+                  absolute
+                  right-[-80px]
+                  z-10
+                  p-4
+                  rounded-full
+                  bg-white
+                  shadow-lg
+                  border
+                  border-gray-200
+                  text-[#4a3427]
+                  hover:bg-[#4a3427]
+                  hover:text-white
+                  transition-all
+                  duration-300
+                  disabled:opacity-30
+                  disabled:hover:bg-white
+                  disabled:hover:text-[#4a3427]
+                "
+              >
+                <ChevronRight size={34} />
+              </button>
+              
+            </div>
+              
+          </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
