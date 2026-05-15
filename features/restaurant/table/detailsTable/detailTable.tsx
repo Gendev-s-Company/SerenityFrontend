@@ -7,7 +7,7 @@ import PhotoDetailTable from './PhotoDetailTable';
 import { Button } from '@/components/ui/button';
 import { getTableById } from '@/infrastructure/restaurant/table/tabledetail/tableRequest';
 import { RestaurantTableEntity } from '@/types/entity-type/restauranTableEntity';
-import { X,TriangleAlert, Check } from 'lucide-react';
+import { X,TriangleAlert, Check, Info, Search, RotateCcw } from 'lucide-react';
 import { getEndOfDay, getStartOfDay, timestampToText } from '@/utils/Util';
 import { getAllDisponibilityByTable } from '@/infrastructure/restaurant/table/tableOccupation/tableOccupationRequest';
 import { PaginationState } from '@tanstack/react-table';
@@ -41,7 +41,7 @@ export default function Detailtable() {
     const [openModal, setOpenModal]=    useState(false);
     const user = getLocalStorage()!;
 
-    const [startDate, setstartDate] = useState(getStartOfDay());
+    const [startDate, setStartDate] = useState(getStartOfDay());
     const [endDate,setEndDate]=useState(getEndOfDay());
 
     const [disponibility, setDisponibility]= useState<TableReservationEntity[]>([]);
@@ -49,7 +49,7 @@ export default function Detailtable() {
     const [selectedCustomer, setSelectedCustomer] = useState<string>("");
 
     const handleOpenModal = async (item: RestaurantTableEntity | null) => {
-           setOpenModal(true);
+      setOpenModal(true);
     }
     
     const [searched, setSearched] = useState(false);
@@ -110,11 +110,22 @@ export default function Detailtable() {
               `Conflit avec une réservation existante : ${conflict.customer.name} (${timestampToText(conflict.starttime)} à ${timestampToText(conflict.endtime)})`
             );
             return;
+          }      
+          try{
+            await createReservation(body); 
+            setSuccessMessage("Réservation validée avec succès !");
+
+          } catch( error: any ){
+              setValidationError('Une erreur s`est produite!');
+              console.log(error);
           }
-      
-          setSuccessMessage("Réservation validée avec succès !");
-          await createReservation(body); 
           
+    }
+    const handlereset = () =>{
+        setStartDate(getStartOfDay());
+        setEndDate(getEndOfDay());
+        setDisponibility([]);
+        setSearched(false);
     }
 
     useEffect(() => {
@@ -214,7 +225,7 @@ export default function Detailtable() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className={`bg-white rounded-2xl shadow-2xl w-[98%] max-w-6xl max-h-[90vh] overflow-y-auto transition-opacity duration-300
+            className={`bg-white rounded-2xl overflow-hidden shadow-2xl w-[98%] max-w-5xl h-[90vh] flex flex-col transition-opacity duration-300
               ${openModal ? "opacity-100" : "opacity-0"}
             `}
           >
@@ -236,10 +247,10 @@ export default function Detailtable() {
             </div>
             
             {/* BODY */}
-            <div className="p-6 flex flex-col gap-6">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
             
               {/* DATE SECTION */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             
                 {/* Date début */}
                 <div className="flex flex-col gap-2">
@@ -249,7 +260,7 @@ export default function Detailtable() {
                   <input
                     type="datetime-local"
                     value={startDate}
-                    onChange={(e) => setstartDate(e.target.value)}
+                    onChange={(e) => setStartDate(e.target.value)}
                     className="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -279,40 +290,87 @@ export default function Detailtable() {
                     className="border border-gray-300 rounded-xl px-4 py-3 bg-gray-100 text-gray-500 cursor-not-allowed"
                   />
                 </div>
+
+                {/* BOUTONS */}
+                <div className="grid grid-cols-2 gap-2 items-end">
+                            
+                  {/* SEARCH */}
+                  <button
+                    title="Voir les disponibilités"
+                    className="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-2 py-4 rounded-xl font-medium transition"
+                    onClick={() => {
+                      handleSearch(table);
+                      setSearched(true);
+                    }}
+                  >
+                    <Search size={18} />
+                  </button>
+                  
+                  {/* RESET */}
+                  <button
+                    title="Réinitialiser"
+                    className="flex items-center justify-center bg-gray-500 hover:bg-gray-600 text-white px-2 py-4 rounded-xl font-medium transition"
+                    onClick={handlereset}
+                  >
+                    <RotateCcw size={18} />
+                  </button>
+                  
+                </div>
               </div>
             
-              {/* VERIFY BUTTON */}
-              <div className="flex justify-center">
-                <button
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition"
-                  onClick={() => {
-                    handleSearch(table);
-                    setSearched(true);
-                  }}
-                >
-                  Vérifier
-                </button>
-              </div>
-            
-              {/* MESSAGE DYNAMIQUE */}           
+              {/* MESSAGE DYNAMIQUE */}
+              <div className="bg-white rounded-2xl shadow-md p-5 space-y-4">        
                 {!searched ? (
-                  <div className="flex items-center gap-2 text-gray-500 bg-gray-50 p-3 rounded-xl">
-                    <span>Veuillez vérifier la disponibilité du créneau.</span>
-                  </div>
+                  // <div className="flex items-center gap-2 text-gray-500 bg-gray-50 p-3 rounded-xl">
+                  //   <span>Veuillez vérifier la disponibilité du créneau.</span>
+                  // </div>
+                    <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed rounded-xl bg-gray-50">
+                        <div className="bg-gray-200 p-3 rounded-full mb-3">
+                          <Info size={20} className="text-gray-500" />
+                        </div>
+                    
+                        <p className="text-sm font-medium text-gray-600">
+                          Veuillez vérifier la disponibilité du créneau.
+                        </p>
+                    </div>
                 ) : filteredOccupations.length > 0 ? (
-                  <div className="flex items-center gap-2 text-yellow-700 bg-yellow-50 p-3 rounded-xl">
-                    <TriangleAlert />
-                    <span>Choisissez un créneau qui ne chevauche pas les réservations existantes.</span>
-                  </div>
+                  <>
+                  {/* LISTE DES OCCUPATIONS */}
+                    <div className="flex items-center gap-2 text-yellow-700 bg-yellow-50 p-3 rounded-xl">
+                      <TriangleAlert />
+                      <span>Choisissez un créneau qui ne chevauche pas les réservations existantes.</span>
+                    </div>
+                    <div className="flex flex-col gap-3">               
+                        <h3 className="font-semibold text-gray-700">
+                          Réservations existantes
+                        </h3>
+                
+                        {filteredOccupations.map((item, index) => (
+                          <div
+                            key={index}
+                            className="p-3 border rounded-xl bg-gray-50"
+                          >
+                            <p className="text-sm font-medium">
+                              Client : {item.customer?.name || "Inconnu"}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Du <strong>{timestampToText(item.starttime)}</strong>{" "}
+                              au <strong>{timestampToText(item.endtime)}</strong>
+                            </p>
+                          </div>
+                        ))}
+                    </div>
+                  </>
                 ) : (
                   <div className="flex items-center gap-2 text-green-700 bg-green-50 p-3 rounded-xl">
                     <Check size={18} />
                     <span>Cette table est libre pour le créneau sélectionné.</span>
                   </div>
                 )}
+              </div> 
             
-              {/* LISTE DES OCCUPATIONS */}
-              {filteredOccupations.length > 0 && (
+              
+              {/* {filteredOccupations.length > 0 && (
                 <div className="flex flex-col gap-3">
                 
                   <h3 className="font-semibold text-gray-700">
@@ -334,7 +392,7 @@ export default function Detailtable() {
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
 
               {/* FORM */}
               <div className="flex flex-col gap-5">
@@ -384,15 +442,16 @@ export default function Detailtable() {
                   </div>
                 )}
 
+              {/* FOOTER */}
                 {/* BUTTON */}
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleValidate}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition"
-                  >
-                    Valider
-                  </button>
-                </div>
+              <div className="border-t px-6 py-4 bg-white flex justify-end shrink-0">
+                <button
+                  onClick={handleValidate}
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition"
+                >
+                  Réserver
+                </button>
+              </div>
             
               </div>
             </div>
