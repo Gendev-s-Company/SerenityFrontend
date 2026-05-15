@@ -9,11 +9,12 @@ const stateOption: FieldOptions[] = [
 ]
 
 export const ActivityOrderColumnOptions: ColumnConfig<ActivityOrderEntity>[] = [
-  { key: "select", header: "Select", type: "checkbox" },
+  // { key: "select", header: "Select", type: "checkbox" },
   { key: "acOrderID", header: "AcOrderID", type: "text", sorting: true },
   { key: "activity.name", header: "Activité", type: "text", sorting: true },
   // { key: "activity.description", header: "Description", type: "text", sorting: true },
   { key: "customer.name", header: "Client", type: "text", sorting: true },
+  { key: "totalPerson", header: "Nombre de personne", type: 'text', sorting: true },
   { key: "price", header: "Prix unitaire", type: 'amount', sorting: true },
   {
     key: "duration", header: "Durée", type: "text", sorting: true,
@@ -40,6 +41,7 @@ export const ActivityOrderColumnOptions: ColumnConfig<ActivityOrderEntity>[] = [
 export const ActivityOrderfield: FieldConfig<ActivityOrderEntity>[] = [
   // { name: "price", libelle: "Prix :", type: "amount", normal: true },
   { name: "duration", libelle: "Durée :", type: "number", normal: true },
+  { name: "totalPerson", libelle: "Nombre de personne :", type: "number", normal: true },
   { name: "state", libelle: "Statut :", type: "select", normal: false, items: stateOption },
   { name: "dateOrder", libelle: "Date de commande :", type: "datetime-local", normal: true },
 ];

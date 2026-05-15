@@ -109,6 +109,8 @@ export default function ActivitiesOrder() {
       )
         .then((data) => {
           setActivitieso(data.content);
+          console.log(data.content);
+          
           setPage((prevPage) => ({
             ...prevPage,
             pageIndex: data.pageable.pageNumber,
@@ -193,8 +195,9 @@ export default function ActivitiesOrder() {
     customer: customer,
     dateOrder: new Date().toISOString(),
     price: 0,
-    duration: 0,
+    duration: 1,
     state: "0",
+    totalPerson:1,
     skipValidation: true,
   };
 

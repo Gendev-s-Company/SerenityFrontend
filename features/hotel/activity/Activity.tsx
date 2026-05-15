@@ -1,6 +1,11 @@
 "use client";
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { createActivity, deleteActivity, getPaginateActivities, updateActivity } from '@/infrastructure/hotel/activity/activityRequest';
+import {
+  createActivity,
+  deleteActivity,
+  getPaginateActivities,
+  updateActivity,
+} from "@/infrastructure/hotel/activity/activityRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { ActivityEntity } from "@/types/entity-type/activityEntity";
 import { useEffect, useMemo, useState } from "react";
@@ -10,7 +15,7 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
-
+import { FieldConfig } from "@/types/component-type/form-type";
 
 export default function Activity() {
   const [activity, setActivity] = useState<ActivityEntity[]>([]);
@@ -23,12 +28,12 @@ export default function Activity() {
     totalElement: 0,
     totalPage: 0,
   });
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const user = getLocalStorage()!;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true)
+    setLoading(true);
     if (user && user.profil.company.companyID) {
       getPaginateActivities(
         user.profil.company.companyID!,
@@ -45,11 +50,13 @@ export default function Activity() {
             totalElement: data.totalElements,
             totalPage: data.totalPages,
           });
-          setLoading(false)
+          console.log(data.content);
+
+          setLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching activities:", error)
-          setLoading(false)
+          console.error("Error fetching activities:", error);
+          setLoading(false);
         });
     }
   }, [refresh, page.pageIndex]);
@@ -79,6 +86,27 @@ export default function Activity() {
     return [...ActivityColumnOptions, btnAction];
   }, []);
 
+  const activityOption = [
+    { id: "true", label: "Oui" },
+    { id: "false", label: "Non" },
+  ];
+
+  const optionsF: FieldConfig<ActivityEntity> = useMemo(
+    () => ({
+      name: "isindividual",
+      libelle: "Activité Individuel?",
+      type: "select",
+      normal: false,
+      items: activityOption,
+    }),
+    [activityOption],
+  );
+
+  const namefield = useMemo(() => {
+    return [...ActivityNamefield, optionsF];
+    // return [...ActivityOrderfield.slice(0, 2), options, optionsCustomer, ...ActivityOrderfield.slice(3)];
+  }, [optionsF]);
+
   const company: CompanyEntity = {
     skipValidation: true,
     companyID: user?.profil?.company.companyID,
@@ -94,6 +122,7 @@ export default function Activity() {
     name: "",
     description: "",
     status: 0,
+    isindividual:'true',
     skipValidation: false,
   };
 
@@ -108,13 +137,15 @@ export default function Activity() {
   return (
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-        <h2 className="text-xl font-semibold">{"Liste des activités de l'établissement"}</h2>
+        <h2 className="text-xl font-semibold">
+          {"Liste des activités de l'établissement"}
+        </h2>
         <DataTable
           body={body}
           onCreate={onCreate}
           data={activity}
           mcolumns={columns}
-          fields={ActivityNamefield}
+          fields={namefield}
           columnFilter="name"
           pageCount={all.totalPage}
           rowCount={all.totalElement}
