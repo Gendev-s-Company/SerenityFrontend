@@ -99,26 +99,27 @@ export default function Detailtable() {
     };
 
     const handleValidate = async () => {
-          setValidationError('');
-          setSuccessMessage('');
-          const conflict = filteredOccupations.find((item) =>
-            isOverlapping(startDate, endDate, item.starttime, item.endtime)
-          );
+      setValidationError('');
+      setSuccessMessage('');
+      const conflict = filteredOccupations.find((item) =>
+        isOverlapping(startDate, endDate, item.starttime, item.endtime)
+      );
       
-          if (conflict) {
-            setValidationError(
-              `Conflit avec une réservation existante : ${conflict.customer.name} (${timestampToText(conflict.starttime)} à ${timestampToText(conflict.endtime)})`
-            );
-            return;
-          }      
-          try{
-            await createReservation(body); 
-            setSuccessMessage("Réservation validée avec succès !");
+      if (conflict) {
+        setValidationError(
+          `Conflit avec une réservation existante : ${conflict.customer.name} (${timestampToText(conflict.starttime)} à ${timestampToText(conflict.endtime)})`
+        );
+        return;
+      }
 
-          } catch( error: any ){
-              setValidationError('Une erreur s`est produite!');
-              console.log(error);
-          }
+      try {
+        await createReservation(body); 
+        setSuccessMessage("Réservation validée avec succès !");
+
+      } catch ( error: any ){
+        setValidationError('Une erreur s`est produite!');
+        console.log(error);
+      }
           
     }
     const handlereset = () =>{
