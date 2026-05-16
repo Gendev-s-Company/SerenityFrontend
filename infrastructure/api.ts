@@ -2,7 +2,7 @@ import { CallMethod } from "@/types/enums";
 
 
 // https://development-observe-lakes-indication.trycloudflare.com
-const basePath = "https://dependent-goals-know-actors.trycloudflare.com/api";
+const basePath = "http://localhost:8000/api";
 
 
 const apiCall = async<T>(path: string, body?: unknown, method = CallMethod.get): Promise<T> => {
