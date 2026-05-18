@@ -5,11 +5,10 @@ import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { pageSize } from "@/utils/PaginationUtility";
 import {DishOrderColumnOptions, DishOrderNameField, stateLabel} from "./prep-view-dishOrder";
-import { deleteDishOrder, getPaginateDishOrder, getPaginateDishOrderbyState, updateDishOrder } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
+import { deleteDishOrder, getPaginateDishOrderbyState, updateDishOrder } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { PageType } from "@/types/component-type/PageType";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/liste/complexe-data-table";
 
 export default function DishOrder() {
@@ -24,10 +23,10 @@ export default function DishOrder() {
     const [trigger, setTrigger] = useState<string>("-1");
     const [list, setList] = useState<string>("-1");
     const [selectedState, setSelectedState] = useState("-1");
-    const [all, setAll] = useState({
-        totalElement: 0,
-        totalPage: 0,
-    });
+    // const [all, setAll] = useState({
+    //     totalElement: 0,
+    //     totalPage: 0,
+    // });
     const [paginationInfo, setPaginationInfo] = useState<PageType>({
         totalElement: 0,
         totalPage: 0,
@@ -168,43 +167,6 @@ export default function DishOrder() {
             ))}
           </TabsList>
         </Tabs>
-
-        
-
-        {/* <div className="mt-6">
-          <div className="flex flex-col md:flex-row md:items-center w-full bg-white p-4 rounded-xl shadow-sm border border-slate-100 gap-4">
-            
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <label className="text-sm font-bold text-slate-600 uppercase tracking-tight min-w-[50px]">
-                Date
-              </label>
-              <input 
-                type="date" 
-                value={dateOrder}
-                className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                onChange={(e) => setdateOrder(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-3 md:ml-auto w-full md:w-auto">
-              <Button 
-                onClick={handleSearch}
-                type="button"
-                className="px-3 py-1 cursor-pointer hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
-              >
-                Rechercher
-              </Button>
-            </div>
-              <Button 
-                onClick={reset}
-                type="button"
-                className="px-3 py-1 cursor-pointer hover:bg-indigo-700 border border-slate-800 rounded-md text-sm font-medium transition-colors"
-              >
-                Reinitialiser
-              </Button>
-            </div>
-
-          </div>
-        </div> */}
 
         <DataTable
           body={emptyReservation as DishOrderEntity}

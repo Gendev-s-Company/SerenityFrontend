@@ -1,15 +1,11 @@
 "use client";
 import { DataTable } from "@/components/liste/complexe-data-table";
-import { createActivityPrice, deleteActivityPrice, getPaginateActivityPrices, updateActivityPrice } from '@/infrastructure/hotel/activity/activityPrice/activityPriceRequest';
 import { ColumnConfig } from "@/types/component-type/column-config";
-import { ActivityPriceEntity } from "@/types/entity-type/activityPriceEntity";
 import { useEffect, useMemo, useState } from "react";
 // import { ActivityPriceColumnOptions, ActivityPriceNamefield } from "./prep-view-activityPrice";
 import { PaginationState } from "@tanstack/react-table";
 import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
-import { ActivityEntity } from "@/types/entity-type/activityEntity";
-import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { getLocalStorage } from "@/utils/storage";
 import { RoomPriceEntity } from "@/types/entity-type/roomPriceEntity";
 import { createRoomPrice, deleteRoomPrice, getPaginateRoomPrices, updateRoomPrice } from "@/infrastructure/hotel/room/roomPrice/roomPriceRequest";

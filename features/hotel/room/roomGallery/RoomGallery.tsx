@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, MoreVertical, Trash2,Edit2,Info,Clock,Moon } from "lucide-react"
+import { ChevronLeft, ChevronRight, MoreVertical, Trash2,Edit2,Info,Clock,Moon, BookMarked } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,13 +35,13 @@ import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeReq
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
 import { getCurrency } from "@/utils/Util"
 
-const mockPhotos = [
-  { photoID: 1, path: "/file.svg" },
-  { photoID: 2, path: "/globe.svg" },
-  { photoID: 3, path: "/next.svg" },
-  { photoID: 4, path: "/vercel.svg" },
-  { photoID: 5, path: "/window.svg" },
-]
+// const mockPhotos = [
+//   { photoID: 1, path: "/file.svg" },
+//   { photoID: 2, path: "/globe.svg" },
+//   { photoID: 3, path: "/next.svg" },
+//   { photoID: 4, path: "/vercel.svg" },
+//   { photoID: 5, path: "/window.svg" },
+// ]
 
 export function RoomGallery() {
 
@@ -109,6 +109,10 @@ export function RoomGallery() {
       setRefresh((prev) => prev + 1);
     }
   };
+
+  const reserve = (roomID: string) => {
+    router.push('/view/hotel/room/reservation/create?roomid='+roomID)
+  }
 
   const roomTypeOptions: FieldConfig<RoomEntity> = useMemo(
     () => ({
@@ -220,7 +224,16 @@ return (
                             <Trash2 className="mr-2 h-4 w-4" />
                             Supprimer
                           </button>
-                        </AlertDialogTrigger>             
+                        </AlertDialogTrigger>  
+
+                      {/* RESERVER */}
+                      <button
+                        onClick={() => reserve(room.roomID ?? "")}
+                        className="flex items-center px-2 py-1.5 text-blue-500 text-sm w-full hover:bg-blue-50 rounded-sm"
+                      >
+                        <BookMarked className="mr-2 h-4 w-4" />
+                        Réserver
+                      </button>
 
                         <AlertDialogContent>
                           <AlertDialogHeader>
@@ -284,8 +297,8 @@ return (
                                   <DropdownMenuTrigger asChild>
                                     <Button
                                       variant="secondary"
-                            size="icon"
-                            className="h-8 w-8 shadow-md hover:bg-white"
+                                      size="icon"
+                                      className="h-8 w-8 shadow-md hover:bg-white"
                                     >
                                       <MoreVertical className="h-4 w-4" />
                                     </Button>

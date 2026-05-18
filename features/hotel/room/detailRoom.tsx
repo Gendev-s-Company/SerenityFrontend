@@ -10,6 +10,7 @@ import { getRoomLastPriceById } from '@/infrastructure/hotel/room/roomPrice/room
 import RoomPrice from './roomPrice/roomPrice';
 import { Button } from '@/components/ui/button';
 import { getCurrency } from '@/utils/Util';
+import { Clock, Moon } from 'lucide-react';
 
 export default function DetailRoom() {
     const roomID = useSearchParams().get('roomID');
@@ -106,13 +107,13 @@ export default function DetailRoom() {
                 <div className="flex flex-wrap gap-3 mt-4">
                     {room?.roomPrice?.nightPrice && (
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
-                        🌙 {getCurrency(room.roomPrice.nightPrice)} / Nuit
+                        <Moon size={14} style={{ marginRight: '8px' }}/> {getCurrency(room.roomPrice.nightPrice)} / Nuit
                     </span>
                     )}
                     
                     {room?.roomPrice?.hourPrice && (
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
-                        ⏰ {getCurrency(room.roomPrice.hourPrice)} / Heure
+                        <Clock size={14} style={{ marginRight: '8px' }}/> {getCurrency(room.roomPrice.hourPrice)} / Heure
                     </span>
                     )}
                 </div>

@@ -1,5 +1,5 @@
 'use client';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import PhotoDetailTable from './PhotoDetailTable';
 
@@ -23,9 +23,9 @@ import { CustomerEntity } from '@/types/entity-type/customerEntity';
 
 export default function Detailtable() {
     const tableID = useSearchParams().get('tableID');
-    const [refresh, setRefresh] = useState<number>(0);
-    const router = useRouter();
-    const navigate = () => router.push('/view/restaurant/table/createResa');
+    // const [refresh, setRefresh] = useState<number>(0);
+    // const router = useRouter();
+    // const navigate = () => router.push('/view/restaurant/table/createResa');
 // ###############################################################################################################
 
     const [page, setPage] = useState<PaginationState>({
@@ -48,7 +48,7 @@ export default function Detailtable() {
     const [customers,setCustomers]= useState<CustomerEntity[]>([]);
     const [selectedCustomer, setSelectedCustomer] = useState<string>("");
 
-    const handleOpenModal = async (item: RestaurantTableEntity | null) => {
+    const handleOpenModal = async () => {
       setOpenModal(true);
     }
     
@@ -79,7 +79,6 @@ export default function Detailtable() {
       (item) => ![0, 5, 6, 8].includes(item.state)
     );
 
-    const hasConflicts = filteredOccupations.length > 0;
     const [validationError, setValidationError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -170,7 +169,7 @@ export default function Detailtable() {
                 {/* BOUTON RÉSERVER - Version Desktop */}
                 <Button 
                 size="lg"
-                onClick={() => handleOpenModal(table)}
+                onClick={() => handleOpenModal()}
                  className="cursor-pointer hidden md:flex bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 rounded-xl shadow-lg shadow-indigo-200 transition-all hover:scale-105 active:scale-95">
                 Réserver
                 </Button>
@@ -209,7 +208,7 @@ export default function Detailtable() {
                 <div className="mt-8 md:hidden">
                     <Button 
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-6 rounded-xl shadow-lg shadow-indigo-100 transition-transform active:scale-[0.98]"
-                        onClick={() => handleOpenModal(table)}
+                        onClick={() => handleOpenModal()}
                     >
                         Réserver
                     </Button>
@@ -240,6 +239,7 @@ export default function Detailtable() {
               </div>
             
               <button
+                title="Fermer la boite de dialogue"
                 onClick={() => setOpenModal(false)}
                 className="hover:bg-red-500 p-2 rounded-lg transition"
               >
@@ -259,10 +259,12 @@ export default function Detailtable() {
                     Date début
                   </label>
                   <input
+                    name="datedebut"
                     type="datetime-local"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     className="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder='Date de depart'
                   />
                 </div>
             
@@ -272,10 +274,12 @@ export default function Detailtable() {
                     Date fin
                   </label>
                   <input
+                    name="datefin"
                     type="datetime-local"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     className="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder='Date de fin'
                   />
                 </div>
             
@@ -285,10 +289,12 @@ export default function Detailtable() {
                     Table
                   </label>
                   <input
+                    name="table"
                     type="text"
                     disabled
                     value={table?.name ?? ""}
                     className="border border-gray-300 rounded-xl px-4 py-3 bg-gray-100 text-gray-500 cursor-not-allowed"
+                    placeholder='Numero de table'
                   />
                 </div>
 
@@ -322,9 +328,6 @@ export default function Detailtable() {
               {/* MESSAGE DYNAMIQUE */}
               <div className="bg-white rounded-2xl shadow-md p-5 space-y-4">        
                 {!searched ? (
-                  // <div className="flex items-center gap-2 text-gray-500 bg-gray-50 p-3 rounded-xl">
-                  //   <span>Veuillez vérifier la disponibilité du créneau.</span>
-                  // </div>
                     <div className="flex flex-col items-center justify-center py-10 text-center border border-dashed rounded-xl bg-gray-50">
                         <div className="bg-gray-200 p-3 rounded-full mb-3">
                           <Info size={20} className="text-gray-500" />
@@ -370,31 +373,6 @@ export default function Detailtable() {
                 )}
               </div> 
             
-              
-              {/* {filteredOccupations.length > 0 && (
-                <div className="flex flex-col gap-3">
-                
-                  <h3 className="font-semibold text-gray-700">
-                    Réservations existantes
-                  </h3>
-            
-                  {filteredOccupations.map((item, index) => (
-                    <div
-                      key={index}
-                      className="p-3 border rounded-xl bg-gray-50"
-                    >
-                      <p className="text-sm font-medium">
-                        Client : {item.customer?.name || "Inconnu"}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Du <strong>{timestampToText(item.starttime)}</strong>{" "}
-                        au <strong>{timestampToText(item.endtime)}</strong>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )} */}
-
               {/* FORM */}
               <div className="flex flex-col gap-5">
           
@@ -405,6 +383,8 @@ export default function Detailtable() {
                   </label>
           
                   <select
+                  title="customer"
+                  name="customer"
                   value={selectedCustomer}
                   onChange={(e) => setSelectedCustomer(e.target.value)}
                   className="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -416,19 +396,6 @@ export default function Detailtable() {
                         ))}
                   </select>
                 </div>
-          
-                {/* REMARQUE */}
-                {/* <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    Remarque
-                  </label>
-          
-                  <input
-                    type="text"
-                    placeholder="Ajouter une remarque..."
-                    className="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div> */}
           
                 {/* VALIDATION ERROR / SUCCESS */}
                 {validationError && (

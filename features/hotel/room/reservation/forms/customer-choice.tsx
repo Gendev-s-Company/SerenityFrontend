@@ -7,7 +7,6 @@ import { CustomerNamefield } from "@/features/hotel/customer/prep-view-customer"
 import useForm from "@/hooks/use-form";
 import {
   createCustomer,
-  getAllCustomer,
   getAllCustomerByCompany,
 } from "@/infrastructure/hotel/customer/customerRequest";
 import { FieldOptions } from "@/types/component-type/form-type";

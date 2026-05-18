@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Progress,
-  ProgressValue,
   ProgressLabel,
 } from "@/components/ui/progress";
 
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import RoomChoice from "./forms/room-choice";
 import RoomAccount from "./forms/room-account";

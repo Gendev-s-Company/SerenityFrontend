@@ -79,7 +79,7 @@ export default function PhotoDetailTable({ tableId }: PhotoDetailTableProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    const res = []
+    // const res = []
 
     if (files) {
       

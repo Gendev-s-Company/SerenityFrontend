@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { RotateCcw,Plus,Minus,X,ChevronLeft, ChevronRight, Check} from "lucide-react";
+import { RotateCcw,Plus,Minus,X,ChevronLeft, ChevronRight, Check, TriangleAlert} from "lucide-react";
 import { getLocalItem, getLocalStorage, removeLocalItem } from "@/utils/storage";
 import { getPaginateDishes } from "@/infrastructure/restaurant/dish/dishRequest";
 import { DishEntity } from "@/types/entity-type/dishEntity";
@@ -397,9 +397,12 @@ const addToOrder = (dish: DishEntity) => {
               <Field className="flex items-center gap-3 w-auto">
                 <FieldLabel htmlFor="start" className="whitespace-nowrap">
                   {tabledisponibles > 0 && (
-                    <p className="text-sm text-green-600 text-center">
-                      {tabledisponibles} disponible(s)
-                    </p>
+                    <div className="flex items-center gap-2 text-green-700 bg-green-50 p-3 rounded-xl transition-all duration-100">
+                        <Check />
+                          <span>
+                            {tabledisponibles} disponible(s)
+                          </span>
+                    </div>
                   )}
                 </FieldLabel>
                 <Select
@@ -439,8 +442,9 @@ const addToOrder = (dish: DishEntity) => {
             
             <hr />
             {!selectedTable && (
-               <div className="mb-3 text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-md">
-                Veuillez rechercher les dates de réservation et sélectionner une table dans la liste pour passer une commande.
+               <div className="flex items-center gap-2 text-red-700 bg-red-50 p-3 rounded-xl">
+                 <TriangleAlert />
+                 <span>Veuillez rechercher les dates de réservation et sélectionner une table dans la liste pour passer une commande.</span>
               </div>
             )}
             {successMessage && (

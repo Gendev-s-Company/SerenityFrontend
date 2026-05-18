@@ -14,11 +14,10 @@ import { getLocalStorage } from "@/utils/storage";
 import { getPaginateAllReservation, updateReservation} from "@/infrastructure/hotel/room/roomReservation/roomReservationRequest";
 
 import { RoomReservationColumnOptions, RoomReservationFields } from "./prep-view-roomReservation"; 
-import { id } from "zod/v4/locales";
-import { Label } from "@radix-ui/react-label";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 
-import { BookmarkCheck, BookmarkX, DoorClosedLocked, DoorOpenIcon, Lock, LockOpen, UserX2 } from "lucide-react";
+import { BookmarkCheck, BookmarkX, DoorClosedLocked, DoorOpenIcon, UserX2 } from "lucide-react";
 
 import {
   Tooltip,
@@ -195,7 +194,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={(e) => onUpdateAnnuler(row)}
+                  onClick={() => onUpdateAnnuler(row)}
                   type="button"
                   className="px-3 py-1 bg-amber-400 rounded-md cursor-pointer hover:bg-amber-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
                 >
@@ -212,7 +211,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={(e) => onUpdateReserver(row)}
+                  onClick={() => onUpdateReserver(row)}
                   type="button"
                   className="px-3 py-1 bg-emerald-400 rounded-md cursor-pointer hover:bg-emerald-500 text-sm font-medium transition-colors inline-flex items-center gap-2"
                 >
@@ -236,7 +235,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={(e) => onUpdateFinished(row)}
+                  onClick={() => onUpdateFinished(row)}
                   type="button"
                   className="px-3 py-1 bg-purple-400 rounded-md cursor-pointer hover:bg-purple-500 text-sm font-medium transition-colors"
                 >
@@ -260,7 +259,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={(e) => onUpdateOccupied(row)}
+                  onClick={() => onUpdateOccupied(row)}
                   type="button"
                   className="px-3 py-1 bg-blue-400 rounded-md cursor-pointer hover:bg-blue-500 text-sm font-medium transition-colors"
                 >
@@ -277,7 +276,7 @@ const btnAction: ColumnConfig<RoomReservationEntity> = {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={(e) => onUpdateMissed(row)}
+                  onClick={() => onUpdateMissed(row)}
                   type="button"
                   className="px-3 py-1 bg-red-400 rounded-md cursor-pointer hover:bg-red-500 text-sm font-medium transition-colors"
                 >
@@ -461,21 +460,25 @@ const reset = async () => {
                 Début
               </label>
               <input 
+                name="startdate"
                 type="date" 
                 value={startDate}
                 className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 onChange={(e) => setStartDate(e.target.value)}
+                placeholder="date debut"
               />
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <label className="text-sm font-bold text-slate-600 uppercase tracking-tight min-w-[50px]">
                 Fin
               </label>
-              <input 
+              <input
+                name="enddate"
                 type="date" 
                 value={endDate}
                 className="h-[42px] w-full md:w-auto px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 onChange={(e) => setEndDate(e.target.value)}
+                placeholder="date fin"
               />
             </div>
             <div className="flex gap-3 md:ml-auto w-full md:w-auto">

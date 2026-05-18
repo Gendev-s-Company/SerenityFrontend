@@ -12,14 +12,16 @@ const stateOption: FieldOptions[] = [
 export const DishOrderColumnOptions: ColumnConfig<DishOrderEntity>[]=[
     { key: "select", header: "Select", type: "checkbox" },
     { key: "orderID", header: "OrderID", 
-        type: "link", 
         sorting: true,
-        href: (row) => `/view/restaurant/dishOrder/dishOrderDetails?orderID=${row.orderID}` 
     },
-    { key: "tableOccupation.table.name", header: "Table Occupation", sorting: true },
+    { key: "tableOccupation.table.name", 
+      header: "Table Occupation",
+      type: "link",
+      sorting: true,    
+      href: (row) => `/view/restaurant/dishOrder/dishOrderDetails?orderID=${row.orderID}` 
+    },
     { key: "totalPrice", header: "Total Price", sorting: true },
     { key: "dateOrder", header: "Date Order", type: "date", sorting: true},
-    // { key: "state", header: "State",type:"text", sorting: true },
     { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 
 ];

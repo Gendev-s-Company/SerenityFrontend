@@ -10,7 +10,6 @@ import { getLocalStorage } from "@/utils/storage";
 import { PlatPriceEntity } from "@/types/entity-type/platPriceEntity";
 import { createplatPrice, deleteplatPrice, getPaginateplatPrices, updateplatPrice } from "@/infrastructure/restaurant/plat/platPrice/platPriceRequest";
 import { PlatPriceColumnOptions, PlatPriceNamefield } from "./prep-view-platPrice";
-import { PlatEntity } from "@/types/entity-type/platEntity";
 import { PlatTypeEntity } from "@/types/entity-type/platTypeEntity";
 
 interface PlatPriceProps {

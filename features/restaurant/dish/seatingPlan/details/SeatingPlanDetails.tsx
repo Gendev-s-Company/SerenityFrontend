@@ -586,14 +586,6 @@ export default function SeatingPlanDetails() {
               {/* CreateBox */}
               <CreateBox body={body} onSubmit={onCreate} fields={namefield} />
 
-              {/* Bouton */}
-              {/* <button
-                className="flex items-center gap-1 bg-blue-800 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition"
-                onClick={() => setShowCatalogue((prev) => !prev)}
-              >
-                <CookingPot size={16} />
-                Voir le menu
-              </button> */}
 
             </div>
           </div>
