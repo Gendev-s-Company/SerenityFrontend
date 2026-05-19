@@ -15,7 +15,7 @@ export interface FileData {
 }
 
 
-export interface RoomPhotoInsertEntity {
-    photoID: string;
+export interface TablePhotoInsertEntity {
+    tableID: string;
     uploadFile: FileData[];
 }
