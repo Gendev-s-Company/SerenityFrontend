@@ -1,9 +1,9 @@
-// import TableType from "@/features/restaurant/table/tabletype/tableType"
-
 import TableType from "@/features/restaurant/table/tableType/TableType"
+import { Metadata } from 'next'
 
-
-
+export const metadata: Metadata = {
+  title: 'Types de tables',
+}
 
 const page = () => {
   return (

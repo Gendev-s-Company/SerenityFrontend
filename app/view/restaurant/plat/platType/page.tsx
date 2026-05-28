@@ -1,4 +1,9 @@
 import PlatType from "@/features/restaurant/plat/platType/PlatType"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Type de plats',
+}
 
 
 const page = () => {

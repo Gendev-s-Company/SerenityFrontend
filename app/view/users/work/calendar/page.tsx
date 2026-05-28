@@ -1,6 +1,9 @@
 import Planning from '@/features/users/work/planning/planning'
-import React from 'react'
+import { Metadata } from 'next'
 
+export const metadata: Metadata = {
+  title: 'Calendrier de travail',
+}
 const page = () => {
   return (
     <Planning />

@@ -38,7 +38,7 @@ export const UsersItems: PMenu =
             minAuthority: 6,
         },
         {
-            title: "Suivie de travail",
+            title: "Suivi de travail",
             url: "#rer",
             dropdown: true,
             isSubmenu: false,

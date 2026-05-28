@@ -1,5 +1,10 @@
 import Activity from '@/features/hotel/activity/Activity'
-import React from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Activités de l\'hôtel',
+}
+
 
 const page = () => {
   return (

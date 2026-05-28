@@ -1,5 +1,9 @@
 import Users from '@/features/users/Users'
-import React from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Utilisateurs',
+}
 
 const page = () => {
   return (

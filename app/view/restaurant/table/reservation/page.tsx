@@ -1,5 +1,9 @@
 import TableReservation from '@/features/restaurant/table/tablereservation/tableReservation'
-import React from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Etat des réservations de table',
+}
 
 const page = () => {
   return (

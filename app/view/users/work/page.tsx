@@ -1,5 +1,9 @@
 import WorkSchedulePage from '@/features/users/work/WorkSchedule'
-import React from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Planning de travail',
+}
 
 const page = () => {
   return (

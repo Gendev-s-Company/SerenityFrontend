@@ -1,5 +1,10 @@
 import Reservation from '@/features/hotel/room/reservation/reservation'
-import React from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Réservation de chambre',
+}
+
 
 const page = () => {
   return (

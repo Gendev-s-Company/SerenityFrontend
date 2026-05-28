@@ -1,5 +1,9 @@
 import Profil from '@/features/users/profils/Profil'
-import React from 'react'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Profil utilisateur',
+}
 
 const page = () => {
   return (

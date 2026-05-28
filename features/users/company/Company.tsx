@@ -86,6 +86,7 @@ export default function Company() {
     setRefresh((prev) => prev + 1);
   };
   return (
+    // Variable titre
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
         <DataTable
