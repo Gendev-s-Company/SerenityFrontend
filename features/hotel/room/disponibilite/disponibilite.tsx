@@ -17,7 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Switch } from "@/components/ui/switch"
 import { Search } from "lucide-react";
 import { Field, FieldLabel } from "@/components/ui/field"
-import { dateToBackend, generateDateRange, normalizeDateKey, timestampToText } from "@/utils/Util"
+import { dateToBackend, formatDateFR, generateDateRange, normalizeDateKey, timestampToText } from "@/utils/Util"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
@@ -479,54 +479,89 @@ export default function Disponibilite() {
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {Object.entries(allRoomsGrouped).map(([roomID, rooms]) => {
-                  const roomName = rooms[0]?.room_name || roomID;
-                  return (
-                    <tr key={roomID}>
-                      <td className="border border-gray-300 p-1 sm:p-2 font-semibold bg-gray-50 sticky left-0 z-5 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">{roomName}</td>
-                      {dates.map(date => {
-                        const roomForDate = rooms.find(r => normalizeDateKey(r.day) === date);
-                        const state = roomForDate ? roomForDate.reservation_state : 9;
-                        const label = reservationStateLabels[state] || "Aucune donnée";
-
-                        // Appliquer les couleurs selon le mode
-                        const cellColor = appliedFilters.mode === 0
-                          ? (state === 0 ? 'bg-green-500' : state === 9 ? 'bg-gray-300' : 'bg-red-600')
-                          : roomstateStyles[state];
-
-                        return (
-                          <TooltipProvider key={date}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <td
-                                  className={`border border-gray-300 p-2 cursor-pointer hover:opacity-80 ${cellColor || 'bg-gray-200'}`}
-                                  onClick={() => roomForDate && setSelectedRoom(roomForDate)}
-                                >
-                                </td>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  Chambre: {roomName} <br />
-                                  Date: {timestampToText(date)} <br />
-                                  État: {label}
-                                  {roomForDate && (
-                                    <>
-                                      <br />
-                                      Arrivée: {roomForDate.actual_arrival ? timestampToText(roomForDate.actual_arrival) : "Non défini"}<br />
-                                      Départ: {roomForDate.actual_departure ? timestampToText(roomForDate.actual_departure) : "Non défini"}
-                                    </>
-                                  )}
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
+                <tbody>
+                  {Object.entries(allRoomsGrouped).map(([roomID, rooms]) => {
+                    const roomName = rooms[0]?.room_name || roomID;
+                  
+                    return (
+                      <tr key={roomID}>
+                      
+                        {/* NOM CHAMBRE */}
+                        <td className="border border-gray-300 p-1 sm:p-2 font-semibold bg-gray-50 sticky left-0 z-5 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">
+                          {roomName}
+                        </td>
+                    
+                        {/* COLONNES PAR DATE */}
+                        {dates.map(date => {
+                        
+                          // IMPORTANT : on récupère toutes les réservations du jour
+                          const roomsForDate = rooms.filter(
+                            r => normalizeDateKey(r.day) === date
+                          );
+                        
+                          return (
+                            <td
+                              key={date}
+                              className="border border-gray-300 p-1 align-top min-h-[60px]"
+                            >
+                              {roomsForDate.length > 0 ? (
+                                <div className="flex flex-col gap-1">
+                                
+                                  {roomsForDate.map((res, i) => {
+                                    const state = res.reservation_state;
+                                    const label = reservationStateLabels[state] || "Inconnu";
+                                  
+                                    const cellColor =
+                                      appliedFilters.mode === 0
+                                        ? (state === 0
+                                            ? 'bg-green-500'
+                                            : 'bg-red-600')
+                                        : roomstateStyles[state];
+                                        
+                                    return (
+                                      <TooltipProvider key={`${date}-${i}`}>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <div
+                                              onClick={() => setSelectedRoom(res)}
+                                              className={`text-white text-[10px] px-1 py-[2px] rounded cursor-pointer hover:scale-102 transition-transform ${cellColor}`}
+                                            >
+                                              {res.actual_arrival
+                                                ? timestampToText(res.actual_arrival)
+                                                : "--"}{" "}
+                                              -{" "}
+                                              {res.actual_departure
+                                                ? timestampToText(res.actual_departure)
+                                                : "--"}
+                                            </div>
+                                          </TooltipTrigger>
+                                              
+                                          <TooltipContent>
+                                            <p>
+                                              Chambre : {roomName} <br />
+                                              Date : {formatDateFR(date)} <br />
+                                              État : {label} <br />
+                                              Arrivée : {res.actual_arrival ? timestampToText(res.actual_arrival) : "Non défini"} <br />
+                                              Départ : {res.actual_departure ? timestampToText(res.actual_departure) : "Non défini"}
+                                            </p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    );
+                                  })}
+                
+                                </div>
+                              ) : (
+                                <div className="h-[20px]"></div>
+                              )}
+                            </td>
+                          );
+                        })}
+                
+                      </tr>
+                    );
+                  })}
+                </tbody>
             </table>
           </div>
         )}
