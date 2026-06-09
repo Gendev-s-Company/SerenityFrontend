@@ -1,4 +1,4 @@
-import { DishPhotoEntity } from "./dishphotoEntity";
+import { DishPhotoEntity } from "./dishPhotoEntity";
 import { DishPriceEntity } from "./dishPriceEntity";
 import { DishTypeEntity } from "./dishTypeEntity";
 

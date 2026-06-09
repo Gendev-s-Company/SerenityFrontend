@@ -8,6 +8,7 @@ import { ActivityPriceEntity } from '@/types/entity-type/activityPriceEntity';
 import PhotoDetailActivity from './PhotoDetailActivity';
 import ActivityPrice from '../activityPrice/ActivityPrice';
 import { getCurrency } from '@/utils/Util';
+import { Sparkles } from "lucide-react";
 
 export default function DetailActivity() {
     const activityID = useSearchParams().get('activityID');
@@ -91,7 +92,7 @@ export default function DetailActivity() {
 
                             <div className="flex flex-wrap gap-3">
                                 <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
-                                    ✨ Activité disponible
+                                    <Sparkles size={20} style={{ marginRight: '8px' }}/> Activité disponible
                                 </span>
                             </div>
                         </div>

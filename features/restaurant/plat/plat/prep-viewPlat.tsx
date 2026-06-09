@@ -40,7 +40,7 @@ export const PlatColumnOptions2: ColumnConfig<PlatEntity>[] = [
 
 
 export const PlatNamefield: FieldConfig<PlatEntity>[] = [
-    { name: "name", libelle: "name:", type: "text", normal: true },
+    { name: "name", libelle: "nom:", type: "text", normal: true },
     { name: "description", libelle: "description :", type: "textarea", normal: false },
       
 ];

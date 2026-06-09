@@ -35,14 +35,6 @@ import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeReq
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
 import { getCurrency } from "@/utils/Util"
 
-// const mockPhotos = [
-//   { photoID: 1, path: "/file.svg" },
-//   { photoID: 2, path: "/globe.svg" },
-//   { photoID: 3, path: "/next.svg" },
-//   { photoID: 4, path: "/vercel.svg" },
-//   { photoID: 5, path: "/window.svg" },
-// ]
-
 export function RoomGallery() {
 
   const user = getLocalStorage()!
@@ -50,6 +42,7 @@ export function RoomGallery() {
   const [roomTypeOption, setRoomTypeOption] = useState<FieldOptions[]>([]);
 
   const [rooms, setRoom] = useState<RoomEntity[]>([])
+  const [preview, setPreview] = useState<string | null>(null);
   const [refresh,setRefresh] = useState<number>(0)
 
   const [page, setPage] = useState<PaginationState>({
@@ -98,6 +91,7 @@ export function RoomGallery() {
       }
     })
   }
+
   const onUpdate = async (formData: RoomEntity) => {
       await updateRoom(formData);
       setRefresh((prev) => prev + 1);
@@ -146,7 +140,7 @@ export function RoomGallery() {
   // Chargement des chambres
   useEffect(() => {
     if (user && user.profil.company.companyID) {
-      getPaginateRooms(page.pageIndex, page.pageSize)
+      getPaginateRooms(user.profil.company.companyID, page.pageIndex, page.pageSize)
         .then((data) => {
           setRoom(data.content)
           setAll({
@@ -340,13 +334,13 @@ return (
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </div>
-
+                              {/* Image cliquable */}
                               <img
                                 src={convertToBase64(photo.files.data, photo.files.type)}
                                 alt="Room"
                                 className="object-cover w-full h-full"
+                                onClick={() => setPreview(convertToBase64(photo.files.data, photo.files.type))}
                               />
-
                                 </CardContent>
                               </Card>
                             ))}
@@ -389,6 +383,28 @@ return (
                   </div>
                 )}
               </div>
+
+              {/* Le modal de l'image cliqué en plein écran */}
+                {preview && (
+                <div
+                  onClick={() => setPreview(null)}
+                  className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-zoom-out
+                             animate-in fade-in duration-200"
+                >
+                  <img
+                    src={preview}
+                    alt="preview"
+                    className="max-h-[90vh] max-w-[90vw] rounded shadow-xl
+                               animate-in zoom-in-90 duration-200"
+                    style={{ 
+                      animation: "zoomIn 0.2s ease",
+                      minWidth: "400px",   // taille minimale
+                      minHeight: "300px",
+                      objectFit: "contain" // évite la déformation
+                    }}
+                  />
+                </div>
+              )}
               
               {/* PAGINATION PAR CHAMBRE */}
               <div className="flex justify-center items-center mt-6 gap-4 pt-4 border-t">

@@ -48,6 +48,7 @@ export default function Room() {
       setLoading(true)
       if (user && user.profil.company.companyID) {
         getPaginateRooms(
+          user.profil.company.companyID,
           page.pageIndex,
           page.pageSize,
         )

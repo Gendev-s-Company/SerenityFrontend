@@ -38,23 +38,26 @@ export default function WorkSchedulePage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
-    getPaginateworkSC(page.pageIndex, page.pageSize)
-      .then((data) => {
-        setWorks(data.content);
-        setPage((prevPage) => ({
-          ...prevPage,
-          pageIndex: data.pageable.pageNumber,
-        }));
-        setAll({
-          totalElement: data.totalElements,
-          totalPage: data.totalPages,
-        });
-        setLoading(false)
-      })
-      .catch((error) => {
-         console.error("Error fetching profils:", error)
+    if(user.profil.company.companyID){
+      getPaginateworkSC(user.profil.company.companyID, page.pageIndex, page.pageSize)
+        .then((data) => {
+          setWorks(data.content);
+          setPage((prevPage) => ({
+            ...prevPage,
+            pageIndex: data.pageable.pageNumber,
+          }));
+          setAll({
+            totalElement: data.totalElements,
+            totalPage: data.totalPages,
+          });
           setLoading(false)
-       });
+        })
+        
+        .catch((error) => {
+           console.error("Error fetching profils:", error)
+            setLoading(false)
+         });
+    }       
   }, [refresh, page.pageIndex]);
 
 

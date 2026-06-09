@@ -41,6 +41,8 @@ export default function TableOrder() {
     pageSize: 12,
   })
 
+  const pageSize = page.pageSize; // votre taille de page actuelle
+
   const [all, setAll] = useState({
     totalElement: 0,
     totalPage: 0,
@@ -144,13 +146,28 @@ export default function TableOrder() {
       const matchSearch = d.name
         .toLowerCase()
         .includes(search.toLowerCase());
-
       return matchCategory && matchSearch;
     });
   }, [dishes, category, search]);
 
+  const displayedDishes = useMemo(() => {
+    if (category === "Tous") return filteredDishes;
+    const start = page.pageIndex * pageSize;
+    console.log(filteredDishes);
+    return filteredDishes.slice(start, start + pageSize);
+  }, [filteredDishes, category, page.pageIndex, pageSize]);
+
 
   // ===== PAGINATION =====
+
+  const totalPage = useMemo(() => {
+    if (category === "Tous") return all.totalPage;
+    return Math.ceil(filteredDishes.length / pageSize);
+  }, [category, filteredDishes.length, all.totalPage, pageSize]);
+
+  useEffect(() => {
+    setPage((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [category]);
 
 
   const paginatedOrder = useMemo(() => {
@@ -497,6 +514,9 @@ const addToOrder = (dish: DishEntity) => {
                         }`}
                       >
                         {label}
+                        {/* <p className="text-sm text-gray-500">
+                          {cat.typeID} 
+                        </p>  */}
                       </button>
                     );
                   })}
@@ -611,7 +631,7 @@ const addToOrder = (dish: DishEntity) => {
                       {loading ? (
                         <p className="text-center text-gray-400">Chargement...</p>
                       ) : (
-                        filteredDishes.map((dish) => {
+                        displayedDishes.map((dish) => {
                           const isDisabled = dish.state === 1;
                         
                           return (
@@ -630,7 +650,10 @@ const addToOrder = (dish: DishEntity) => {
                               <p title={dish.name} className="truncate whitespace-nowrap overflow-hidden">{dish.name}</p> 
                               <p className="text-sm text-gray-500">
                                 {dish.price?.price.toLocaleString()} Ar
-                              </p>                                              
+                              </p>    
+                              {/* <p className="text-sm text-gray-500">
+                                {dish.type?.typeID} 
+                              </p>                                             */}
                               {isDisabled ? (
                                 <p className="text-xs text-red-500 mt-1">
                                   Indisponible
@@ -647,7 +670,7 @@ const addToOrder = (dish: DishEntity) => {
                     </div>
                   
                   {/* PAGINATION FIXE */}
-                    {all.totalPage > 1 && (
+                    {totalPage > 1  && (
                       <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 border-t bg-slate-50/50">
                         
                         <button
@@ -665,7 +688,7 @@ const addToOrder = (dish: DishEntity) => {
                         </button>
                         
                         <span>
-                          {page.pageIndex + 1} / {all.totalPage}
+                          {page.pageIndex + 1} / {totalPage}
                         </span>
                         
                         <button
@@ -676,7 +699,7 @@ const addToOrder = (dish: DishEntity) => {
                               pageIndex: Math.min(prev.pageIndex + 1, all.totalPage - 1),
                             }))
                           }
-                          disabled={page.pageIndex === all.totalPage - 1}
+                          disabled={page.pageIndex === totalPage - 1}
                           className="px-3 py-1 border rounded disabled:opacity-50"
                         >
                           <ChevronRight size={14} />

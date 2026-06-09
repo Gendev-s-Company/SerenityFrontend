@@ -8,8 +8,8 @@ export const getAllRoom = async () => {
   return await getCall<RoomEntity[]>(roomPath+'/all');
 }
 
-export const getPaginateRooms = async (page:number,size:number) => {
-  return await getCall<Page<RoomEntity>>(`${roomPath}/${page}/${size}` );
+export const getPaginateRooms = async (company:string,page:number,size:number) => {
+  return await getCall<Page<RoomEntity>>(`${roomPath}/all/${page}/${size}?company=${company}` );
 }
 
 export const getRoomById = async (id: string) => {

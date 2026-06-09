@@ -54,6 +54,7 @@ const RoomChoice = ({
         .then((data) => {
           const list = convertListRoomsToOption(data);
           setRooms(list);
+          console.log('chambres:',data);
           const choosed = list.find((c) => c.id === init.roomID);
           if (choosed) {
             setFilters([choosed]);

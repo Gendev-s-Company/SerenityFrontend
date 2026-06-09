@@ -6,7 +6,7 @@ import { WorkSchedule } from "@/types/entity-type/workschedule";
 const workPath = "/workschedule";
 
 export const getAllworkSC = async () => {
-  return await getCall<WorkSchedule[]>(workPath );
+  return await getCall<WorkSchedule[]>(workPath);
 }
 
 export const getAllworkSCByAutority = async (userID: string) => {
@@ -18,8 +18,8 @@ export const getAllByListUser = async (list: FieldOptions[]) => {
   return await getCall<WorkSchedule[]>(`${workPath}/calendar/choice${param}`);
 }
 
-export const getPaginateworkSC = async (page:number,size:number) => {
-  return await getCall<Page<WorkSchedule>>(`${workPath}/${page}/${size}?field=starttime` );
+export const getPaginateworkSC = async (company: string, page: number, size: number) => {
+  return await getCall<Page<WorkSchedule>>(`${workPath}/${page}/${size}?company=${company}&field=starttime` );
 }
 export const getworkSCById = async (id: string) => {
     return await getCall<WorkSchedule>(`${workPath}/${id}`);

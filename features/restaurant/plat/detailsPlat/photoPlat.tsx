@@ -39,6 +39,8 @@ export default function PhotoDetailPlat({ platID }: PhotoDetailPlatProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
+  const [preview, setPreview] = useState<string | null>(null);
+
 
 
   const size = 4;
@@ -265,6 +267,7 @@ export default function PhotoDetailPlat({ platID }: PhotoDetailPlatProps) {
                           src={photo.src}
                           alt="Activity"
                           className="object-cover w-full h-full transition-transform group-hover:scale-105"
+                          onClick={() => setPreview(photo.src)}
                         />
                       </CardContent>
                     </Card>
@@ -304,6 +307,27 @@ export default function PhotoDetailPlat({ platID }: PhotoDetailPlatProps) {
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
+            {/* Le modal de l'image cliqué en plein écran */}
+              {preview && (
+                  <div
+                    onClick={() => setPreview(null)}
+                    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-zoom-out
+                               animate-in fade-in duration-200"
+                  >
+                    <img
+                      src={preview}
+                      alt="preview"
+                      className="max-h-[90vh] max-w-[90vw] rounded shadow-xl
+                                 animate-in zoom-in-90 duration-200"
+                    style={{ 
+                      animation: "zoomIn 0.2s ease",
+                      minWidth: "400px",   // taille minimale
+                      minHeight: "300px",
+                      objectFit: "contain" // évite la déformation
+                    }}
+                    />
+                  </div>
+              )}
         </>
       )}
     </div>
