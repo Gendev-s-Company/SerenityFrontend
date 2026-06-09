@@ -61,6 +61,10 @@ export function normalizeDateKey(dateString: string | null) {
 export function generateDateRange(startDate: string, endDate: string): string[] {
   const start = new Date(startDate);
   const end = new Date(endDate);
+
+  start.setHours(0, 0, 0, 0);
+  end.setHours(0, 0, 0, 0);
+
   const dateArray: string[] = [];
 
   const currentDate = new Date(start);
@@ -70,8 +74,6 @@ export function generateDateRange(startDate: string, endDate: string): string[] 
   }
 
   return dateArray;
-
-
 }
 
 export const getStartOfDay = () => {

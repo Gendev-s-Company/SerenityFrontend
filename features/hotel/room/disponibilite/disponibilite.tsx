@@ -474,7 +474,7 @@ export default function Disponibilite() {
                   <th className="border border-gray-300 p-1 sm:p-2 bg-gray-100 font-semibold sticky left-0 z-20 min-w-[80px] sm:min-w-[120px] lg:min-w-[150px]">Chambre</th>
                   {dates.map(date => (
                     <th key={date} className="border border-gray-300 p-1 sm:p-2 bg-gray-100 text-xs sm:text-sm font-semibold whitespace-nowrap min-w-[30px] sm:min-w-[40px]">
-                      {timestampToText(date)}
+                      {formatDateFR(date)}
                     </th>
                   ))}
                 </tr>
