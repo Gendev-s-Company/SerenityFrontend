@@ -27,6 +27,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 // import { AlertDialog, AlertDialogAction } from "@radix-ui/react-alert-dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, } from "@/components/ui/alert-dialog"
 import CarouselLoading from "@/components/loader/CarouselLoading"
+import { convertToBase64 } from "@/utils/Util";
 
 interface PhotoDetailActivityProps {
   activityId: string;
@@ -65,14 +66,8 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
     fetchPhotos();
   }, [activityId, page]);
 
-  const convertToBase64 = (buffer: number[], type: string) => {
-    if (!buffer || buffer.length === 0) return "";
-    const uint8Array = new Uint8Array(buffer);
-    let binary = "";
-    uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
-    return `data:${type};base64,${buffer}`;
-  };
 
+  // Affichage des photos
   const displayPhotos = useMemo(() => {
     return photos.map(photo => ({
       ...photo,

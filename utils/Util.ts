@@ -87,3 +87,13 @@ export const getEndOfDay = () => {
   d.setHours(23, 0, 0, 0);
   return dateToBackend(d.toISOString());
 };
+
+// PHOTO
+// Conversion de photo en base64
+export  const convertToBase64 = (buffer: number[], type: string) => {
+    if (!buffer || buffer.length === 0) return "";
+    const uint8Array = new Uint8Array(buffer);
+    let binary = "";
+    uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
+    return `data:${type};base64,${buffer}`;
+};

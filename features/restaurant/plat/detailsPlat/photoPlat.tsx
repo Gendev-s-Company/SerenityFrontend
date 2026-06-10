@@ -26,6 +26,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import CarouselLoading from "@/components/loader/CarouselLoading"
 import { PlatPhotoEntity } from "@/types/entity-type/platPhotoEntity"
 import { createPhoto, deletePlatPhoto, getAllphoto } from "@/infrastructure/restaurant/plat/platDetails/platDetailRequest"
+import { convertToBase64 } from "@/utils/Util";
 
 interface PhotoDetailPlatProps {
   platID: string;
@@ -63,14 +64,6 @@ export default function PhotoDetailPlat({ platID }: PhotoDetailPlatProps) {
   useEffect(() => {
     fetchPhotos();
   }, [platID, page]);
-
-  const convertToBase64 = (buffer: number[], type: string) => {
-    if (!buffer || buffer.length === 0) return "";
-    const uint8Array = new Uint8Array(buffer);
-    let binary = "";
-    uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
-    return `data:${type};base64,${buffer}`;
-  };
 
   const displayPhotos = useMemo(() => {
     return photos.map(photo => ({

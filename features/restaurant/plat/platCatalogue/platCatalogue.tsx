@@ -14,6 +14,8 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
+import { convertToBase64 } from "@/utils/Util";
+
 
 interface CatalogueProps {
   tableID?: string;
@@ -106,14 +108,6 @@ export default function Catalogue({ tableID }: CatalogueProps) {
     (acc, item) => acc + item.quantity,
     0,
   );
-
-  const convertToBase64 = (buffer: number[], type: string) => {
-    if (!buffer || buffer.length === 0) return "";
-    const uint8Array = new Uint8Array(buffer);
-    let binary = "";
-    uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
-    return `data:${type};base64,${buffer}`;
-  };
 
   const submit = () => {
     const purchase = {
@@ -268,13 +262,17 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                       {/* GRILLE */}
                       <div className="grid grid-cols-3 gap-x-8 gap-y-6">
                     
-                        {group.dishes.map((item) => (
-                        
-                          <div
-                            key={`dish-${item.dishID}`}
-                            className="flex flex-col items-center justify-start min-h-[250px]"
-                          >
-                          
+                        {group.dishes.map((item) => {                         
+                          const photoSrc = item.photos[0]?.files?.data
+                            ? convertToBase64(item.photos[0].files.data, item.photos[0].files.type)
+                            : item.photos[0]?.path ?? "/placeholder-food.jpg";
+
+                          return(
+                            <div
+                              key={`dish-${item.dishID}`}
+                              className="flex flex-col items-center justify-start min-h-[250px]"
+                            >
+                            
                             <div className="flex flex-col items-center text-center w-full animate-in fade-in duration-500 py-4">
                         
                               <a
@@ -299,15 +297,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                                 >
                                 
                                   <Image
-                                    src={
-                                      item.photos[0]?.files?.data
-                                        ? convertToBase64(
-                                            item.photos[0].files.data,
-                                            item.photos[0].files.type,
-                                          )
-                                        : item.photos[0]?.path ||
-                                          "/placeholder-food.jpg"
-                                    }
+                                    src={photoSrc}
                                     alt={item.name}
                                     fill
                                     className="object-cover"
@@ -385,7 +375,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                                   
                           </div>
           
-                        ))}
+                        )})}
           
                       </div>
                       
@@ -469,7 +459,11 @@ export default function Catalogue({ tableID }: CatalogueProps) {
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {selectedItems.length > 0 ? (
                 <>
-                  {selectedItems.map((item) => (
+                  {selectedItems.map((item) => {
+                    const photoSrc = item.photos[0]?.files?.data
+                        ? convertToBase64(item.photos[0].files.data, item.photos[0].files.type)
+                        : item.photos[0]?.path ?? "/placeholder-food.jpg";
+                    return(
                     <div
                       key={item.dishID}
                       className="flex items-center justify-between border-b border-gray-50 pb-4"
@@ -477,15 +471,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                       <div className="flex items-center gap-4 text-gray-800">
                         <div className="relative w-14 h-14 rounded-full overflow-hidden border">
                           <Image
-                            src={
-                              item.photos[0]?.files?.data
-                                ? convertToBase64(
-                                    item.photos[0].files.data,
-                                    item.photos[0].files.type,
-                                  )
-                                : item.photos[0]?.path ||
-                                  "/placeholder-food.jpg"
-                            }
+                            src={photoSrc}
                             alt={item.name}
                             fill
                             className="object-cover"
@@ -512,7 +498,7 @@ export default function Catalogue({ tableID }: CatalogueProps) {
                         </button>
                       </div>
                     </div>
-                  ))}
+                  )})}
                   <div className="pt-4 flex justify-between items-center border-t border-[#4a3427]/10">
                     <span className="uppercase tracking-widest text-xs text-gray-400">
                       Total à payer

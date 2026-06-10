@@ -34,6 +34,7 @@ import { FieldConfig, FieldOptions } from "@/types/component-type/form-type"
 import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeRequest"
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
 import { getCurrency } from "@/utils/Util"
+import { RoomPhotoEntity } from "@/types/entity-type/roomPhotoEntity"
 
 export function RoomGallery() {
 
@@ -54,6 +55,24 @@ export function RoomGallery() {
     totalElement: 0,
     totalPage: 0,
   })
+
+
+  // Pagination des photos par chambre
+  const photosPerPage = 2
+  const [photoPages, setPhotoPages] = useState<Record<string, number>>({})
+
+  
+  // Fonction displayphotos
+  const displayPhotos =(roomPhotos : RoomPhotoEntity[]) =>{
+    return roomPhotos.map(photo =>({
+      ...photo,
+      src: photo?.files?.data
+        ? convertToBase64(photo.files.data, photo.files.type)
+        : photo?.path
+      }))
+  }
+
+
   const convertToBase64 = (buffer: number[], type: string) => {
     if (!buffer || buffer.length === 0) return "";
     const uint8Array = new Uint8Array(buffer);
@@ -63,11 +82,6 @@ export function RoomGallery() {
   };
 
   const [loading, setLoading] = useState(true)
-
-  const photosPerPage = 2
-
-  // Pagination des photos par chambre
-  const [photoPages, setPhotoPages] = useState<Record<string, number>>({})
 
   const handlePhotoPage = (
     roomID: string,
@@ -166,13 +180,13 @@ return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
         {rooms.map((room) => {
-          const photos = room.photos
+          const displaycarrousselPhotos = displayPhotos(room.photos);
           if (!room.roomID) return null
 
           const currentPage = photoPages[room.roomID] ?? 0
-          const totalPages = Math.ceil(photos.length / photosPerPage)
+          const totalPages = Math.ceil(displaycarrousselPhotos.length / photosPerPage)
 
-          const displayPhotos = photos.slice(
+          const paginatePhotos = displaycarrousselPhotos.slice(
             currentPage * photosPerPage,
             (currentPage + 1) * photosPerPage
           )
@@ -271,14 +285,14 @@ return (
                 {/* CARROUSEL PHOTOS */}
               <div className="flex-1 relative group">
 
-                {displayPhotos.length > 0 ? (
+                {paginatePhotos.length > 0 ? (
                   <>
                     <Carousel className="w-full">
                       <CarouselContent>
                         <CarouselItem>
                           <div className="grid grid-cols-2 gap-4">
                 
-                            {displayPhotos.map((photo) => (
+                            {paginatePhotos.map((photo) => (
                               <Card
                                 key={photo.photoID}
                                 className="aspect-[4/3] overflow-hidden border-2 hover:border-primary/50 transition-colors relative group"
@@ -336,10 +350,10 @@ return (
                               </div>
                               {/* Image cliquable */}
                               <img
-                                src={convertToBase64(photo.files.data, photo.files.type)}
+                                src={photo.src}
                                 alt="Room"
                                 className="object-cover w-full h-full"
-                                onClick={() => setPreview(convertToBase64(photo.files.data, photo.files.type))}
+                                onClick={() => setPreview(photo.src)}
                               />
                                 </CardContent>
                               </Card>
@@ -356,7 +370,7 @@ return (
                       size="icon"
                       className="absolute left-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition"
                       onClick={() =>
-                        handlePhotoPage(room.roomID!, "prev", photos.length)
+                        handlePhotoPage(room.roomID!, "prev", displaycarrousselPhotos.length)
                       }
                       disabled={currentPage === 0}
                     >
@@ -369,7 +383,7 @@ return (
                       size="icon"
                       className="absolute right-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition"
                       onClick={() =>
-                        handlePhotoPage(room.roomID!, "next", photos.length)
+                        handlePhotoPage(room.roomID!, "next", displaycarrousselPhotos.length)
                       }
                       disabled={currentPage === totalPages - 1}
                     >
