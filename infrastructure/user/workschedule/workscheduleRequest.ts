@@ -13,14 +13,15 @@ export const getAllworkSCByAutority = async (userID: string) => {
   return await getCall<WorkSchedule[]>(`${workPath}/calendar?userId=${userID}`);
 }
 
-export const getAllByListUser = async (list: FieldOptions[]) => {
+export const getAllByListUser = async (list: FieldOptions[],company: string) => {
   const param = convertOptionToListParam(list)
-  return await getCall<WorkSchedule[]>(`${workPath}/calendar/choice${param}`);
+  return await getCall<WorkSchedule[]>(`${workPath}/calendar/choice${param}&company=${company}`);
 }
 
-export const getPaginateworkSC = async (company: string, page: number, size: number) => {
-  return await getCall<Page<WorkSchedule>>(`${workPath}/${page}/${size}?company=${company}&field=starttime` );
+export const getPaginateworkSCByUser = async (userID:string, page: number, size: number) => {
+  return await getCall<Page<WorkSchedule>>(`${workPath}/calendar/${page}/${size}?userId=${userID}` );
 }
+
 export const getworkSCById = async (id: string) => {
     return await getCall<WorkSchedule>(`${workPath}/${id}`);
 }
@@ -35,11 +36,8 @@ export const deleteworkSC = async (id: string) => {
     return await deleteCall<WorkSchedule>(`${workPath}/${id}`);
 }
 
-function convertOptionToListParam(list:FieldOptions[]) {
-    let param = '?'
-    list.forEach(row => {
-      param += 'userids='+row.id+'&'
-    });
-    param+='1=1'
-    return param
+function convertOptionToListParam(list: FieldOptions[]) {
+    const params = new URLSearchParams();
+    list.forEach(row => params.append('userids', row.id));
+    return `?${params.toString()}`;
 }

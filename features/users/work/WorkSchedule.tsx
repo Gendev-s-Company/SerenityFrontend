@@ -2,7 +2,7 @@
 import {
   createworkSC,
   deleteworkSC,
-  getPaginateworkSC,
+  getPaginateworkSCByUser,
   updateworkSC,
 } from "@/infrastructure/user/workschedule/workscheduleRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
@@ -39,7 +39,7 @@ export default function WorkSchedulePage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     if(user.profil.company.companyID){
-      getPaginateworkSC(user.profil.company.companyID, page.pageIndex, page.pageSize)
+      getPaginateworkSCByUser(user.userID!, page.pageIndex, page.pageSize)
         .then((data) => {
           setWorks(data.content);
           setPage((prevPage) => ({

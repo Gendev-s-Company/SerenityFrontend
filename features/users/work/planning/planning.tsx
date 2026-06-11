@@ -67,16 +67,16 @@ const Planning = () => {
         const events = convertListToEvent(data);
         setWorks(events);
       })
-      .catch((error) => console.error("Error fetching profils:", error));
+      .catch((error) => console.error("Error fetching workschedule:", error));
   }, [refresh]);
   useEffect(() => {
     if (filters.length > 0) {
-      getAllByListUser(filters)
+      getAllByListUser(filters,user.profil.company.companyID!)
         .then((data) => {
           const events = convertListToEvent(data);
           setWorks(events);
         })
-        .catch((error) => console.error("Error fetching profils:", error));
+        .catch((error) => console.error("Error fetching workschedules for users:", error));
     }
   }, [refresh, filters]);
   const options: FieldConfig<WorkSchedule> = useMemo(
