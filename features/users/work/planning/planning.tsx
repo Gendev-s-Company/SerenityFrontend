@@ -20,16 +20,17 @@ import { UserEntity } from "@/types/entity-type/userEntity";
 import { getAllUser, getUserById } from "@/infrastructure/user/userRequest";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { convertListUsersToOption } from "@/infrastructure/user/userFunction";
-
-import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { MultiSelect } from "@/components/ui/multi-select";
+import Sbutton from "@/components/button/Sbutton";
+
 
 const Planning = () => {
   const [works, setWorks] = useState<CalendarEvent[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
   const [users, setUsers] = useState<FieldOptions[]>([]);
   const [filters, setFilters] = useState<FieldOptions[]>([]);
+
   const user = getLocalStorage();
   
   const body: WorkSchedule = {
@@ -69,16 +70,21 @@ const Planning = () => {
       })
       .catch((error) => console.error("Error fetching workschedule:", error));
   }, [refresh]);
-  useEffect(() => {
-    if (filters.length > 0) {
-      getAllByListUser(filters,user.profil.company.companyID!)
-        .then((data) => {
-          const events = convertListToEvent(data);
-          setWorks(events);
-        })
-        .catch((error) => console.error("Error fetching workschedules for users:", error));
-    }
-  }, [refresh, filters]);
+
+  // Recherche le workschedule par rapport aux nom utilisateurs séléctionnés
+  const handleSearch = () => {
+      if (filters.length > 0) {
+         getAllByListUser(filters,user.profil.company.companyID!)
+          .then((data) => {
+            console.log(data);
+            const events = convertListToEvent(data);
+            setWorks(events);
+          })
+          .catch((error) => console.error("Error fetching workschedules for users:", error));
+      }
+  }
+
+
   const options: FieldConfig<WorkSchedule> = useMemo(
     () => ({
       name: "userID",
@@ -108,15 +114,15 @@ const Planning = () => {
     return value;
   };
 
-  const onCreate = async (formData: WorkSchedule) => {
-    const dataToSend = {
-      ...formData,
-      userID: formData.userID?.userID || formData.userID
+    const onCreate = async (formData: WorkSchedule) => {
+      const dataToSend = {
+        ...formData,
+        userID: formData.userID?.userID || formData.userID
+      };
+      // console.log('Donnees envoyees:',formData);
+      await createworkSC(dataToSend);
+      setRefresh((prev) => prev + 1);
     };
-    // console.log('Donnees envoyees:',formData);
-    await createworkSC(dataToSend);
-    setRefresh((prev) => prev + 1);
-  };
 
   const initForm = (body: WorkSchedule, slot: SlotInfo) => {
     body.starttime = slot.start;
@@ -132,8 +138,7 @@ const Planning = () => {
     }
   }
   return (
-        <div className="space-y-6">
-          
+      <div className="space-y-6">        
         {/* Filter Section */}
         <div className="container px-5 pt-5">
           
@@ -143,44 +148,43 @@ const Planning = () => {
               onSubmit={(e) => e.preventDefault()}
               className="flex flex-col lg:flex-row lg:items-end gap-4"
             >
-            
               {/* Multi Select */}
               <div className="flex-1 space-y-2">
-          
                 <label className="text-sm font-medium text-gray-700 block">
                   Utilisateurs
-                </label>
-          
-                <MultiSelect
-                  setOpts={updateFilter}
-                  safidy={filters}
-                  opts={users}
-                  placeholder="Choisir les utilisateurs"
-                />
-        
+                </label>                
+                  <MultiSelect
+                    setOpts={updateFilter}
+                    safidy={filters}
+                    opts={users}
+                    placeholder="Choisir les utilisateurs"
+                  />
               </div>
-          
+
               {/* Button */}
-              <Button
-                aria-label="Afficher le filtre"
-                variant="outline"
-                className="
-                  h-10
-                  px-5
-                  rounded-xl
-                  border-gray-300
-                  hover:bg-blue-600
-                  hover:text-white
-                  transition-all
-                  duration-200
-                  shadow-sm
-                  self-end
-                "
-              >
-                <Search className="mr-2 h-4 w-4" />
-                Afficher
-              </Button>
-          
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block invisible">
+                  {/* Label invisible pour aligner avec le MultiSelect */}
+                  placeholder
+                </label>
+                <Sbutton
+                  message="Planning rafraîchi !"
+                  libelle="Afficher"
+                  className="
+                    h-10
+                    px-5
+                    rounded-xl
+                    border-gray-300
+                    hover:bg-blue-600
+                    hover:text-white
+                    transition-all
+                    duration-200
+                    shadow-sm
+                  "
+                  formAction={handleSearch}
+                  icon={Search}
+                /> 
+              </div>
             </form>
           
           </div>

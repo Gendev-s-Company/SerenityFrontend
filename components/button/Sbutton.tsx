@@ -2,6 +2,7 @@ import { useTransition } from "react";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
+import { LucideIcon } from "lucide-react";
 // interface local utiliser pour ce composant
 interface SbuttonProps {
   formAction: () => void; //la fonction qu'on va appeler pour lorsqu'on appui sur le bouton
@@ -15,13 +16,15 @@ interface SbuttonProps {
   | "ghost"
   | "link"; //variant du bouton(pareil que pour shadcn/ui grey theme)
   message?:string;
+  icon?: LucideIcon;
 }
 export default function Sbutton({
   formAction,
   libelle = "Valider",
   variant = "default",
   className = "",
-  message = "Action réussi!!"
+  message = "Action réussi!!",
+  icon: Icon
 }: SbuttonProps) {
   // on utilise useTransition pour pouvoir mettre le loader sur le bouton car on utilisera
   //la plus part du temps une fonction asynchrone
@@ -39,7 +42,6 @@ export default function Sbutton({
         const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue";
         // affichage de message si erreur
         console.log(error);
-        
         toast.error(errorMessage, { position: "top-right" })
       }
 
@@ -54,6 +56,7 @@ export default function Sbutton({
       className={`${className} cursor-pointer`}
       variant={variant}
     >
+      {Icon && <Icon size={16} />} {/* On renomme en Icon pour JSX */}
       {isPending ? (
         <>
           <Spinner data-icon="inline-start" /> Loading...
