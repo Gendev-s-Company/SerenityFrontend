@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { RotateCcw,Plus,Minus,X,ChevronLeft, ChevronRight, Check, TriangleAlert} from "lucide-react";
 import { getLocalItem, getLocalStorage, removeLocalItem } from "@/utils/storage";
-import { getPaginateDishes } from "@/infrastructure/restaurant/dish/dishRequest";
+import { getPaginateDishes, getPaginateDishesByType } from "@/infrastructure/restaurant/dish/dishRequest";
 import { DishEntity } from "@/types/entity-type/dishEntity";
 import { PaginationState } from "@tanstack/react-table";
 
@@ -140,22 +140,13 @@ export default function TableOrder() {
 
    const filteredDishes = useMemo(() => {
     return dishes.filter((d) => {
-      const matchCategory =
-        category === "Tous" || d.type?.typeID === category;
-
       const matchSearch = d.name
         .toLowerCase()
         .includes(search.toLowerCase());
-      return matchCategory && matchSearch;
+      return  matchSearch;
     });
   }, [dishes, category, search]);
 
-  const displayedDishes = useMemo(() => {
-    if (category === "Tous") return filteredDishes;
-    const start = page.pageIndex * pageSize;
-    console.log(filteredDishes);
-    return filteredDishes.slice(start, start + pageSize);
-  }, [filteredDishes, category, page.pageIndex, pageSize]);
 
 
   // ===== PAGINATION =====
@@ -287,8 +278,9 @@ const addToOrder = (dish: DishEntity) => {
     setLoading(true);
 
     if (user && user.profil.company.companyID) {
-      getPaginateDishes(
+      getPaginateDishesByType(
         user.profil.company.companyID,
+        category,
         page.pageIndex,
         page.pageSize
       )
@@ -305,7 +297,7 @@ const addToOrder = (dish: DishEntity) => {
           setLoading(false);
         });
     }
-  }, [refresh, page.pageIndex]);
+  }, [refresh, page.pageIndex,category]);
 
   // Set directement les items du panier si dans les details commande si la variable n'est pas vide
   useEffect(() => {
@@ -506,7 +498,7 @@ const addToOrder = (dish: DishEntity) => {
                       <button
                         title={`Catégorie : ${cat.name}`}
                         key={value}
-                        onClick={() => setCategory(value!)}
+                         onClick={() => setCategory(value!)}
                          className={`w-25 px-2 py-2 rounded-md border text-sm text-center truncate whitespace-nowrap overflow-hidden ${
                           category === value
                             ? "bg-slate-800 text-white"
@@ -631,7 +623,7 @@ const addToOrder = (dish: DishEntity) => {
                       {loading ? (
                         <p className="text-center text-gray-400">Chargement...</p>
                       ) : (
-                        displayedDishes.map((dish) => {
+                        filteredDishes.map((dish) => {
                           const isDisabled = dish.state === 1;
                         
                           return (

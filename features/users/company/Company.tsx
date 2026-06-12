@@ -89,20 +89,21 @@ export default function Company() {
     // Variable titre
     <div className="container mx-auto py-10 px-3">
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-        <DataTable
-          body={body}
-          onCreate={onCreate}
-          data={company}
-          mcolumns={columns}
-          fields={CompanyNamefield}
-          pageCount={all.totalPage}
-          rowCount={all.totalElement}
-          onPaginationChange={setPage}
-          pagination={page}
-          columnFilter="name"
-          loading={loading}
-          authority={user?.profil?.authority}
-        />
+        <h2 className="text-xl font-semibold">{"Liste des sociétés"}</h2>
+          <DataTable
+            body={body}
+            onCreate={onCreate}
+            data={company}
+            mcolumns={columns}
+            fields={CompanyNamefield}
+            pageCount={all.totalPage}
+            rowCount={all.totalElement}
+            onPaginationChange={setPage}
+            pagination={page}
+            columnFilter="name"
+            loading={loading}
+            authority={user?.profil?.authority}
+          />
       </div>
     </div>
   );

@@ -3,30 +3,18 @@ import { Calendar, LayoutDashboard, User } from "lucide-react";
 import { HotelItems } from "./hotel-menu";
 import { RestoItems } from "./restaurant-menu";
 import { UsersItems } from "./users-menu";
+import { PackItems } from "./pack-menu";
+import { CustomerItems } from "./customer-menu";
+import { DashboardItems } from "./dashboad-menu";
 
 // Menu items.
 export const items: PMenu[] = [
-  {
-    title: "TABLEAU DE BORD",
-    url: "#hyhy",
-    dropdown: false,
-    isSubmenu: false,
-    subMenu: [],
-    icon: LayoutDashboard,
-    minAuthority: 4,
-  },
+  DashboardItems,
   UsersItems,
-  {
-    title: "Clients",
-    url: "/view/customer",
-    dropdown: false,
-    isSubmenu: false,
-    subMenu: [],
-    icon: User,
-    minAuthority: 4,
-  },
+  CustomerItems,
   RestoItems,
   HotelItems,
+  PackItems,
   // {
   //   title: "HOTEL",
   //   url: "/view/hotel/room/roomGallery",

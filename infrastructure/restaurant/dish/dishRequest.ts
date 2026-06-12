@@ -11,6 +11,10 @@ export const getPaginateDishes = async (company:string,page:number, size:number)
     return await getCall<Page<DishEntity>>(`${dishPath}/all/${page}/${size}?company=${company}` );
 }
 
+export const getPaginateDishesByType = async (company:string,typeid:string,page:number, size:number) => {
+    return await getCall<Page<DishEntity>>(`${dishPath}/byType/${page}/${size}?company=${company}&typeid=${typeid}` );
+}
+
 export const getDishById = async (id: string) => {
     return await getCall<DishEntity>(`${dishPath}/${id}`);
 }

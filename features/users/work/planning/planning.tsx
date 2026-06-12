@@ -142,7 +142,7 @@ const Planning = () => {
         {/* Filter Section */}
         <div className="container px-5 pt-5">
           
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+          <div className="bg-slate-50/50 border border-gray-200 rounded-2xl shadow-sm p-5">
           
             <form
               onSubmit={(e) => e.preventDefault()}

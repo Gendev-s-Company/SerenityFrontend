@@ -151,20 +151,23 @@ export default function WorkSchedulePage() {
 
   return (
     <div className="container mx-auto py-10 px-3">
-      <DataTable
-        body={body}
-        onCreate={onCreate}
-        data={works}
-        mcolumns={columns}
-        fields={namefield}
-        columnFilter="userID"
-        pageCount={all.totalPage}
-        rowCount={all.totalElement}
-        onPaginationChange={setPage}
-        pagination={page}
-        loading={loading}
-        authority={user?.profil?.authority}
-      />
+      <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+        <h2 className="text-xl font-semibold">{"Planning de travail des employés"}</h2>
+          <DataTable
+            body={body}
+            onCreate={onCreate}
+            data={works}
+            mcolumns={columns}
+            fields={namefield}
+            columnFilter="userID"
+            pageCount={all.totalPage}
+            rowCount={all.totalElement}
+            onPaginationChange={setPage}
+            pagination={page}
+            loading={loading}
+            authority={user?.profil?.authority}
+          />
+      </div>
     </div>
   );
 }

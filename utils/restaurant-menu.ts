@@ -12,7 +12,7 @@ export const RestoItems: PMenu =
       title: "Tables",
       url: "#table",
       dropdown: false,
-      isSubmenu: true,
+      isSubmenu: false,
       subMenu: [
         {
           title: "Table",
@@ -67,7 +67,7 @@ export const RestoItems: PMenu =
       title: "Plat",
       url: "#crudplat",
       dropdown: false,
-      isSubmenu: true,
+      isSubmenu: false,
       subMenu: [{
         title: "Menu",
         url: "/view/restaurant/plat/catalogue",
@@ -104,7 +104,7 @@ export const RestoItems: PMenu =
       title: "Service",
       url: "#commande",
       dropdown: false,
-      isSubmenu: true,
+      isSubmenu: false,
       subMenu: [
         {
           title: "Plan de table",
