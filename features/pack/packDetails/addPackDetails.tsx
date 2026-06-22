@@ -100,7 +100,6 @@ export default function AddPackDetails({pack, openPacks ,onOpenChange} :PackDeta
                           <p className="text-base text-muted-foreground italic">Aucun avantage</p>
                         </div>
                       </div> */}
-                      <ActivityPackForm packID={pack.packID!}/>
                     </TabsContent>
 
                   </div>
