@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PackEntity } from "@/types/entity-type/packEntity";
 import { Hotel, Package, Sparkles, UtensilsCrossed } from "lucide-react";
-import { ActivityPackForm } from "../packActivityDetails/activityPackForm";
+
 
 interface PackDetailsProps {
   pack: PackEntity;
