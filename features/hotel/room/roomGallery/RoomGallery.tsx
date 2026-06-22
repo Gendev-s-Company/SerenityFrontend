@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, MoreVertical, Trash2,Edit2,Info,Clock,Moon, BookMarked } from "lucide-react"
+import { ChevronLeft, ChevronRight, MoreVertical, Trash2,Info,Clock,Moon, BookMarked } from "lucide-react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -158,8 +158,8 @@ export function RoomGallery() {
         .then((data) => {
           setRoom(data.content)
           setAll({
-            totalElement: data.totalElements,
-            totalPage: data.totalPages,
+            totalElement: data.page.totalElements,
+            totalPage: data.page.totalPages,
           })
           setLoading(false)
 
@@ -313,11 +313,6 @@ return (
                                   </DropdownMenuTrigger>
 
                                   <DropdownMenuContent align="end">
-                                    <button className="flex items-center px-2 py-1.5 text-sm w-full text-blue-600 hover:bg-blue-50 rounded-sm">
-                                      <Edit2 className="mr-2 h-4 w-4" />
-                                      Modifier
-                                    </button>
-
                                     <AlertDialog>
                                       <AlertDialogTrigger asChild>
                                     <button className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">

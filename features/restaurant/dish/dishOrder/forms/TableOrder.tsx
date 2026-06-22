@@ -171,21 +171,21 @@ export default function TableOrder() {
 
 
   // ===== ACTIONS =====
-const addToOrder = (dish: DishEntity) => {
-  setOrder((prev) => {
-    const existing = prev.find((i) => i.dish.dishID === dish.dishID);
-
-    if (existing) {
-      return prev.map((i) =>
-        i.dish.dishID === dish.dishID
-          ? { ...i, quantity: i.quantity + 1 }
-          : i
-      );
-    }
-
-    return [...prev, { dish, quantity: 1 }];
-  });
-};
+  const addToOrder = (dish: DishEntity) => {
+    setOrder((prev) => {
+      const existing = prev.find((i) => i.dish.dishID === dish.dishID);
+    
+      if (existing) {
+        return prev.map((i) =>
+          i.dish.dishID === dish.dishID
+            ? { ...i, quantity: i.quantity + 1 }
+            : i
+        );
+      }
+    
+      return [...prev, { dish, quantity: 1 }];
+    });
+  };
 
   const increase = (id: string) => {
     setOrder((prev) =>
@@ -287,8 +287,8 @@ const addToOrder = (dish: DishEntity) => {
         .then((data) => {
           setDishes(data.content);
           setAll({
-            totalElement: data.totalElements,
-            totalPage: data.totalPages,
+            totalElement: data.page.totalElements,
+            totalPage: data.page.totalPages,
           });
           setLoading(false);
         })
@@ -506,9 +506,6 @@ const addToOrder = (dish: DishEntity) => {
                         }`}
                       >
                         {label}
-                        {/* <p className="text-sm text-gray-500">
-                          {cat.typeID} 
-                        </p>  */}
                       </button>
                     );
                   })}

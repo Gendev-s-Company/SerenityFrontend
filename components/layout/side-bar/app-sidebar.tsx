@@ -54,9 +54,9 @@ export function AppSidebar() {
                     {!item.dropdown && !item.isSubmenu && (
                       <SidebarMenuItem>
                         <SidebarMenuButton asChild>
-                          <a href={item.url} className="scroll-m-20 text-xl font-semibold tracking-tight">
+                          <a href={item.url}>
                             <item.icon />
-                            <span>{item.title}</span>
+                            <strong>{item.title}</strong>
                           </a>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

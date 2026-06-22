@@ -49,13 +49,13 @@ export default function RestaurantTable() {
         getPaginateTable(user.profil.company.companyID,page.pageIndex,page.pageSize)
             .then((data) => {                
                 setRestaurantTable(data.content);
-                setPage((prevPage) => ({
-                  ...prevPage,
-                  pageIndex: data.pageable.pageNumber,
-                }));
+                  setPage((prevPage) => ({
+                    ...prevPage,
+                    pageIndex: data.page.number,
+                  }));
                 setAll({
-                  totalElement: data.totalElements,
-                  totalPage: data.totalPages,
+                  totalElement: data.page.totalElements,
+                  totalPage: data.page.totalPages,
                 });
                 setLoading(false)
             })

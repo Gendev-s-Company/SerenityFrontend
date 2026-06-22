@@ -45,10 +45,10 @@ export default function ActivityPrice({ activityId, refresh, setRefresh }: Activ
         .then((data) => {
           setActivityPrice(data.content);
           console.log(data.content);
-          setPage((prevPage) => ({
-            ...prevPage,
-            pageIndex: data.pageable.pageNumber,
-          }));
+                  setPage((prevPage) => ({
+          ...prevPage,
+          pageIndex: data.page.number,
+        }));
           setAll({
             totalElement: data.totalElements,
             totalPage: data.totalPages,

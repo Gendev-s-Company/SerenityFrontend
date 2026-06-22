@@ -4,7 +4,7 @@ import { Map, ListOrdered, Pen, BookText, Inbox, Table2, UtensilsCrossed, BookMa
 export const RestoItems: PMenu =
 {
   title: "RESTAURANT",
-  url: "#",
+  url: "",
   dropdown: false,
   isSubmenu: true,
   subMenu: [

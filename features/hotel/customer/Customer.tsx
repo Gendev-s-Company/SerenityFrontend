@@ -36,13 +36,13 @@ export default function Customer(){
          )
            .then((data) => {
              setCustomer(data.content);
-             setPage((prevPage) => ({
-               ...prevPage,
-               pageIndex: data.pageable.pageNumber,
-             }));
+        setPage((prevPage) => ({
+          ...prevPage,
+          pageIndex: data.page.number,
+        }));
              setAll({
-               totalElement: data.totalElements,
-               totalPage: data.totalPages,
+               totalElement: data.page.totalElements,
+               totalPage: data.page.totalPages,
              });
              setLoading(false)
            })

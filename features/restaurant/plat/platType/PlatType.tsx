@@ -39,11 +39,11 @@ export default function PlatType() {
               setPlatType(data.content);
               setPage((prevPage) => ({
                 ...prevPage,
-                pageIndex: data.pageable.pageNumber,
+                pageIndex: data.page.number,
               }));
               setAll({
-                totalElement: data.totalElements,
-                totalPage: data.totalPages,
+                totalElement: data.page.totalElements,
+                totalPage: data.page.totalPages,
               });
               setLoading(false)
             })

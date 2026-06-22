@@ -6,10 +6,10 @@ export interface Page<T> {
     last: true,
     number: number,
     numberOfElements: number,
-    pageable: {
+    page: {
         offset: number,
-        pageNumber: number,
-        pageSize: number,
+        number: number,
+        size: number,
         paged: boolean,
         sort: {
             empty: boolean,
@@ -17,6 +17,8 @@ export interface Page<T> {
             unsorted: boolean
         },
         unpaged: boolean
+        totalElements: number,
+        totalPages: number
     },
     size: number,
     sort: {
@@ -24,7 +26,6 @@ export interface Page<T> {
         sorted: boolean,
         unsorted: boolean
     },
-    totalElements: number,
-    totalPages: number
+
 
 }

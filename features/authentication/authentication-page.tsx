@@ -39,7 +39,7 @@ export default function AuthenticationPage() {
       setError(false);
       const user = await login(forms.getForm);
       setAuthStorage(JSON.stringify(user));
-      router.push("/view");
+      router.push("/view/users/company");
     } catch (error) {
       setError(true);
       throw error;

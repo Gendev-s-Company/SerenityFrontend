@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { BedDouble, BedSingle, Book, BookMarked, BookText, Calendar, Gamepad, GamepadDirectional, Hotel, Inbox, LucidePictureInPicture } from "lucide-react";
+import { BedDouble, BedSingle, Book, BookMarked, BookText, Calendar, Gamepad, GamepadDirectional, Hotel, Inbox } from "lucide-react";
 
 
 export const HotelItems: PMenu =

@@ -53,13 +53,13 @@ export default function SeatingPlan() {
             //  );
              console.log("Fetched tables:", data.content.flatMap((type) => type.tables || []));
              console.log("Fetched table types:", data.content);
-             setPage((prevPage) => ({
-               ...prevPage,
-               pageIndex: data.pageable.pageNumber,
-             }));
+        setPage((prevPage) => ({
+          ...prevPage,
+          pageIndex: data.page.number,
+        }));
              setAll({
-               totalElement: data.totalElements,
-               totalPage: data.totalPages,
+               totalElement: data.page.totalElements,
+               totalPage: data.page.totalPages,
              });
              setLoading(false)
            })

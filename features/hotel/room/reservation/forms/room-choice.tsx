@@ -182,7 +182,7 @@ export const roomResaField: FieldConfig<RoomChoice>[] = [
   },
 ];
 
-const convertListRoomsToOption = (list: RoomEntity[]): FieldOptions[] => {
+export const convertListRoomsToOption = (list: RoomEntity[]): FieldOptions[] => {
   const result: FieldOptions[] = [];
   list?.map((row) => {
     if (row.roomID) {

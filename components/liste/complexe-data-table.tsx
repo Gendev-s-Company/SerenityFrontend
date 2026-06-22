@@ -21,7 +21,6 @@ import Tooltips from "../tooltips/tooltips";
 import Liste from "./Liste";
 import CreateBox from "../create/create-box";
 import { findAuthority } from "@/control/crud/crud-access";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import Salert from "../alert/Salert";
 

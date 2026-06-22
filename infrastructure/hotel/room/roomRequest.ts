@@ -4,8 +4,8 @@ import { Page } from "@/types/entity-type/common/Page";
 
 const roomPath="/hotel/room"
 
-export const getAllRoom = async () => {
-  return await getCall<RoomEntity[]>(roomPath+'/all');
+export const getAllRoom = async (company: string) => {
+  return await getCall<RoomEntity[]>(roomPath+'/all?company='+company);
 }
 
 export const getPaginateRooms = async (company:string,page:number,size:number) => {

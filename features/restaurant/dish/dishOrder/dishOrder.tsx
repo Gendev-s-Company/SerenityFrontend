@@ -86,7 +86,7 @@ export default function DishOrder() {
             
               setPage((prevPage) => ({
                   ...prevPage,
-                  pageIndex: data.pageable.pageNumber,
+                  pageIndex: data.page.number,
               }));
             
               setLoading(false);

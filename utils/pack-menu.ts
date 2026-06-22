@@ -4,7 +4,7 @@ import { GamepadDirectional, Inbox, UtensilsCrossed, TicketPercent, Hotel } from
 export const PackItems: PMenu =
 {
   title: "PACK",
-  url: "#",
+  url: "",
   dropdown: false,
   isSubmenu: true,
   subMenu: [
@@ -19,13 +19,13 @@ export const PackItems: PMenu =
     },
     {
       title: "Pack disponibles",
-      url: "#pack",
+      url: "",
       dropdown: true,
       isSubmenu: false,
       subMenu: [
         {
           title: "Pack Hotel",
-          url: "#",
+          url: "/view/pack/packHotelDetails",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
@@ -34,7 +34,7 @@ export const PackItems: PMenu =
         },
         {
           title: "Pack Restaurant",
-          url: "#",
+          url: "/view/pack/packRestoDetails",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
@@ -43,7 +43,7 @@ export const PackItems: PMenu =
         },
         {
           title: "Pack Activité",
-          url: "#",
+          url: "/view/pack/packActivityDetails",
           dropdown: false,
           isSubmenu: false,
           subMenu: [],
