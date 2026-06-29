@@ -61,7 +61,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                   </h3>
                 </div>
                 <div className="p-5">
-                  {pack.hotelsPack.length ? (
+                  {pack.hotelsPack?.length ? (
                     <ul className="space-y-3">
                       {pack.hotelsPack.map((advantage, index) => (
                         <li key={index} className="flex items-center justify-between gap-2 text-base text-slate-700">
@@ -70,7 +70,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                             {advantage.duration}h heures de la durée 
                           </span>
                           <span className="text-sm font-medium text-blue-700 bg-blue-100 px-3 py-1 rounded-full shrink-0">
-                            +{pack.discount}%
+                            -{pack.discount}%
                           </span>
                         </li>
                       ))}
@@ -90,7 +90,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                   </h3>
                 </div>
                 <div className="p-5">
-                  {pack.restoPack.length ? (
+                  {pack.restoPack?.length ? (
                     <ul className="space-y-3">
                       {pack.restoPack.map((advantage, index) => (
                         <li key={index} className="flex items-center justify-between gap-2 text-base text-slate-700">
@@ -99,7 +99,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                             {advantage.dishID} avec quantité rajoutée
                           </span>
                           <span className="text-sm font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full shrink-0">
-                            +{advantage.quantity}
+                            -{advantage.quantity}
                           </span>
                         </li>
                       ))}
@@ -119,7 +119,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                   </h3>
                 </div>
                 <div className="p-5">
-                  {pack.activityPack.length ? (
+                  {pack.activityPack?.length ? (
                     <ul className="space-y-3">
                       {pack.activityPack.map((advantage, index) => (
                         <li key={index} className="flex items-center justify-between gap-2 text-base text-slate-700">
@@ -128,7 +128,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                             {advantage.duration}h heures de la durée 
                           </span>
                           <span className="text-sm font-medium text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full shrink-0">
-                            +{pack.discount}%
+                            -{pack.discount}%
                           </span>
                         </li>
                       ))}
