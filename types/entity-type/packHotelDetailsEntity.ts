@@ -1,5 +1,5 @@
 import { PackEntity } from "./packEntity";
-import { RoomEntity } from "./roomEntity";
+
 
 export interface PackHotelDetailsEntity{
     id: string | null,

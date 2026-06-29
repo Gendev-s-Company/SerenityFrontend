@@ -102,6 +102,7 @@ export default function Pack(){
     };
 
     const handleAddPack = () => {
+      setSelectedPack(null);
       setOpenModalAddPack(true);
     };
 

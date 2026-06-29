@@ -1,4 +1,4 @@
-import { DishEntity } from "./dishEntity";
+
 import { PackEntity } from "./packEntity";
 
 export interface PackeRestoDetailsEntity{

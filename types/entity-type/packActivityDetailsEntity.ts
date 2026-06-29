@@ -1,4 +1,3 @@
-import { ActivityEntity } from "./activityEntity";
 import { PackEntity } from "./packEntity";
 
 export interface PackActivityDetailsEntity{
