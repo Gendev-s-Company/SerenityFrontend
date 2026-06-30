@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PackEntity } from "@/types/entity-type/packEntity";
+import { timestampToText } from "@/utils/Util";
 import { Hotel, UtensilsCrossed, Sparkles, Package } from "lucide-react";
 
 interface PackDetailsProps {
@@ -28,11 +29,16 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
               </div>
               <div>
                 <DialogTitle className="text-white text-2xl">
-                  Détails du pack
+                  Avantages du pack
                 </DialogTitle>
-                <DialogDescription className="text-slate-300 text-base">
-                  Liste des avantages inclus dans ce pack
-                </DialogDescription>
+                  <DialogDescription className="text-slate-300 text-base">
+                    <span className="flex flex-col gap-2">
+                      <span className="text-sm font-medium text-white bg-slate-700 px-3 py-1 rounded-full shrink-0">
+                       Validité:  {timestampToText(pack.startDate)} - {timestampToText(pack.endDate)}
+                      </span>
+                      
+                    </span>
+                  </DialogDescription>
               </div>
             </div>
           </DialogHeader>
@@ -96,7 +102,7 @@ export default function PackDetails({ pack, open, onOpenChange }: PackDetailsPro
                         <li key={index} className="flex items-center justify-between gap-2 text-base text-slate-700">
                           <span className="flex items-center gap-2">
                             <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0" />
-                            {advantage.dishID} avec quantité rajoutée
+                            {advantage.dishID} avec quantité
                           </span>
                           <span className="text-sm font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full shrink-0">
                             -{advantage.quantity}

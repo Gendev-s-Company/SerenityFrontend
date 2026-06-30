@@ -40,19 +40,19 @@ import Sbutton from "@/components/button/Sbutton";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface HotelItem {
-  id: string;
+  id: string| null;
   roomId: string;
   duration: string;
 }
 
 interface RestaurantItem {
-  id: string;
+  id: string| null;
   dishId: string;
   quantity: string;
 }
 
 interface ActivityItem {
-  id: string;
+  id: string| null;
   activityId: string;
   duration: string;
 }
@@ -130,11 +130,11 @@ function HotelTab({
   rooms: RoomEntity[]; 
   onChange: (items: HotelItem[]) => void;
 }) {
-  const add = () =>
-    onChange([
-      ...items,
-      { id: crypto.randomUUID(), roomId: "", duration: "" },
-    ]);
+const add = () =>
+  onChange([
+    ...items,
+    { id: null, roomId: "", duration: "" },
+  ]);
 
   const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
 
@@ -148,7 +148,7 @@ function HotelTab({
 
       {items.map((item, idx) => (
         <div
-          key={item.id}
+          key={idx}
           className="rounded-lg border border-slate-200 bg-slate-50 p-3 flex flex-col gap-3"
         >
           <div className="flex items-center justify-between">
@@ -157,7 +157,7 @@ function HotelTab({
             </span>
             <button
               type="button"
-              onClick={() => remove(item.id)}
+              onClick={() => remove(item.id!)}
               className="text-slate-400 hover:text-red-500 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -169,7 +169,7 @@ function HotelTab({
               <Label className="text-xs text-slate-500">Chambre</Label>
               <Select
                 value={item.roomId}
-                onValueChange={(v) => update(item.id, "roomId", v)}
+                onValueChange={(v) => update(item.id!, "roomId", v)}
               >
                 <SelectTrigger className="h-9 text-sm bg-white">
                   <SelectValue placeholder="Sélectionner…" />
@@ -192,7 +192,7 @@ function HotelTab({
                 placeholder="Ex. 2"
                 className="h-9 text-sm bg-white"
                 value={item.duration}
-                onChange={(e) => update(item.id, "duration", e.target.value)}
+                onChange={(e) => update(item.id!, "duration", e.target.value)}
               />
             </div>
           </div>
@@ -218,7 +218,7 @@ function RestaurantTab({
   const add = () =>
     onChange([
       ...items,
-      { id: crypto.randomUUID(), dishId: "", quantity: "" },
+      {  id: null, dishId: "", quantity: "" },
     ]);
 
   const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
@@ -241,7 +241,7 @@ function RestaurantTab({
             </span>
             <button
               type="button"
-              onClick={() => remove(item.id)}
+              onClick={() => remove(item.id!)}
               className="text-slate-400 hover:text-red-500 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -253,7 +253,7 @@ function RestaurantTab({
               <Label className="text-xs text-slate-500">Plat / Menu</Label>
               <Select
                 value={item.dishId}
-                onValueChange={(v) => update(item.id, "dishId", v)}
+                onValueChange={(v) => update(item.id!, "dishId", v)}
               >
                 <SelectTrigger className="h-9 text-sm bg-white">
                   <SelectValue placeholder="Sélectionner…" />
@@ -276,7 +276,7 @@ function RestaurantTab({
                 placeholder="Ex. 1"
                 className="h-9 text-sm bg-white"
                 value={item.quantity}
-                onChange={(e) => update(item.id, "quantity", e.target.value)}
+                onChange={(e) => update(item.id!, "quantity", e.target.value)}
               />
             </div>
           </div>
@@ -302,7 +302,7 @@ function ActivitiesTab({
   const add = () =>
     onChange([
       ...items,
-      { id: crypto.randomUUID(), activityId: "", duration: "" },
+      {  id: null, activityId: "", duration: "" },
     ]);
 
   const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
@@ -325,7 +325,7 @@ function ActivitiesTab({
             </span>
             <button
               type="button"
-              onClick={() => remove(item.id)}
+              onClick={() => remove(item.id!)}
               className="text-slate-400 hover:text-red-500 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -337,7 +337,7 @@ function ActivitiesTab({
               <Label className="text-xs text-slate-500">Activité</Label>
               <Select
                 value={item.activityId}
-                onValueChange={(v) => update(item.id, "activityId", v)}
+                onValueChange={(v) => update(item.id!, "activityId", v)}
               >
                 <SelectTrigger className="h-9 text-sm bg-white">
                   <SelectValue placeholder="Sélectionner…" />
@@ -360,7 +360,7 @@ function ActivitiesTab({
                 placeholder="Ex. 3"
                 className="h-9 text-sm bg-white"
                 value={item.duration}
-                onChange={(e) => update(item.id, "duration", e.target.value)}
+                onChange={(e) => update(item.id!, "duration", e.target.value)}
               />
             </div>
           </div>
@@ -423,90 +423,54 @@ export function AddPackDetails({
 
 
     // Creation /modification de pack
-    // const handleSubmit = async () => {
-    //   const body: PackEntity = {
-    //     packID: packToEdit?.packID ?? null,  // ← l'ID existant pour l'update
-    //     companyID: user?.profil?.company.companyID!,
-    //     title: form.title,
-    //     discount: Number(form.discount),
-    //     startDate: form.startDate ? new Date(form.startDate) : new Date(),
-    //     endDate: form.endDate ? new Date(form.endDate) : new Date(),
-    //     status: 0,
-    //     skipValidation: false,
-    //     hotelsPack: form.hotelItems.map((item) => ({
-    //       roomID: item.roomId,
-    //       duration: Number(item.duration),
-    //     })),
-    //     activityPack:form.activityItems.map((item) => ({
-    //       activityID: item.activityId,
-    //       duration: Number(item.duration),
-    //     })),
-    //     restoPack: form.restaurantItems.map((item) => ({
-    //       dishID: item.dishId,
-    //       duration: Number(item.quantity),
-    //     })),
-    //   };
-    
-    //   if (packToEdit) {
-    //     await updatePack(body);   // ← update
-    //   } else {
-    //     await createPack(body);   // ← create
-    //   }
-    
-    //   // setRefresh((prev) => prev + 1);
-    //   resetForm();
-    //   onOpenChange(false);
-    // };
-
     const handleSubmit = async () => {
-      try{
-
-        const body: PackEntity = {
-          packID: null,
-          companyID: user?.profil?.company.companyID!,
-          title: form.title,
-          discount: Number(form.discount) ?? 0,
-          startDate: form.startDate ? new Date(form.startDate) : new Date(),
-          endDate: form.endDate ? new Date(form.endDate) : new Date(),
-          status: 0,
-          skipValidation: false,
-        
+      const body: PackEntity = {
+        packID: packToEdit?.packID ?? null,  // ← l'ID existant pour l'update
+        companyID: user?.profil?.company.companyID!,
+        title: form.title,
+        discount: Number(form.discount),
+        startDate: form.startDate ? new Date(form.startDate) : new Date(),
+        endDate: form.endDate ? new Date(form.endDate) : new Date(),
+        status: 0,
+        skipValidation: false,
           hotelsPack: form.hotelItems.map((item) => ({
-            id: null,
+            id: item.id ? item.id : null,
             roomID: item.roomId,
-            duration: Number(item.duration) ?? 0,
+            duration: Number(item.duration),
             status: 0,
             skipValidation: true,
           })),
-        
           activityPack: form.activityItems.map((item) => ({
-            id: null,
+            id: item.id ? item.id : null,
             activityID: item.activityId,
-            duration: Number(item.duration) ?? 0,
+            duration: Number(item.duration),
             status: 0,
             skipValidation: true,
           })),
-        
           restoPack: form.restaurantItems.map((item) => ({
-            id: null,
+            id: item.id ? item.id : null,
             dishID: item.dishId,
-            quantity: Number(item.quantity) ?? 0,
+            quantity: Number(item.quantity),
             status: 0,
             skipValidation: true,
           })),
-        };
-      
-        await createPack(body);
-        resetForm();
-        onOpenChange(false);
-        onSuccess?.();
-        
-    } catch (error) {
-      console.error("Erreur lors de la sauvegarde :", error);
-      }
+      };
+    
+      if (packToEdit) {
+        console.log(body);
+        await updatePack(body);   // ← update
+
+      } else {
+        console.log(body);
+        await createPack(body);   // ← create
+      }  
+      // setRefresh((prev) => prev + 1);
+      resetForm();
+      onOpenChange(false);
+      onSuccess?.();
     };
 
-    // si c'est en mode modification
+    // s'il y a packToEdit c'est en mode modification sinon creation
     useEffect(() => {
       if (packToEdit) {
         setForm({
@@ -515,23 +479,23 @@ export function AddPackDetails({
           startDate: packToEdit.startDate?.toString().split("T")[0] ?? "",
           endDate: packToEdit.endDate?.toString().split("T")[0] ?? "",
           hotelItems: (packToEdit.hotelsPack ?? []).map((h) => ({
-            id: crypto.randomUUID(),
+            id: String(h.id),      // ← vrai ID backend
             roomId: h.roomID,
             duration: String(h.duration),
           })),
           restaurantItems: (packToEdit.restoPack ?? []).map((r) => ({
-            id: crypto.randomUUID(),
+            id: String(r.id),      // ← vrai ID backend
             dishId: r.dishID,
             quantity: String(r.quantity),
           })),
           activityItems: (packToEdit.activityPack ?? []).map((a) => ({
-            id: crypto.randomUUID(),
+            id: String(a.id),      // ← vrai ID backend
             activityId: a.activityID,
             duration: String(a.duration),
           })),
         });
       } else {
-        resetForm(); // mode création → formulaire vide
+        resetForm();
       }
     }, [packToEdit]);
 

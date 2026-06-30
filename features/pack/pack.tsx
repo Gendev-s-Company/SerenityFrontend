@@ -106,10 +106,10 @@ export default function Pack(){
       setOpenModalAddPack(true);
     };
 
-    // const handleUpdatePack = (pack: PackEntity) => {
-    //   setSelectedPack(pack);
-    //   setOpenModalAddPack(true);
-    // };
+    const handleUpdatePack = (pack: PackEntity) => {
+      setSelectedPack(pack);
+      setOpenModalAddPack(true);
+    };
 
     return (
     <div className="container mx-auto py-10 px-3">
@@ -179,12 +179,12 @@ export default function Pack(){
                   >
                   <Info size={15} />
                 </button>
-                {/* <button 
+                <button 
                   className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors" aria-label="Modifier"
                   onClick={() => handleUpdatePack(pack)}
                 >
                   <Edit size={15} />
-                </button> */}
+                </button>
                 <DeleteBox id={pack.packID!} onDelete={() => onDelete(pack.packID)} />
               </div>
             </div>
@@ -240,7 +240,7 @@ export default function Pack(){
         )}
       </div>
 
-      {/* Ajout de nouveau pack */}
+      {/* Ajout/Modification de nouveau pack */}
       <AddPackDetails  openPacks={openModalAddPack} onOpenChange={setOpenModalAddPack} packToEdit={selectedPack} onSuccess={() => setRefresh((prev) => prev + 1)} />
 
       {/* Detail d'un pack */}
