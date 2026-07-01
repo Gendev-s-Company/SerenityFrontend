@@ -1,4 +1,5 @@
 
+import { DishEntity } from "./dishEntity";
 import { PackEntity } from "./packEntity";
 
 export interface PackeRestoDetailsEntity{
@@ -8,5 +9,5 @@ export interface PackeRestoDetailsEntity{
     quantity: number,
     status: number,
     skipValidation: boolean,
-
+    dish?: DishEntity,
 }

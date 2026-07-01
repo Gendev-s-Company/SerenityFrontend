@@ -136,10 +136,13 @@ const add = () =>
     { id: null, roomId: "", duration: "" },
   ]);
 
-  const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
+  
+  const remove = (idx: number) =>
+    onChange(items.filter((_, i) => i !== idx));
 
-  const update = (id: string, field: keyof HotelItem, value: string) =>
-    onChange(items.map((i) => (i.id === id ? { ...i, [field]: value } : i)));
+
+  const update = (idx: number, field: keyof HotelItem, value: string) =>
+    onChange(items.map((item, i) => (i === idx ? { ...item, [field]: value } : item)));
 
 
   return (
@@ -157,7 +160,7 @@ const add = () =>
             </span>
             <button
               type="button"
-              onClick={() => remove(item.id!)}
+              onClick={() => remove(idx)}
               className="text-slate-400 hover:text-red-500 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -169,7 +172,7 @@ const add = () =>
               <Label className="text-xs text-slate-500">Chambre</Label>
               <Select
                 value={item.roomId}
-                onValueChange={(v) => update(item.id!, "roomId", v)}
+                onValueChange={(v) => update(idx, "roomId", v)}
               >
                 <SelectTrigger className="h-9 text-sm bg-white">
                   <SelectValue placeholder="Sélectionner…" />
@@ -192,7 +195,7 @@ const add = () =>
                 placeholder="Ex. 2"
                 className="h-9 text-sm bg-white"
                 value={item.duration}
-                onChange={(e) => update(item.id!, "duration", e.target.value)}
+                onChange={(e) => update(idx, "duration", e.target.value)}
               />
             </div>
           </div>
@@ -221,10 +224,12 @@ function RestaurantTab({
       {  id: null, dishId: "", quantity: "" },
     ]);
 
-  const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
 
-  const update = (id: string, field: keyof RestaurantItem, value: string) =>
-    onChange(items.map((i) => (i.id === id ? { ...i, [field]: value } : i)));
+  const remove = (idx: number) =>
+    onChange(items.filter((_, i) => i !== idx));
+
+  const update = (idx: number, field: keyof RestaurantItem, value: string) =>
+    onChange(items.map((item, i) => (i === idx ? { ...item, [field]: value } : item)));
 
   return (
     <div className="flex flex-col gap-3">
@@ -232,7 +237,7 @@ function RestaurantTab({
 
       {items.map((item, idx) => (
         <div
-          key={item.id}
+          key={idx}
           className="rounded-lg border border-slate-200 bg-slate-50 p-3 flex flex-col gap-3"
         >
           <div className="flex items-center justify-between">
@@ -241,7 +246,7 @@ function RestaurantTab({
             </span>
             <button
               type="button"
-              onClick={() => remove(item.id!)}
+              onClick={() => remove(idx)}
               className="text-slate-400 hover:text-red-500 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -253,7 +258,7 @@ function RestaurantTab({
               <Label className="text-xs text-slate-500">Plat / Menu</Label>
               <Select
                 value={item.dishId}
-                onValueChange={(v) => update(item.id!, "dishId", v)}
+                onValueChange={(v) => update(idx, "dishId", v)}
               >
                 <SelectTrigger className="h-9 text-sm bg-white">
                   <SelectValue placeholder="Sélectionner…" />
@@ -276,7 +281,7 @@ function RestaurantTab({
                 placeholder="Ex. 1"
                 className="h-9 text-sm bg-white"
                 value={item.quantity}
-                onChange={(e) => update(item.id!, "quantity", e.target.value)}
+                onChange={(e) => update(idx, "quantity", e.target.value)}
               />
             </div>
           </div>
@@ -305,10 +310,13 @@ function ActivitiesTab({
       {  id: null, activityId: "", duration: "" },
     ]);
 
-  const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
 
-  const update = (id: string, field: keyof ActivityItem, value: string) =>
-    onChange(items.map((i) => (i.id === id ? { ...i, [field]: value } : i)));
+  const remove = (idx: number) =>
+    onChange(items.filter((_, i) => i !== idx));
+
+
+  const update = (idx: number, field: keyof ActivityItem, value: string) =>
+    onChange(items.map((item, i) => (i === idx ? { ...item, [field]: value } : item)));
 
   return (
     <div className="flex flex-col gap-3">
@@ -316,7 +324,7 @@ function ActivitiesTab({
 
       {items.map((item, idx) => (
         <div
-          key={item.id}
+          key={idx}
           className="rounded-lg border border-slate-200 bg-slate-50 p-3 flex flex-col gap-3"
         >
           <div className="flex items-center justify-between">
@@ -325,7 +333,7 @@ function ActivitiesTab({
             </span>
             <button
               type="button"
-              onClick={() => remove(item.id!)}
+              onClick={() => remove(idx)}
               className="text-slate-400 hover:text-red-500 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
@@ -337,7 +345,7 @@ function ActivitiesTab({
               <Label className="text-xs text-slate-500">Activité</Label>
               <Select
                 value={item.activityId}
-                onValueChange={(v) => update(item.id!, "activityId", v)}
+                onValueChange={(v) => update(idx, "activityId", v)}
               >
                 <SelectTrigger className="h-9 text-sm bg-white">
                   <SelectValue placeholder="Sélectionner…" />
@@ -360,7 +368,7 @@ function ActivitiesTab({
                 placeholder="Ex. 3"
                 className="h-9 text-sm bg-white"
                 value={item.duration}
-                onChange={(e) => update(item.id!, "duration", e.target.value)}
+                onChange={(e) => update(idx, "duration", e.target.value)}
               />
             </div>
           </div>

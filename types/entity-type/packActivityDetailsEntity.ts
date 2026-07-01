@@ -1,3 +1,4 @@
+import { ActivityEntity } from "./activityEntity";
 import { PackEntity } from "./packEntity";
 
 export interface PackActivityDetailsEntity{
@@ -7,5 +8,5 @@ export interface PackActivityDetailsEntity{
     duration: number,
     status: number,
     skipValidation: boolean,
-
+    activity?:ActivityEntity,
 }

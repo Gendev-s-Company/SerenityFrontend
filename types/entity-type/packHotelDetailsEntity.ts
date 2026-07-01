@@ -1,4 +1,5 @@
 import { PackEntity } from "./packEntity";
+import { RoomEntity } from "./roomEntity";
 
 
 export interface PackHotelDetailsEntity{
@@ -8,4 +9,5 @@ export interface PackHotelDetailsEntity{
     duration: number,
     status: number,
     skipValidation: boolean,
+    room?:RoomEntity,
 }
