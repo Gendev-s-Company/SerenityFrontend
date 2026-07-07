@@ -6,7 +6,7 @@ import { PackEntity } from "@/types/entity-type/packEntity";
 import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 import { PaginationState } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { BadgePercent, CalendarClock, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Hotel, Info, Package, Percent, Plus, Search, Sparkles, Trash, UtensilsCrossed } from "lucide-react";
 
 import DeleteBox from "@/components/delete/delete-box";
