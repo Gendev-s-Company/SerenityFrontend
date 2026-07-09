@@ -10,7 +10,38 @@ import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
+import { ReceiptText } from "lucide-react";
+import UpdateBox from "@/components/update/update-box";
+import DeleteBox from "@/components/delete/delete-box";
+import InvoicePreviewModal from "@/features/invoice/invoice/InvoicePreviewModal";
+import { InvoiceData, sampleInvoice } from "@/lib/invoice-data";
 
+function mapRowToInvoice(row: any): InvoiceData {
+  // adapte les champs à la forme réelle de ton `row`
+  return {
+    invoiceNumber: row.invoiceNumber ?? row.id,
+    date: row.date,
+    dueDate: row.dueDate,
+    taxRate: row.taxRate ?? 0.3,
+    company: {
+      name: row.company?.name ?? "Studio Salford",
+      phone: row.company?.phone ?? "",
+      mail: row.company?.mail ?? "",
+      address: row.company?.address ?? "",
+    },
+    billedTo: {
+      name: row.clientName,
+      phone: row.clientPhone,
+      address: row.clientAddress,
+    },
+    payment: {
+      accountHolder: row.payment?.accountHolder ?? "",
+      bank: row.payment?.bank ?? "",
+      accountNumber: row.payment?.accountNumber ?? "",
+    },
+    items: row.items ?? [],
+  };
+}
 export default function Customer(){
     const[customer,setCustomer]=useState<CustomerEntity[]>([]);
     const [refresh, setRefresh] = useState<number>(0);
@@ -24,6 +55,9 @@ export default function Customer(){
     });
     const [loading, setLoading] = useState(true)
     const user = getLocalStorage()!;
+    // 1. état pour la facture actuellement en aperçu
+    const [previewInvoice, setPreviewInvoice] = useState<InvoiceData | null>(null);
+    const [openInvoiceModal, setOpenInvoiceModal] = useState(false);
 
     useEffect(() => {
        // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -64,6 +98,12 @@ export default function Customer(){
         setRefresh((prev) => prev + 1);
       }
     };
+    
+  // la fonction que ton bouton appelle déjà
+    function printReceipt(row: any) {
+      setPreviewInvoice(mapRowToInvoice(row));
+      setOpenInvoiceModal(true);
+    }
 
     const btnAction: ColumnConfig<CustomerEntity> = {
       key: "action_btn",
@@ -73,6 +113,29 @@ export default function Customer(){
       onUpdate: (row) => onUpdate(row),
       onDelete: (row) => onDelete(row.customerID),
       onClick: (row) => console.log("Editer", row.customerID),
+      cell: (row: CustomerEntity) => {
+        return (
+          <div className="flex gap-2">
+            {/* Impression de facture */}
+              <button 
+                className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-white text-green-600 hover:bg-blue-50 transition-colors" 
+                aria-label="Modifier"
+                onClick={() => printReceipt(row)}
+              >
+                <ReceiptText size={15} className="text-green-600" />
+              </button>     
+
+
+            {/* Modifier */}
+            <UpdateBox body={row} onUpdate={onUpdate} fields={CustomerNamefield} />
+
+            {/* Supprimer  */}
+            <DeleteBox id={row.customerID!} onDelete={() => onDelete(row.customerID)} />
+          </div>
+
+        )
+
+      }
     };
 
     const columns = useMemo(() => {
@@ -125,6 +188,9 @@ export default function Customer(){
             authority={user?.profil?.authority}
           />
         </div>
+        
+        {/* Detail de la facture d'un client */}
+        <InvoicePreviewModal invoice={previewInvoice} open={openInvoiceModal} onOpenChange={setOpenInvoiceModal}/>         
       </div>
     );
     

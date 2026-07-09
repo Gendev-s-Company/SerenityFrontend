@@ -1,11 +1,11 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Calendar, LayoutDashboard, User } from "lucide-react";
 import { HotelItems } from "./hotel-menu";
 import { RestoItems } from "./restaurant-menu";
 import { UsersItems } from "./users-menu";
 import { PackItems } from "./pack-menu";
 import { CustomerItems } from "./customer-menu";
-import { DashboardItems } from "./dashboad-menu";
+import { DashboardItems } from "./dashboard-menu";
+import { InvoiceItems } from "./invoice-menu";
 
 // Menu items.
 export const items: PMenu[] = [
@@ -15,6 +15,7 @@ export const items: PMenu[] = [
   RestoItems,
   HotelItems,
   PackItems,
+  InvoiceItems,
   // {
   //   title: "HOTEL",
   //   url: "/view/hotel/room/roomGallery",
