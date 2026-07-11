@@ -45,7 +45,7 @@ function EntityBadge({ count, label, icon, className }: {
 }
 
 
-export default function Pack(){
+export default function  Pack(){
     const user = getLocalStorage();
     const [pack, setPack]= useState<PackEntity[]>([]);
     const [refresh, setRefresh]= useState<number>(0);
@@ -63,7 +63,15 @@ export default function Pack(){
     const [openDetails, setOpenDetails] = useState(false);
     const [openModalAddPack, setOpenModalAddPack] = useState(false);
     const [selectedPack,setSelectedPack]=useState<PackEntity|null>();
-    const [search, setSearch] = useState("");    
+    const [search, setSearch] = useState("");   
+ 
+    const benefitsincluded = (pack: PackEntity) => {
+      const activityCount = pack.activityPack?.length ?? 0;
+      const hotelCount = pack.hotelsPack?.length ?? 0;
+      const restoCount = pack.restoPack?.length ?? 0;
+      
+      return activityCount || hotelCount || restoCount;
+    }
 
     const filtered = pack.filter((p) =>
       p.title.toLowerCase().includes(search.toLowerCase())
@@ -138,7 +146,11 @@ export default function Pack(){
         
         {/* Liste */}
         <div className="relative border rounded-xl bg-slate-50/50 flex flex-col gap-3 p-3">
-          {filtered.map((pack) => (
+        {filtered.length === 0 && (
+          <p className="text-gray-500 text-center py-4">Aucun pack trouvé.</p>
+        )}
+        {filtered.length > 0 && (
+          filtered.map((pack) => (
             <div
               key={pack.packID}
               className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-5 py-4"
@@ -149,7 +161,7 @@ export default function Pack(){
                     <Package size={17} className="text-gray-400" />
                     {pack.title}
                   </p>
-                  <span className="text-xs font-medium text-gray-400">inclus :</span>
+                  <span className="text-xs font-medium text-gray-400">{benefitsincluded(pack) ? 'inclus: ':'Aucun avantage inclus' }</span>
                   <EntityBadge count={pack.activityPack?.length ?? 0} label="activité" icon={<Sparkles size={12} />} className="bg-purple-500 text-white border-purple-50" />
                   <EntityBadge count={pack.hotelsPack?.length ?? 0} label="hôtel" icon={<Hotel size={12} />} className="bg-blue-500 text-white border-blue-50" />
                   <EntityBadge count={pack.restoPack?.length ?? 0} label="resto" icon={<UtensilsCrossed size={12} />} className="bg-orange-500 text-white border-orange-50" />
@@ -188,13 +200,13 @@ export default function Pack(){
                 <DeleteBox id={pack.packID!} onDelete={() => onDelete(pack.packID)} />
               </div>
             </div>
-          ))}
+          )))}
         </div>
         
         {/* Pagination */}
         {all.totalPage > 1 && (
           <div className="flex items-center justify-between text-sm text-gray-500">
-            <span>{filtered.length} élément{filtered.length > 1 ? "s" : ""}</span>
+            <span>{filtered.length} sur {all.totalElement} élément{filtered.length > 1 ? "s" : ""}</span>
             <div className="flex items-center gap-1">
               <button
                 disabled={page.pageIndex === 0}
