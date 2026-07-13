@@ -75,12 +75,12 @@ export default function AuthenticationPage() {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Mot de passe</Label>
-                  <a
+                  {/* <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Mot de passe oublié?
-                  </a>
+                  </a> */}
                 </div>
                 <Input
                   id="password"

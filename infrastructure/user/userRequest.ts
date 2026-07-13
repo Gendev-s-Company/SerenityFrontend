@@ -27,7 +27,7 @@ export const deleteUser = async (id: string) => {
 export const login = async (body:unknown) => {
     return await postCall<UserEntity>(`/auth/login`, body);
 }
-export const updatePassword = async ({userID, newPwd, oldpwd}:{userID:string, newPwd: string, oldpwd:string}) =>{
-    const uri = `/auth/password/${userID}?oldPassword=${oldpwd}&newPassword=${newPwd}`
+export const updatePassword = async ({userID,name,phone, newPwd, oldpwd,confirmpwd}:{userID:string, name:string, phone:string, newPwd: string, oldpwd:string,confirmpwd: string}) =>{
+    const uri = `/auth/password/${userID}?oldPassword=${oldpwd}&newPassword=${newPwd}&confirmedPassword=${confirmpwd}`
     return await putCall<unknown>(uri,undefined);
 }
