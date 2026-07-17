@@ -14,6 +14,7 @@ import PackDetails from "./packDetails/packDetails";
 import { timestampToText } from "@/utils/Util";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AddPackDetails } from "./packDetails/addPackDetails";
+import { title } from "process";
 
 const tags = {
   reduction: "bg-amber-50 text-amber-800 border border-amber-300",
@@ -47,7 +48,7 @@ function EntityBadge({ count, label, icon, className }: {
 
 export default function  Pack(){
     const user = getLocalStorage();
-    const [pack, setPack]= useState<PackEntity[]>([]);
+    const [packs, setPacks]= useState<PackEntity[]>([]);
     const [refresh, setRefresh]= useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState<PaginationState>({
@@ -63,7 +64,8 @@ export default function  Pack(){
     const [openDetails, setOpenDetails] = useState(false);
     const [openModalAddPack, setOpenModalAddPack] = useState(false);
     const [selectedPack,setSelectedPack]=useState<PackEntity|null>();
-    const [search, setSearch] = useState("");   
+    const [search, setSearch] = useState(""); 
+    const [filteredPacks,setFilteredPacks]=useState<PackEntity[]>([]);
  
     const benefitsincluded = (pack: PackEntity) => {
       const activityCount = pack.activityPack?.length ?? 0;
@@ -73,9 +75,18 @@ export default function  Pack(){
       return activityCount || hotelCount || restoCount;
     }
 
-    const filtered = pack.filter((p) =>
-      p.title.toLowerCase().includes(search.toLowerCase())
-    );
+    const handleSearch = () => {
+      if (!search.trim()) {
+        setFilteredPacks(packs);
+        return;
+      }
+    
+      const result = packs.filter((pack) =>
+        pack.title.toLowerCase().includes(search.toLowerCase())
+      );
+
+      setFilteredPacks(result);
+    };
 
     // Liste des packs
     useEffect(()=>{
@@ -83,11 +94,12 @@ export default function  Pack(){
         if (user && user.profil.company.companyID){
             getPaginatePack(user.profil.company.companyID,page.pageIndex,page.pageSize)
             .then((data)=>{
-                setPack(data.content);
+                setPacks(data.content);
                   setAll({
                     totalElement: data.page.totalElements,
                     totalPage: data.page.totalPages,
                   })
+                  
                 setLoading(false);
             })
             .catch((error)=>{
@@ -96,6 +108,10 @@ export default function  Pack(){
             })
         }
     },[refresh, page])
+
+    useEffect(() => {
+      setFilteredPacks(packs);
+    }, [packs]);
     
     const onDelete = async (id: string | null) => {
       if (id !== null) {
@@ -123,52 +139,75 @@ export default function  Pack(){
     <div className="container mx-auto py-10 px-3">
       <div className="w-full max-w-6xl mx-auto flex flex-col gap-4 border rounded-xl bg-slate-50/50 py-10 px-4">
         <h2 className="text-xl font-semibold">{"Liste des packs"}</h2>
-        {/* Barre d'outils */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="relative flex-1 max-w-sm">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Rechercher un pack..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value)}}
-              className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
-            />
+        {/* Barre de recherche */}
+          <div className="flex items-center justify-between gap-3">
+
+            {/* Groupe recherche */}
+            <div className="flex items-center gap-2">
+
+              <div className="relative w-64">
+                <Search
+                  size={15}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+
+                <input
+                  type="text"
+                  placeholder={'Tapez le titre du pack'}
+                  value={search}
+                  onChange={(e)=>setSearch(e.target.value)}
+                  className="h-10 w-full pl-9 pr-3 text-sm rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+
+
+              <button
+                className="h-10 inline-flex items-center justify-center gap-1.5 px-4 rounded-xl border border-slate-500 bg-slate-500 text-white text-sm font-medium transition-colors hover:bg-slate-600"
+                onClick={handleSearch}
+              >
+                <Search size={15} />
+                Rechercher
+              </button>
+
+            </div>
+
+
+            {/* Bouton ajouter à droite */}
+            <button
+              className="h-10 w-10 inline-flex items-center justify-center rounded-full border border-slate-500 bg-slate-500 text-white transition-colors hover:bg-slate-600"
+              onClick={() => handleAddPack()}
+              title="Ajouter un pack"
+            >
+              <Plus size={16} />
+            </button>
+
           </div>
-          <button
-            // onClick={handleAdd}
-            className="inline-flex items-center gap-1.5 px-3 py-3 text-sm font-medium rounded-full border border-slate-500 text-white bg-slate-500 hover:bg-slate-600 transition-colors"
-            onClick={() => handleAddPack()}
-          >
-            <Plus size={15} /> 
-          </button>
-        </div>
         
         {/* Liste */}
         <div className="relative border rounded-xl bg-slate-50/50 flex flex-col gap-3 p-3">
-        {filtered.length === 0 && (
+        {filteredPacks.length === 0 && (
           <p className="text-gray-500 text-center py-4">Aucun pack trouvé.</p>
         )}
-        {filtered.length > 0 && (
-          filtered.map((pack) => (
-            <div className="flex items-center justify-between gap-5 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md">
-                      
+        {filteredPacks.length > 0 && (
+          filteredPacks.map((pack,index) => (
+            <div key={index} className="flex items-center justify-between gap-5 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md">
+
               {/* Informations */}
               <div className="flex-1 min-w-0">
-                      
+
                 {/* Header */}
                 <div className="flex items-center justify-between gap-3 mb-3">
-                      
+
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100">
                       <Package size={18} className="text-slate-600" />
                     </div>
-                      
+
                     <div className="min-w-0">
                       <h3 className="truncate text-sm font-semibold text-gray-900">
                         {pack.title}
                       </h3>
-                      
+
                       <p className="text-xs text-gray-400">
                         {benefitsincluded(pack)
                           ? "Avantages inclus"
@@ -193,7 +232,7 @@ export default function  Pack(){
                       Inactif
                     </span>
                   )}
-            
+
                 </div>
                 
                 
@@ -210,21 +249,21 @@ export default function  Pack(){
                     icon={<Sparkles size={12} />}
                     className="bg-purple-500 text-white border-purple-50"
                   />
-            
+
                   <EntityBadge
                     count={pack.hotelsPack?.length ?? 0}
                     label="hôtel"
                     icon={<Hotel size={12} />}
                     className="bg-blue-500 text-white border-blue-50"
                   />
-            
+
                   <EntityBadge
                     count={pack.restoPack?.length ?? 0}
                     label="resto"
                     icon={<UtensilsCrossed size={12} />}
                     className="bg-orange-500 text-white border-orange-50"
                   />
-            
+
                 </div>
                 
                 
@@ -286,7 +325,7 @@ export default function  Pack(){
                   id={pack.packID!}
                   onDelete={() => onDelete(pack.packID)}
                 />
-            
+
               </div>
                 
             </div>
@@ -298,12 +337,12 @@ export default function  Pack(){
           <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-3">
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <span className="font-medium text-gray-800">
-                {filtered.length}
+                {filteredPacks.length}
               </span>
                   
               <span>
-                pack{filtered.length > 1 ? "s" : ""} trouvée
-                {filtered.length > 1 ? "s" : ""}
+                pack{filteredPacks.length > 1 ? "s" : ""} trouvée
+                {filteredPacks.length > 1 ? "s" : ""}
               </span>
                   
               <span className="text-gray-300">•</span>

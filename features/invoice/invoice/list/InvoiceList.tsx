@@ -203,7 +203,7 @@ export default function InvoiceList() {
           filteredBillings.map((invoice) => (
             <div
               key={invoice.billID}
-              className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-5 py-4"
+              className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md"
             >
               <div className="flex-1 min-w-0">
                 {/* Titre */}
