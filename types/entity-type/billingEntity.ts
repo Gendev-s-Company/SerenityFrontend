@@ -2,9 +2,10 @@ import { CustomerEntity } from "./customerEntity";
 
 export interface BillingEntity {
     billID: string | null,
-    customer: string,
+    customerID: string,
+    taxe: number,
     status: number,
-    billingDate: Date,
+    billingDate: Date,  
     dueDate: Date,
     totalAmount: number,
 }

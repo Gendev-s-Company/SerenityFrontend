@@ -25,9 +25,9 @@ export default function AuthenticationPage() {
     userID: "",
     name: "UXUS",
     profil: "cdc",
-    phone: "0320876534",
+    phone: "0341119857",
     joineddate: "",
-    password: "1234",
+    password: "123456",
     status: 0,
   };
   const forms = useForm(body);
