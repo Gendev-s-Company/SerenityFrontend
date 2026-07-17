@@ -151,62 +151,171 @@ export default function  Pack(){
         )}
         {filtered.length > 0 && (
           filtered.map((pack) => (
-            <div
-              key={pack.packID}
-              className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-5 py-4"
-            >
+            <div className="flex items-center justify-between gap-5 rounded-2xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md">
+                      
+              {/* Informations */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center flex-wrap gap-2 mb-2.5">
-                  <p className="font-semibold text-gray-900 flex items-center gap-2 m-0">
-                    <Package size={17} className="text-gray-400" />
-                    {pack.title}
-                  </p>
-                  <span className="text-xs font-medium text-gray-400">{benefitsincluded(pack) ? 'inclus: ':'Aucun avantage inclus' }</span>
-                  <EntityBadge count={pack.activityPack?.length ?? 0} label="activité" icon={<Sparkles size={12} />} className="bg-purple-500 text-white border-purple-50" />
-                  <EntityBadge count={pack.hotelsPack?.length ?? 0} label="hôtel" icon={<Hotel size={12} />} className="bg-blue-500 text-white border-blue-50" />
-                  <EntityBadge count={pack.restoPack?.length ?? 0} label="resto" icon={<UtensilsCrossed size={12} />} className="bg-orange-500 text-white border-orange-50" />
-                </div>
-                <div className="flex flex-wrap gap-2 text-sm text-gray-500">
-                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.reduction}`}>
-                    <BadgePercent size={13} /> -{pack.discount}%
-                  </span>
-                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.periode}`}>
-                    <CalendarClock size={13} /> {timestampToText(pack.startDate)} → {timestampToText(pack.endDate)}
-                  </span>
+                      
+                {/* Header */}
+                <div className="flex items-center justify-between gap-3 mb-3">
+                      
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100">
+                      <Package size={18} className="text-slate-600" />
+                    </div>
+                      
+                    <div className="min-w-0">
+                      <h3 className="truncate text-sm font-semibold text-gray-900">
+                        {pack.title}
+                      </h3>
+                      
+                      <p className="text-xs text-gray-400">
+                        {benefitsincluded(pack)
+                          ? "Avantages inclus"
+                          : "Aucun avantage inclus"}
+                      </p>
+                    </div>
+                  </div>
+                        
+                  {/* Statut */}
                   {pack.status === 0 ? (
-                    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.actif}`}>
-                      <CircleCheck size={13} /> Actif
+                    <span
+                      className={`inline-flex shrink-0 items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.actif}`}
+                    >
+                      <CircleCheck size={13} />
+                      Actif
                     </span>
                   ) : (
-                    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.inactif}`}>
-                      <CircleX size={13} /> Inactif
+                    <span
+                      className={`inline-flex shrink-0 items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.inactif}`}
+                    >
+                      <CircleX size={13} />
+                      Inactif
                     </span>
                   )}
+            
                 </div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button 
-                  className="p-1.5 rounded-md border border-blue-200 text-blue-500 hover:bg-blue-50 transition-colors" aria-label="Voir les détails"
-                  onClick={() => handleViewDetails(pack)} 
+                
+                
+                {/* Entity badges */}
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                
+                  <span className="text-xs font-medium text-gray-400">
+                    Inclus :
+                  </span>
+                
+                  <EntityBadge
+                    count={pack.activityPack?.length ?? 0}
+                    label="activité"
+                    icon={<Sparkles size={12} />}
+                    className="bg-purple-500 text-white border-purple-50"
+                  />
+            
+                  <EntityBadge
+                    count={pack.hotelsPack?.length ?? 0}
+                    label="hôtel"
+                    icon={<Hotel size={12} />}
+                    className="bg-blue-500 text-white border-blue-50"
+                  />
+            
+                  <EntityBadge
+                    count={pack.restoPack?.length ?? 0}
+                    label="resto"
+                    icon={<UtensilsCrossed size={12} />}
+                    className="bg-orange-500 text-white border-orange-50"
+                  />
+            
+                </div>
+                
+                
+                {/* Tags */}
+                <div className="flex flex-wrap items-center gap-2">
+                
+                  <span
+                    className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.reduction}`}
                   >
-                  <Info size={15} />
-                </button>
-                <button 
-                  className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors" aria-label="Modifier"
-                  onClick={() => handleUpdatePack(pack)}
-                >
-                  <Edit size={15} />
-                </button>
-                <DeleteBox id={pack.packID!} onDelete={() => onDelete(pack.packID)} />
+                    <BadgePercent size={13} />
+                    -{pack.discount}%
+                  </span>
+                
+                
+                  <span
+                    className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.periode}`}
+                  >
+                    <CalendarClock size={13} />
+                    {timestampToText(pack.startDate)}
+                    <span>→</span>
+                    {timestampToText(pack.endDate)}
+                  </span>
+                
+                </div>
+                
               </div>
+                
+                
+              {/* Actions */}
+              <div className="flex items-center rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden shrink-0">
+                
+                <button
+                  onClick={() => handleViewDetails(pack)}
+                  aria-label="Voir les détails"
+                  title="Voir les détails"
+                  className="flex h-10 w-10 items-center justify-center text-blue-600 transition-colors hover:bg-blue-50"
+                >
+                  <Info size={16}/>
+                </button>
+                
+                
+                <div className="h-5 w-px bg-gray-200" />
+                
+                
+                <button
+                  onClick={() => handleUpdatePack(pack)}
+                  aria-label="Modifier"
+                  title="Modifier"
+                  className="flex h-10 w-10 items-center justify-center text-amber-600 transition-colors hover:bg-amber-50"
+                >
+                  <Edit size={16}/>
+                </button>
+                
+                
+                <div className="h-5 w-px bg-gray-200" />
+                
+                
+                <DeleteBox
+                  id={pack.packID!}
+                  onDelete={() => onDelete(pack.packID)}
+                />
+            
+              </div>
+                
             </div>
           )))}
         </div>
         
         {/* Pagination */}
         {all.totalPage > 1 && (
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <span>{filtered.length} sur {all.totalElement} élément{filtered.length > 1 ? "s" : ""}</span>
+          <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-3">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span className="font-medium text-gray-800">
+                {filtered.length}
+              </span>
+                  
+              <span>
+                pack{filtered.length > 1 ? "s" : ""} trouvée
+                {filtered.length > 1 ? "s" : ""}
+              </span>
+                  
+              <span className="text-gray-300">•</span>
+                  
+              <span>
+                Page <span className="font-semibold text-gray-800">{page.pageIndex + 1}</span>
+                {" / "}
+                <span className="font-semibold text-gray-800">{all.totalPage}</span>
+              </span>
+            </div>   
+
+            {/* Navigation */}
             <div className="flex items-center gap-1">
               <button
                 disabled={page.pageIndex === 0}
@@ -216,7 +325,7 @@ export default function  Pack(){
                     pageIndex: prev.pageIndex - 1,
                   }))
                 }               
-                className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm transition-all hover:bg-gray-50 hover:shadow disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label="Page précédente"
               >
                 <ChevronLeft size={15} />
@@ -225,10 +334,10 @@ export default function  Pack(){
                 <button
                   key={n}
                   onClick={() => setPage((prev) => ({ ...prev, pageIndex: n - 1 }))}
-                  className={`w-8 h-8 rounded-md border text-xs font-medium transition-colors ${
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition-all ${
                     n === page.pageIndex + 1
-                      ? "border-blue-200 bg-blue-50 text-blue-600"
-                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                      ? "bg-slate-600 text-white shadow-md"
+                      : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:shadow"
                   }`}
                 >
                   {n}
@@ -242,7 +351,7 @@ export default function  Pack(){
                     pageIndex: prev.pageIndex + 1,
                   }))
                 }
-                className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm transition-all hover:bg-gray-50 hover:shadow disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label="Page suivante"
               >
                 <ChevronRight size={15} />

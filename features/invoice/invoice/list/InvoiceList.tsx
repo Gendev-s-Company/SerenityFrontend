@@ -1,87 +1,90 @@
 "use client";
 import DeleteBox from "@/components/delete/delete-box";
-import { deleteInvoice, updateInvoice } from "@/infrastructure/invoice/invoiceRequest";
+import { deleteInvoice, getPaginateCustomerInvoice, updateInvoice, updateInvoiceState } from "@/infrastructure/invoice/invoiceRequest";
 import { PageType } from "@/types/component-type/PageType";
 import { BillingEntity } from "@/types/entity-type/billingEntity";
 import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 import { timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
-import { BadgePercent, CalendarClock, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Info, Receipt, ReceiptText, Search } from "lucide-react";
+import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Info, Percent, Receipt, ReceiptText, Search, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const tags = {
-  reduction: "bg-amber-50 text-amber-800 border border-amber-300",
-  periode: "bg-blue-50 text-blue-800 border border-blue-200",
-  actif: "bg-green-50 text-green-800 border border-green-300",
-  inactif: "bg-red-50 text-red-800 border border-red-200",
-};
+
 
 // Donnee Mock pour les factures (à remplacer par des données réelles)
 export const mockBillings: BillingEntity[] = [
   {
     billID: "BILL-001",
-    customer:  "Jean Dupont" ,
+    customerID:  "Jean Dupont" ,
     status: 0, // ex: en attente
     billingDate: new Date("2026-06-01"),
     dueDate: new Date("2026-06-15"),
     totalAmount: 1250.5,
+    taxe: 0.2
   },
   {
     billID: "BILL-002",
-    customer:  "Marie Lefebvre" ,
+    customerID:  "Marie Lefebvre" ,
     status: 1, // ex: payée
     billingDate: new Date("2026-06-05"),
     dueDate: new Date("2026-06-20"),
     totalAmount: 340.0,
+    taxe: 0.2
   },
   {
     billID: "BILL-003",
-    customer:  "Société Rakoto SARL" ,
+    customerID:  "Société Rakoto SARL" ,
     status: 2, // ex: en retard
     billingDate: new Date("2026-05-10"),
     dueDate: new Date("2026-05-25"),
     totalAmount: 9800.75,
+    taxe: 0.2
   },
   {
     billID: "BILL-004", // ex: facture brouillon, pas encore générée
-    customer:  "Andriamana Solofo" ,
+    customerID:  "Andriamana Solofo" ,
     status: 3, // ex: brouillon
     billingDate: new Date("2026-07-01"),
     dueDate: new Date("2026-07-15"),
     totalAmount: 0,
+    taxe: 0.2
   },
     {
     billID: "BILL-005",
-    customer:  "Jean Dupont" ,
+    customerID:  "Jean Dupont" ,
     status: 0, // ex: en attente
     billingDate: new Date("2026-06-01"),
     dueDate: new Date("2026-06-15"),
     totalAmount: 1250.5,
+    taxe: 0.2
   },
   {
     billID: "BILL-006",
-    customer:  "Marie Lefebvre" ,
+    customerID:  "Marie Lefebvre" ,
     status: 1, // ex: payée
     billingDate: new Date("2026-06-05"),
     dueDate: new Date("2026-06-20"),
     totalAmount: 340.0,
+    taxe: 0.2
   },
   {
     billID: "BILL-007",
-    customer:  "Société Rakoto SARL" ,
+    customerID:  "Société Rakoto SARL" ,
     status: 2, // ex: en retard
     billingDate: new Date("2026-05-10"),
     dueDate: new Date("2026-05-25"),
     totalAmount: 9800.75,
+    taxe: 0.2
   },
   {
     billID: "BILL-008", // ex: facture brouillon, pas encore générée
-    customer:  "Andriamana Solofo" ,
+    customerID:  "Andriamana Solofo" ,
     status: 3, // ex: brouillon
     billingDate: new Date("2026-07-01"),
     dueDate: new Date("2026-07-15"),
     totalAmount: 0,
+    taxe: 0.2
   },
 ];
 
@@ -102,16 +105,15 @@ export default function InvoiceList() {
     const [openDetails, setOpenDetails] = useState(false);
     const [openInvoiceDetails, setOpenInvoiceDetails] = useState(false);
     const [search, setSearch] = useState("");
-    const [dateFrom, setDateFrom] = useState<string>("");
-    const [dateTo, setDateTo] = useState<string>("");
+    const [filteredBillings,setFilteredBillings]= useState(mockBillings);
     
     useEffect(()=>{
         setLoading(true);
         // Future requete facturation clients
         // if (user && user.profil.company.companyID){
-        //     getPaginatePack(user.profil.company.companyID,page.pageIndex,page.pageSize)
+        //     getPaginateCustomerInvoice(user.profil.company.companyID,page.pageIndex,page.pageSize)
         //     .then((data)=>{
-        //         setPack(data.content);
+        //         setInvoices(data.content);
         //           setAll({
         //             totalElement: data.page.totalElements,
         //             totalPage: data.page.totalPages,
@@ -124,31 +126,39 @@ export default function InvoiceList() {
         //     })
         // }
         setAll({
-          totalElement: mockBillings.length,
-          totalPage: Math.ceil(mockBillings.length / page.pageSize),
+          totalElement: filteredBillings.length,
+          totalPage: Math.ceil(filteredBillings.length / page.pageSize),
         });
     },[refresh, page])
 
-    const filtered = mockBillings.filter((b) => {
-      const matchesName = b.customer
-        .toLowerCase()
-        .includes(search.toLowerCase());
+    // Filtre par date
+    // A corriger avec les donnees dynamiques
+    const handleSearch = () => {
+      const filtered = mockBillings.filter((b) => {
+        const invoiceDate = new Date(b.billingDate);
+      
+        const matchesFrom = search
+          ? invoiceDate >= new Date(search)
+          : true;
+      
+        const matchesTo = search
+          ? invoiceDate <= new Date(search)
+          : true;
+      
+        return matchesFrom && matchesTo;
+      });
+    
+      setFilteredBillings(filtered);
+    };
 
-      const invoiceDate = new Date(b.billingDate); // b.billingDate doit être parsable par `new Date(...)`
-
-      const matchesFrom = dateFrom ? invoiceDate >= new Date(dateFrom) : true;
-      const matchesTo = dateTo ? invoiceDate <= new Date(dateTo) : true;
-
-      return matchesName && matchesFrom && matchesTo;
-    });
 
     const onDelete = async (id: string) => {
         await deleteInvoice(id);
         setRefresh((prev) => prev + 1);
     }
 
-    const onUpdate= async (invoice: BillingEntity) => {
-        await updateInvoice(invoice);
+    const onUpdate= async (invoice: BillingEntity,state: number) => {
+        await updateInvoiceState(invoice,state);
     }
 
     const handleViewDetails = (invoice: BillingEntity) => {
@@ -159,80 +169,167 @@ export default function InvoiceList() {
     <div className="container mx-auto py-10 px-3">
       <div className="w-full max-w-6xl mx-auto flex flex-col gap-4 border rounded-xl bg-slate-50/50 py-10 px-4">
         <h2 className="text-xl font-semibold">{"Liste des factures client"}</h2>
-        {/* Barre d'outils */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="relative flex-1 max-w-sm">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="date"
-              placeholder="Rechercher une facture..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value)}}
-              className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
-            />
+        {/* Barre de recherche */}
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 max-w-sm">
+              <Search
+                size={15}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              />
+
+              <input
+                type="date"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-10 w-full pl-9 pr-3 text-sm rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+              />
+            </div>
+
+            <button
+              className="h-10 inline-flex items-center justify-center gap-1.5 px-4 rounded-xl border border-slate-500 bg-slate-500 text-white text-sm font-medium transition-colors hover:bg-slate-600"
+              onClick={handleSearch}
+            >
+              <Search size={15} />
+              Rechercher
+            </button>
           </div>
-          {/* <button
-            // onClick={handleAdd}
-            className="inline-flex items-center gap-1.5 px-3 py-3 text-sm font-medium rounded-full border border-slate-500 text-white bg-slate-500 hover:bg-slate-600 transition-colors"
-            onClick={() => handleAddPack()}
-          >
-            <Plus size={15} /> 
-          </button> */}
-        </div>
         
         {/* Liste */}
         <div className="relative border rounded-xl bg-slate-50/50 flex flex-col gap-3 p-3">
-        {filtered.length === 0 && (
-          <p className="text-gray-500 text-center py-4">Aucun facture trouvé.</p>
+        {filteredBillings.length === 0 && (
+          <p className="text-gray-500 text-center py-4">Aucune facture trouvé.</p>
         )}
-        {filtered.length > 0 && (
-          filtered.map((invoice) => (
+        {filteredBillings.length > 0 && (
+          filteredBillings.map((invoice) => (
             <div
               key={invoice.billID}
               className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-5 py-4"
             >
               <div className="flex-1 min-w-0">
-                <div className="flex items-center flex-wrap gap-2 mb-2.5">
-                  <p className="font-semibold text-gray-900 flex items-center gap-2 m-0">
-                    <ReceiptText size={17} className="text-gray-400" />
-                     <span className="text-xs font-medium text-gray-400">Facture N°{invoice.billID} </span> de {invoice.customer}
-                  </p>
-                  {/* <EntityBadge count={invoice.activityPack?.length ?? 0} label="activité" icon={<Sparkles size={12} />} className="bg-purple-500 text-white border-purple-50" />
-                  <EntityBadge count={invoice.hotelsPack?.length ?? 0} label="hôtel" icon={<Hotel size={12} />} className="bg-blue-500 text-white border-blue-50" />
-                  <EntityBadge count={invoice.restoPack?.length ?? 0} label="resto" icon={<UtensilsCrossed size={12} />} className="bg-orange-500 text-white border-orange-50" /> */}
+                {/* Titre */}
+                <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
+                      <ReceiptText size={18} className="text-blue-600" />
+                    </div>
+                    {/* N° Facture et Nom du client */}
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900">
+                        Facture #{invoice.billID}
+                      </h3>
+
+                      <p className="text-xs text-gray-500">
+                        Client
+                        <span title={invoice.customerID} className="ml-1 font-medium text-gray-700">
+                          {invoice.customerID}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Etat de la facture :Payé/Non payé */}
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+                      invoice.status === 1
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {invoice.status === 1 ? (
+                      <>
+                        <CircleCheck size={13} />
+                        Payée
+                      </>
+                    ) : (
+                      <>
+                        <CircleX size={13} />
+                        Non payée
+                      </>
+                    )}
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2 text-sm text-gray-500">
-                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.reduction}`}>
-                    <Receipt size={13} /> {invoice.totalAmount}
-                  </span>
-                  <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.periode}`}>
-                    <CalendarClock size={13} /> {timestampToText(invoice.billingDate)} → {timestampToText(invoice.dueDate)}
-                  </span>
-                  {invoice.status === 0 ? (
-                    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.actif}`}>
-                      <CircleCheck size={13} /> Payé
-                    </span>
-                  ) : (
-                    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${tags.inactif}`}>
-                      <CircleX size={13} /> Non payé
-                    </span>
-                  )}
+                  
+                {/* Informations */}
+                <div className="grid gap-2 sm:grid-cols-3">
+                  
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
+                      <Receipt size={14} />
+                      Montant
+                    </div>
+                  
+                    <p className="mt-1 text-lg font-bold text-gray-900">
+                      {invoice.totalAmount}
+                    </p>
+                  </div>
+                  
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
+                      <CalendarClock size={14} />
+                      Période
+                    </div>
+                  
+                    <p className="mt-1 text-sm font-medium text-gray-700">
+                      {timestampToText(invoice.billingDate)}
+                    </p>
+                  
+                    <p className="text-xs text-gray-500">
+                      jusqu'au {timestampToText(invoice.dueDate)}
+                    </p>
+                  </div>
+                  
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
+                      <Percent size={14} />
+                      Taxe
+                    </div>
+                  
+                    <p className="mt-1 text-lg font-bold text-indigo-600">
+                      {invoice.taxe}%
+                    </p>
+                  </div>
+                  
                 </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button 
-                  className="p-1.5 rounded-md border border-blue-200 text-blue-500 hover:bg-blue-50 transition-colors" aria-label="Voir les détails"
-                  onClick={() => handleViewDetails(invoice)} 
-                  >
-                  <Info size={15} />
-                </button>
-                <button 
-                  className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors" aria-label="Modifier"
-                //   onClick={() => handleUpdatePack(invoice)}
+
+              {/* Bouton Actions */}
+              <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+                <button
+                  onClick={() => handleViewDetails(invoice)}
+                  aria-label="Voir les détails"
+                  title="Voir les détails"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700"
                 >
-                  <Edit size={15} />
+                  <Info size={16} />
                 </button>
-                <DeleteBox id={invoice.billID!} onDelete={() => onDelete(invoice.billID!)} />
+
+                {invoice.status === 1 ? (
+                  <button
+                    onClick={() => onUpdate(invoice,0)}
+                    aria-label="Modifier"
+                    title="Modifier"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    <X size={16} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onUpdate(invoice,1)}
+                    aria-label="Modifier"
+                    title="Modifier"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    <Check size={16} />
+                  </button>
+                  )}
+                <button
+                  // onClick={() => handleUpdatePack(invoice)}
+                  aria-label="Supprimer"
+                  title="Supprimer"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
             </div>
           )))}
@@ -240,9 +337,31 @@ export default function InvoiceList() {
         
         {/* Pagination */}
         {all.totalPage > 1 && (
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <span>{filtered.length} élément{filtered.length > 1 ? "s" : ""}</span>
-            <div className="flex items-center gap-1">
+          <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white px-5 py-3">
+                  
+            {/* Informations */}
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span className="font-medium text-gray-800">
+                {filteredBillings.length}
+              </span>
+                  
+              <span>
+                facture{filteredBillings.length > 1 ? "s" : ""} trouvée
+                {filteredBillings.length > 1 ? "s" : ""}
+              </span>
+                  
+              <span className="text-gray-300">•</span>
+                  
+              <span>
+                Page <span className="font-semibold text-gray-800">{page.pageIndex + 1}</span>
+                {" / "}
+                <span className="font-semibold text-gray-800">{all.totalPage}</span>
+              </span>
+            </div>
+                  
+            {/* Navigation */}
+            <div className="flex items-center gap-2">
+                  
               <button
                 disabled={page.pageIndex === 0}
                 onClick={() =>
@@ -250,25 +369,31 @@ export default function InvoiceList() {
                     ...prev,
                     pageIndex: prev.pageIndex - 1,
                   }))
-                }               
-                className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                aria-label="Page précédente"
+                }
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm transition-all hover:bg-gray-50 hover:shadow disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <ChevronLeft size={15} />
+                <ChevronLeft size={17} />
               </button>
+              
               {Array.from({ length: all.totalPage }, (_, i) => i + 1).map((n) => (
                 <button
                   key={n}
-                  onClick={() => setPage((prev) => ({ ...prev, pageIndex: n - 1 }))}
-                  className={`w-8 h-8 rounded-md border text-xs font-medium transition-colors ${
+                  onClick={() =>
+                    setPage((prev) => ({
+                      ...prev,
+                      pageIndex: n - 1,
+                    }))
+                  }
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition-all ${
                     n === page.pageIndex + 1
-                      ? "border-blue-200 bg-blue-50 text-blue-600"
-                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                      ? "bg-slate-600 text-white shadow-md"
+                      : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:shadow"
                   }`}
                 >
                   {n}
                 </button>
               ))}
+          
               <button
                 disabled={page.pageIndex + 1 >= all.totalPage}
                 onClick={() =>
@@ -277,11 +402,11 @@ export default function InvoiceList() {
                     pageIndex: prev.pageIndex + 1,
                   }))
                 }
-                className="p-1.5 rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                aria-label="Page suivante"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm transition-all hover:bg-gray-50 hover:shadow disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <ChevronRight size={15} />
+                <ChevronRight size={17} />
               </button>
+              
             </div>
           </div>
         )}
