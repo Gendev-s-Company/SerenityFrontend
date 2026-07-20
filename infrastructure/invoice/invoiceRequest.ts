@@ -9,8 +9,12 @@ export const getAllInvoice = async (company:string) => {
 }
 
 // Recupere la liste tous les clients qui ont deja été facturé
-export const getPaginateCustomerInvoice = async (company:string,page:number,size:number) => {
-  return await getCall<Page<BillingEntity>>(`${invoicePath}/customers/${page}/${size}?company=${company}` );
+export const getPaginateCustomerInvoiced = async (company:string,page:number,size:number) => {
+  return await getCall<Page<BillingEntity>>(`${invoicePath}/all/${page}/${size}?company=${company}&field=billingDate` );
+}
+
+export const getPaginateInvoices = async (company:string,page:number,size:number) => {
+  return await getCall<Page<BillingEntity>>(`${invoicePath}/all/${page}/${size}?company=${company}` );
 }
 
 // Recupere la facture d'un client

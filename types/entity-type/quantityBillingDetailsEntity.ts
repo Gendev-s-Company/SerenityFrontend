@@ -1,9 +1,10 @@
 import { BillingEntity } from "./billingEntity";
 
 export interface QuantityBillingDetailsEntity {
-    quantityBillingDetailsID: string | null,
-    billing: BillingEntity,
-    servicename:string,
+    id: string | null,
+    bill: BillingEntity,
+    serviceName:string,
+    serviceCode:string,
     quantity: number,
     unitPrice: number,
 }

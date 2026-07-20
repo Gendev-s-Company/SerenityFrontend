@@ -1,8 +1,12 @@
+import { BillingEntity } from "./billingEntity";
+
 export interface DurationBillingDetailsEntity {
-    durationBillingDetailsID: string | null,
-    servicename:string,
+    id: string | null,
+    serviceName:string,
+    serviceCode:string,
     unitPrice: number,
-    type:string,
-    startime: Date,
-    endtime: Date,
+    typeDuration:string,
+    startTime: Date,
+    endTime: Date,
+    bill: BillingEntity,
 }

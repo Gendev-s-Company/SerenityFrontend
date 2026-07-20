@@ -292,8 +292,8 @@ export default function  Pack(){
               </div>
                 
                 
-              {/* Actions */}
-              <div className="flex items-center rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden shrink-0">
+              {/* Bouton Actions */}
+              <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
                 
                 <button
                   onClick={() => handleViewDetails(pack)}
