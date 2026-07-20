@@ -6,6 +6,7 @@ import { PackItems } from "./pack-menu";
 import { CustomerItems } from "./customer-menu";
 import { DashboardItems } from "./dashboard-menu";
 import { InvoiceItems } from "./invoice-menu";
+import { TaxItems } from "./tax-menu";
 
 // Menu items.
 export const items: PMenu[] = [
@@ -16,6 +17,7 @@ export const items: PMenu[] = [
   HotelItems,
   PackItems,
   InvoiceItems,
+  TaxItems,
   // {
   //   title: "HOTEL",
   //   url: "/view/hotel/room/roomGallery",

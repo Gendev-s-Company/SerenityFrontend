@@ -1,5 +1,10 @@
+import { CompanyEntity } from "./companyEntity";
+
 export interface TaxEntity {
     taxID: string | null,
     taxRate: number,
-    dateTaxRate: Date | string,
+    dateTax: Date | string,
+    company: CompanyEntity,
+    status: number,
+    skipValidation?: boolean
 }

@@ -1,0 +1,134 @@
+"use client";
+
+import { createTax, deleteTax, getPaginateTaxes, updateTax } from "@/infrastructure/tax/taxRequest";
+import { ColumnConfig } from "@/types/component-type/column-config";
+import { PageType } from "@/types/component-type/PageType";
+import { TaxEntity } from "@/types/entity-type/taxEntity";
+import { pageSize } from "@/utils/PaginationUtility";
+import { getLocalStorage } from "@/utils/storage";
+import { PaginationState } from "@tanstack/react-table";
+import { useEffect, useMemo, useState } from "react";
+import { TaxColumnOptions, TaxNameField } from "./prep-view-tax";
+import { CompanyEntity } from "@/types/entity-type/companyEntity";
+import { DataTable } from "@/components/liste/complexe-data-table";
+
+export default function Tax(){
+    const [taxes, setTaxes] = useState<TaxEntity[]>([]);
+    const [refresh, setRefresh] = useState<number>(0);
+    const [page, setPage] = useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: pageSize,
+    });
+    const [all, setAll] = useState<PageType>({
+      totalElement: 0,
+      totalPage: 0,
+    });
+    const [loading, setLoading] = useState(true)
+    const user = getLocalStorage()!;
+
+    
+    useEffect(() => {
+       // eslint-disable-next-line react-hooks/set-state-in-effect
+       setLoading(true)
+       if (user && user.profil.company.companyID) {
+         getPaginateTaxes(
+           user.profil.company.companyID!,
+           page.pageIndex,
+           page.pageSize,
+         )
+           .then((data) => {
+             setTaxes(data.content);
+             setPage((prevPage) => ({
+               ...prevPage,
+               pageIndex: data.page.number,
+             }));
+             setAll({
+               totalElement: data.page.totalElements,
+               totalPage: data.page.totalPages,
+             });
+             setLoading(false)
+           })
+           .catch((error) => {
+             console.error("Error fetching room types:", error)
+             setLoading(false)
+           });
+       }
+     }, [refresh, page.pageIndex]);
+
+    //  Mise a jour taxes
+    const onUpdate = async (formData: TaxEntity) => {
+      await updateTax(formData);
+      setRefresh((prev) => prev + 1);
+    };
+
+    const onDelete = async (id: string | null) => {
+      if (id !== null) {
+        await deleteTax(id);
+        setRefresh((prev) => prev + 1);
+      }
+    };
+
+    const btnAction: ColumnConfig<TaxEntity> = {
+      key: "action_btn",
+      header: "Action",
+      type: "button",
+      hiding: false,
+      onUpdate: (row) => onUpdate(row),
+      onDelete: (row) => onDelete(row.taxID),
+      onClick: (row) => console.log("Editer", row.taxID),
+    };
+
+    const columns = useMemo(() => {
+      return [...TaxColumnOptions, btnAction];
+    }, []);
+    
+    const company: CompanyEntity = {
+      skipValidation: true,
+      companyID: user?.profil?.company.companyID,
+      mail: "",
+      name: "",
+      phone: "",
+      status: 0,
+    };
+
+    const body: TaxEntity = {
+      taxID: null,
+      company: company,
+      taxRate: 0,
+      dateTax: new Date(),
+      status: 0,
+      skipValidation: false,
+    };
+
+    const onCreate = async (formData: TaxEntity) => {
+      console.log(user);
+    
+      console.log(formData);
+
+      await createTax(formData);
+      setRefresh((prev) => prev + 1);
+    };
+
+    return (
+       <div className="container mx-auto py-10 px-3">
+         <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
+           <h2 className="text-xl font-semibold">{"Liste des taxes"}</h2>
+           <DataTable
+             body={body}
+             onCreate={onCreate}
+             data={taxes}
+             mcolumns={columns}
+             fields={TaxNameField}
+             columnFilter="taxID"
+             pageCount={all.totalPage}
+             rowCount={all.totalElement}
+             onPaginationChange={setPage}
+             pagination={page}
+             loading={loading}
+             authority={user?.profil?.authority}
+           />
+         </div>
+       </div>
+    );
+    
+}
