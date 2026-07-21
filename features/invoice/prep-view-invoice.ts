@@ -13,6 +13,5 @@ export const InvoiceColumnOptions: ColumnConfig<BillingEntity>[]=[
 ];
 export const InvoiceNameField: FieldConfig<BillingEntity>[] =[
     { name: "billingDate", libelle: "Date de facturation", type: "datetime-local",normal:true },
-    { name: "dueDate", libelle: "Date d'échéance", type: "datetime-local",normal:true },
     { name: "totalAmount", libelle: "Montant total", type: "number",normal:true },
 ];

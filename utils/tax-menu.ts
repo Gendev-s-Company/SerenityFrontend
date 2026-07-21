@@ -18,5 +18,5 @@ export const TaxItems : PMenu = {
     },
   ],
     icon: HandCoins,
-    minAuthority: 4
+    minAuthority: 10
 }

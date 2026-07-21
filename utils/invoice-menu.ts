@@ -1,5 +1,5 @@
 import { PMenu } from "@/types/component-type/menu-type";
-import { Receipt, ReceiptText } from "lucide-react";
+import { Receipt, ReceiptText, User } from "lucide-react";
 
 export const InvoiceItems : PMenu = {
     title: "FACTURES",
@@ -8,12 +8,21 @@ export const InvoiceItems : PMenu = {
     isSubmenu: true,
     subMenu: [
     {
-      title: "Factures",
+      title: "Facturation",
       url: "/view/invoice",
       dropdown: false,
       isSubmenu: false,
       subMenu: [],
       icon: ReceiptText,
+      minAuthority: 2,
+    },
+    {
+      title: "Clients Facturés",
+      url: "/view/invoice/billedCustomers",
+      dropdown: false,
+      isSubmenu: false,
+      subMenu: [],
+      icon: User,
       minAuthority: 2,
     },
   ],

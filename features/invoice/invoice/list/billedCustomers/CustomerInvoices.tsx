@@ -1,22 +1,21 @@
 "use client";
-import DeleteBox from "@/components/delete/delete-box";
-import { deleteInvoice, getPaginateBillings, updateInvoice, updateInvoiceState } from "@/infrastructure/invoice/invoiceRequest";
+import { getCustomerInvoices } from "@/infrastructure/invoice/invoiceRequest";
 import { PageType } from "@/types/component-type/PageType";
 import { BillingEntity } from "@/types/entity-type/billingEntity";
 import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 import { timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
-import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Info, Percent, Receipt, ReceiptText, Search, Trash2, X } from "lucide-react";
+import { CalendarClock, ChevronLeft, ChevronRight, CircleCheck, CircleX, Info, Percent, Receipt, ReceiptText, Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+
 import { useEffect, useState } from "react";
-import InvoiceDetails from "./details/InvoiceDetails";
-import Sbutton from "@/components/button/Sbutton";
-import { toast } from "sonner";
+import InvoiceDetails from "../details/InvoiceDetails";
 
-
-export default function InvoiceList() {
+export default function CustomerInvoices(){
     const user=getLocalStorage();
-    const [invoices, setInvoices]=useState<BillingEntity[]>([]);
+    const customerID = useSearchParams().get('customerID');
+    const [invoicesInvoices, setCustomerInvoices]=useState<BillingEntity[]>([]);
     const [refresh, setRefresh]= useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState<PaginationState>({
@@ -27,34 +26,12 @@ export default function InvoiceList() {
       totalElement: 0,
       totalPage: 0,
     })
-    const [selectedInvoice,setSelectedInvoice]= useState<BillingEntity>();
-    const [openDetails, setOpenDetails] = useState(false);
     const [search, setSearch] = useState("");
-    const [filteredBillings,setFilteredBillings]= useState(invoices);
-    
-    useEffect(() => {
-        setLoading(true);
-        if (user && user.profil.company.companyID) {
-            getPaginateBillings(user.profil.company.companyID, page.pageIndex, page.pageSize)
-                .then((data) => {
-                    setInvoices(data.content);
-                    setFilteredBillings(data.content);
-                    setAll({
-                        totalElement: data.page.totalElements,
-                        totalPage: data.page.totalPages,
-                    });
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.error("Error fetching invoices.", error);
-                    setLoading(false);
-                });
-        }
-    }, [refresh, page]);
+    const [filteredBillings,setFilteredBillings]= useState(invoicesInvoices);
 
-    // Filtre par date
+    // Filtre
     const handleSearch = () => {
-      const filtered = invoices.filter((b) => {
+      const filtered = invoicesInvoices.filter((b) => {
         const invoiceDateStr = b.billingDate.slice(0, 10); // "2026-07-20"
         const matchesFrom = search ? invoiceDateStr === search : true;
         return matchesFrom;
@@ -63,36 +40,36 @@ export default function InvoiceList() {
       setFilteredBillings(filtered);
     };
 
-    // A placer dans les boutons actions pour les donnees dynamiques
-    const onDelete = async (id: string) => {
-      try{
-        await deleteInvoice(id);
-        toast.success("Modification réussie",{ position: "top-right" });
-        setRefresh((prev) => prev + 1);
-      }
-      catch(error : unknown){
-          const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue";
-          toast.error(errorMessage, { position: "top-right" });
-          setRefresh((prev) => prev + 1);
-      }
-    }
+    const [selectedInvoice,setSelectedInvoice]= useState<BillingEntity>();
+    const [openDetails, setOpenDetails] = useState(false);
 
-    const onUpdate = async (invoice: BillingEntity, state: number) => {
-         try{
-          await updateInvoiceState(invoice,state);
-          toast.success("Modification réussie",{ position: "top-right" });
-          setRefresh((prev) => prev + 1);
-        }
-        catch(error : unknown){
-          const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue";
-          toast.error(errorMessage, { position: "top-right" });
-        }    
-    }
+
+      useEffect(() => {
+        console.log(customerID);
+          setLoading(true);
+          if (user && user.profil.company.companyID) {
+              getCustomerInvoices(customerID!,user.profil.company.companyID, page.pageIndex, page.pageSize)
+                  .then((data) => {
+                      setCustomerInvoices(data.content);
+                      setFilteredBillings(data.content);
+                      setAll({
+                          totalElement: data.page.totalElements,
+                          totalPage: data.page.totalPages,
+                      });
+                      setLoading(false);
+                  })
+                  .catch((error) => {
+                      console.error("Error fetching invoices.", error);
+                      setLoading(false);
+                  });
+          }
+      }, [customerID,refresh, page]);
 
     const handleViewDetails = (invoice: BillingEntity) => {
       setSelectedInvoice(invoice);
       setOpenDetails(true);
     };
+
 
     return(
     <div className="container mx-auto py-10 px-3">
@@ -235,30 +212,6 @@ export default function InvoiceList() {
                 >
                   <Info size={16} />
                 </button>
-
-                {/* MODIFIER ETAT */}
-                {invoice.state === 1 ? (
-
-                  <button
-                    onClick={() => onUpdate(invoice, 0)}
-                    aria-label="Modifier"
-                    title="Modifier"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
-                  >
-                    <X size={16} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => onUpdate(invoice, 1)}
-                    aria-label="Modifier"
-                    title="Modifier"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
-                  >
-                    <Check size={16} />
-                  </button>
-                  )}
-                  {/* SUPPRIMER */}
-                <DeleteBox id={invoice.billID!} onDelete={() => onDelete(invoice.billID!)}></DeleteBox>
               </div>
             </div>
           )))}
@@ -343,6 +296,6 @@ export default function InvoiceList() {
 
       {/* Detail d'un invoice */}
       <InvoiceDetails invoice={selectedInvoice!} open={openDetails} onOpenChange={setOpenDetails} />
-    </div>
-    );
+    </div>    );
+
 }
