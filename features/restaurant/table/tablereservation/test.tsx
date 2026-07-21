@@ -122,8 +122,8 @@ useEffect(() => {
         .then((data) => {
           setReservations(data.content);
           setPaginationInfo({
-            totalElement: data.totalElements,
-            totalPage: data.totalPages,
+            totalElement: data.page.totalElements,
+            totalPage: data.page.totalPages,
           });
           setLoading(false);
         })
@@ -344,8 +344,8 @@ const btnAction: ColumnConfig<TableReservationEntity> = {
         .then((data) => {
           setReservations(data.content);
           setPaginationInfo({
-            totalElement: data.totalElements,
-            totalPage: data.totalPages,
+            totalElement: data.page.totalElements,
+            totalPage: data.page.totalPages,
           });
           setLoading(false);
         })

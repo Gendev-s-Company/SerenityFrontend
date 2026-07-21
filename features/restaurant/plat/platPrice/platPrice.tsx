@@ -50,8 +50,8 @@ export default function PlatPrice({ PlatId, refresh, setRefresh }: PlatPriceProp
           pageIndex: data.page.number,
         }));
           setAll({
-            totalElement: data.totalElements,
-            totalPage: data.totalPages,
+            totalElement: data.page.totalElements,
+            totalPage: data.page.totalPages,
           });
           setLoading(false)
         })
