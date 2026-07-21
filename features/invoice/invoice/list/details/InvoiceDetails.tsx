@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatAriary } from "@/lib/invoice-data";
 import { BillingEntity } from "@/types/entity-type/billingEntity";
 import { DurationBillingDetailsEntity,  } from "@/types/entity-type/durationBillingDetailsEntity";
 import { QuantityBillingDetailsEntity } from "@/types/entity-type/quantityBillingDetailsEntity";
@@ -65,12 +66,12 @@ export default function InvoiceDetails({ invoice, open, onOpenChange }: InvoiceD
                 <div className="flex items-center gap-3">
                   <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-right">
                     <p className="text-xs text-gray-500 uppercase tracking-wide">Montant HT</p>
-                    <p className="text-lg font-bold text-gray-900">{invoice.totalHT}</p>
+                    <p className="text-lg font-bold text-gray-900">{formatAriary(invoice.totalHT!)}</p>
                   </div>
                 
                   <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-right">
                     <p className="text-xs text-gray-500 uppercase tracking-wide">Montant TTC</p>
-                    <p className="text-lg font-bold text-blue-700">{invoice.totalTTC}</p>
+                    <p className="text-lg font-bold text-blue-700">{formatAriary(invoice.totalTTC!)}</p>
                   </div>
                 </div>
               </div>
@@ -102,7 +103,7 @@ export default function InvoiceDetails({ invoice, open, onOpenChange }: InvoiceD
                         </span>
                       </span>
                       <span className="text-sm font-medium text-blue-700 bg-blue-100 px-3 py-1 rounded-full shrink-0">
-                        {detail.unitPrice} / unité
+                        {formatAriary(detail.unitPrice)} / unité
                       </span>
                     </li>
                   ))}
@@ -131,7 +132,7 @@ export default function InvoiceDetails({ invoice, open, onOpenChange }: InvoiceD
                           {detail.serviceName} - {detail.serviceCode}
                         </span>
                         <span className="text-sm font-medium text-amber-700 bg-amber-100 px-3 py-1 rounded-full shrink-0">
-                          {detail.quantity} × {detail.unitPrice}
+                          {detail.quantity} × {formatAriary(detail.unitPrice)}
                         </span>
                       </li>
                     ))}

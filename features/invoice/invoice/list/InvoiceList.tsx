@@ -1,6 +1,6 @@
 "use client";
 import DeleteBox from "@/components/delete/delete-box";
-import { deleteInvoice, getPaginateBillings, updateInvoice, updateInvoiceState } from "@/infrastructure/invoice/invoiceRequest";
+import { deleteInvoice, getPaginateBillings, updateInvoiceState } from "@/infrastructure/invoice/invoiceRequest";
 import { PageType } from "@/types/component-type/PageType";
 import { BillingEntity } from "@/types/entity-type/billingEntity";
 import { pageSize } from "@/utils/PaginationUtility";
@@ -10,8 +10,9 @@ import { PaginationState } from "@tanstack/react-table";
 import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Info, Percent, Receipt, ReceiptText, Search, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import InvoiceDetails from "./details/InvoiceDetails";
-import Sbutton from "@/components/button/Sbutton";
 import { toast } from "sonner";
+import InvoicePreviewModal from "../InvoicePreviewModal";
+import { formatAriary } from "@/lib/invoice-data";
 
 
 export default function InvoiceList() {
@@ -29,6 +30,7 @@ export default function InvoiceList() {
     })
     const [selectedInvoice,setSelectedInvoice]= useState<BillingEntity>();
     const [openDetails, setOpenDetails] = useState(false);
+    const [openInvoiceModal, setOpenInvoiceModal] = useState(false);
     const [search, setSearch] = useState("");
     const [filteredBillings,setFilteredBillings]= useState(invoices);
     
@@ -93,6 +95,11 @@ export default function InvoiceList() {
       setSelectedInvoice(invoice);
       setOpenDetails(true);
     };
+
+    const printReceipt = (invoice: BillingEntity) => {
+      setSelectedInvoice(invoice);
+      setOpenInvoiceModal(true);
+    }
 
     return(
     <div className="container mx-auto py-10 px-3">
@@ -187,7 +194,7 @@ export default function InvoiceList() {
                       Montant HT
                     </div>
                     <p className="mt-1 text-lg font-bold text-gray-900">
-                      {invoice.totalHT}
+                      {formatAriary(invoice.totalHT!)}
                     </p>
                   </div>
 
@@ -197,7 +204,7 @@ export default function InvoiceList() {
                       Montant TTC
                     </div>
                     <p className="mt-1 text-lg font-bold text-blue-700">
-                      {invoice.totalTTC!} 
+                      {formatAriary(invoice.totalTTC!)} 
                     </p>
                   </div>
 
@@ -236,14 +243,24 @@ export default function InvoiceList() {
                   <Info size={16} />
                 </button>
 
+                {/* APERCU DE LA FACTURE */}
+                  <button
+                    onClick={() => printReceipt(invoice)}
+                    aria-label="Voir l'aperçu"
+                    title="Voir l'aperçu"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-200 hover:bg-gray-50 hover:text-gray-700"
+                  >
+                    <ReceiptText size={16} />
+                  </button>
+
                 {/* MODIFIER ETAT */}
                 {invoice.state === 1 ? (
 
                   <button
                     onClick={() => onUpdate(invoice, 0)}
                     aria-label="Modifier"
-                    title="Modifier"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
+                    title="Annuler validation"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-red-600 transition-all duration-200 hover:bg-red-50 hover:text-red-700"
                   >
                     <X size={16} />
                   </button>
@@ -251,14 +268,14 @@ export default function InvoiceList() {
                   <button
                     onClick={() => onUpdate(invoice, 1)}
                     aria-label="Modifier"
-                    title="Modifier"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-amber-600 transition-all duration-200 hover:bg-amber-50 hover:text-amber-700"
+                    title="Valider paiement"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-green-600 transition-all duration-200 hover:bg-green-50 hover:text-green-700"
                   >
                     <Check size={16} />
                   </button>
                   )}
                   {/* SUPPRIMER */}
-                <DeleteBox id={invoice.billID!} onDelete={() => onDelete(invoice.billID!)}></DeleteBox>
+                  <DeleteBox id={invoice.billID!} onDelete={() => onDelete(invoice.billID!)}></DeleteBox>
               </div>
             </div>
           )))}
@@ -340,6 +357,8 @@ export default function InvoiceList() {
           </div>
         )}
       </div>
+      {/* Aperçu de la facture  */}
+      <InvoicePreviewModal invoice={selectedInvoice!} open={openInvoiceModal} onOpenChange={setOpenInvoiceModal}/>         
 
       {/* Detail d'un invoice */}
       <InvoiceDetails invoice={selectedInvoice!} open={openDetails} onOpenChange={setOpenDetails} />

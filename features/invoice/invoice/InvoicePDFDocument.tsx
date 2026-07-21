@@ -7,7 +7,9 @@ import {
   View,
   StyleSheet,
 } from "@react-pdf/renderer";
-import { InvoiceData, computeTotals, formatUSD } from "@/lib/invoice-data";
+import {  formatAriary } from "@/lib/invoice-data";
+import { BillingEntity } from "@/types/entity-type/billingEntity";
+import { timestampToText } from "@/utils/Util";
 
 const styles = StyleSheet.create({
   page: {
@@ -114,9 +116,9 @@ const styles = StyleSheet.create({
 export default function InvoicePDFDocument({
   invoice,
 }: {
-  invoice: InvoiceData;
+  invoice: BillingEntity;
 }) {
-  const { subTotal, tax, total } = computeTotals(invoice);
+  // const { subTotal, tax, total } = computeTotals(invoice);
 
   return (
     <Document>
@@ -126,82 +128,112 @@ export default function InvoicePDFDocument({
           <View style={styles.logoBlock}>
             <Text style={styles.plus}>+</Text>
             <Text style={styles.logoText}>
-              {invoice.company.name.split(" ")[0]}
+              {invoice.company?.name?.split(" ")[0]}
               {"\n"}
-              {invoice.company.name.split(" ").slice(1).join(" ")}
+              {invoice.company?.name?.split(" ").slice(1).join(" ")}
             </Text>
           </View>
-
+      
           <View style={{ alignItems: "flex-start" }}>
             <Text style={styles.invoiceTitle}>Invoice</Text>
-            <Text style={styles.small}>Facture N°. {invoice.invoiceNumber}</Text>
-            <Text style={styles.small}>Date: {invoice.date}</Text>
-
+            <Text style={styles.small}>Facture N°. {invoice.billID}</Text>
+            <Text style={styles.small}>Date: {timestampToText(invoice.billingDate)}</Text>
+      
             <Text style={styles.sectionLabel}>Billed to:</Text>
-            <Text style={styles.small}>{invoice.billedTo.name}</Text>
-            <Text style={styles.small}>{invoice.billedTo.phone}</Text>
-            <Text style={styles.small}>{invoice.billedTo.address}</Text>
+            <Text style={styles.small}>{invoice.customerID}</Text>
           </View>
         </View>
-
-        {/* Table */}
-        <View style={styles.table}>
-          <View style={styles.tableHeaderRow}>
-            <Text style={[styles.colDescription, styles.tableHeaderText]}>
-              Description
-            </Text>
-            <Text style={[styles.colHours, styles.tableHeaderText]}>Heures</Text>
-            <Text style={[styles.colRate, styles.tableHeaderText]}>Taux</Text>
-            <Text style={[styles.colAmount, styles.tableHeaderText]}>Montant</Text>
-          </View>
-
-          {invoice.items.map((item, idx) => (
-            <View key={idx} style={styles.tableRow}>
-              <Text style={styles.colDescription}>{item.description}</Text>
-              <Text style={styles.colHours}>{item.hours}</Text>
-              <Text style={styles.colRate}>${item.rate}/hr</Text>
-              <Text style={styles.colAmount}>
-                {formatUSD(item.hours * item.rate)}
+      
+        {/* Table — services à la durée */}
+        {invoice.durationsDetails && invoice.durationsDetails.length > 0 && (
+          <View style={styles.table}>
+            <Text style={styles.sectionLabel}>Services facturés à la durée</Text>
+            <View style={styles.tableHeaderRow}>
+              <Text style={[styles.colDescription, styles.tableHeaderText]}>
+                Description
               </Text>
+              <Text style={[styles.colHours, styles.tableHeaderText]}>Heures</Text>
+              <Text style={[styles.colRate, styles.tableHeaderText]}>Taux</Text>
+              <Text style={[styles.colAmount, styles.tableHeaderText]}>Montant</Text>
             </View>
-          ))}
-        </View>
-
+        
+            {invoice.durationsDetails.map((item) => {
+              const hours =
+                (new Date(item.endTime).getTime() - new Date(item.startTime).getTime()) /
+                (1000 * 60 * 60);
+              return (
+                <View key={item.id} style={styles.tableRow}>
+                  <Text style={styles.colDescription}>{item.serviceName}</Text>
+                  <Text style={styles.colHours}>{hours.toFixed(1)}h</Text>
+                  <Text style={styles.colRate}>{formatAriary(item.unitPrice)}/h</Text>
+                  <Text style={styles.colAmount}>
+                    {formatAriary(hours * item.unitPrice)}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        )}
+    
+        {/* Table — services à la quantité */}
+        {invoice.quantityDetails && invoice.quantityDetails.length > 0 && (
+          <View style={styles.table}>
+            <Text style={styles.sectionLabel}>Services facturés à la quantité</Text>
+            <View style={styles.tableHeaderRow}>
+              <Text style={[styles.colDescription, styles.tableHeaderText]}>
+                Description
+              </Text>
+              <Text style={[styles.colHours, styles.tableHeaderText]}>Quantité</Text>
+              <Text style={[styles.colRate, styles.tableHeaderText]}>Prix unitaire</Text>
+              <Text style={[styles.colAmount, styles.tableHeaderText]}>Montant</Text>
+            </View>
+        
+            {invoice.quantityDetails.map((item) => (
+              <View key={item.id} style={styles.tableRow}>
+                <Text style={styles.colDescription}>{item.serviceName}</Text>
+                <Text style={styles.colHours}>{item.quantity}</Text>
+                <Text style={styles.colRate}>{formatAriary(item.unitPrice)}</Text>
+                <Text style={styles.colAmount}>
+                  {formatAriary(item.quantity * item.unitPrice)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+    
         {/* Divider + Totals */}
         <View style={styles.divider} />
         <View style={styles.footerTotalsRow}>
-          <Text style={styles.small}>Date echeance: {invoice.dueDate}</Text>
-
+          {/* <Text style={styles.small}>Date echeance: {timestampToText(invoice.dueDate)}</Text> */}
+      
           <View style={styles.totalsBlock}>
             <View style={styles.totalsLine}>
               <Text>Sous-Total</Text>
-              <Text>{formatUSD(subTotal)}</Text>
+              <Text>{formatAriary(invoice.totalHT!)}</Text>
             </View>
             <View style={styles.totalsLine}>
-              <Text>Taxes ({Math.round(invoice.taxRate * 100)}%)</Text>
-              <Text>{formatUSD(tax)}</Text>
+              <Text>Taxes</Text>
+              <Text>{formatAriary(invoice.taxe)}</Text>
             </View>
             <View style={styles.totalsLineBold}>
               <Text>Total</Text>
-              <Text>{formatUSD(total)}</Text>
+              <Text>{formatAriary(invoice.totalTTC!)}</Text>
             </View>
           </View>
         </View>
-
+      
         {/* Bottom: Contact / Payment */}
         <View style={styles.bottomRow}>
           <View style={styles.bottomCol}>
             <Text style={styles.sectionLabel}>Contact</Text>
-            <Text style={styles.small}>{invoice.company.phone}</Text>
-            <Text style={styles.small}>{invoice.company.mail}</Text>
-            <Text style={styles.small}>{invoice.company.address}</Text>
+            <Text style={styles.small}>{invoice.company?.phone}</Text>
+            <Text style={styles.small}>{invoice.company?.mail}</Text>
           </View>
           <View style={styles.bottomCol}>
-            <Text style={styles.sectionLabel}>Type de Paiement</Text>
-            <Text style={styles.small}>{invoice.payment.accountHolder}</Text>
-            <Text style={styles.small}>Bank: {invoice.payment.bank}</Text>
+            <Text style={styles.sectionLabel}>Paiement</Text>
+            <Text style={styles.small}>{invoice.company?.name}</Text>
             <Text style={styles.small}>
-              N° de compte: {invoice.payment.accountNumber}
+              Total: {invoice.totalAmount}
             </Text>
           </View>
         </View>

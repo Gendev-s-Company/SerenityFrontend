@@ -7,17 +7,16 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { InvoiceData } from "@/lib/invoice-data";
 import InvoicePreview from "./InvoicePreview";
 import InvoiceDownloadButton from "./InvoiceDownloadButton";  
-import { Check } from "lucide-react";
+import { BillingEntity } from "@/types/entity-type/billingEntity";
 
 export default function InvoicePreviewModal({
   invoice,
   open,
   onOpenChange,
 }: {
-  invoice: InvoiceData | null;
+  invoice: BillingEntity | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -33,18 +32,11 @@ export default function InvoicePreviewModal({
               Aperçu de la facture
             </DialogTitle>
             <DialogDescription className="mt-0.5 text-xs text-neutral-500">
-              Facture n° {invoice.invoiceNumber} — {invoice.billedTo.name}
+              Facture n° {invoice.billID} — {invoice.company?.name}
             </DialogDescription>
           </div>
 
           <div className="flex gap-1">
-            <button
-              title="Valider la facture"
-              // onClick={handleValidate}
-              className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition-all duration-300 hover:bg-emerald-700"
-            >
-              <Check className="h-3.5 w-3.5" />
-            </button>
             <InvoiceDownloadButton invoice={invoice} />
           </div>
         </DialogHeader>

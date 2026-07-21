@@ -217,7 +217,6 @@ export default function BilledCustomers(){
           </div>
         )}
       </div>
-
     </div>
     );
 }

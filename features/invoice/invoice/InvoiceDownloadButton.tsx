@@ -4,11 +4,12 @@ import { useState } from "react";
 import { InvoiceData } from "@/lib/invoice-data";
 import { Download, Printer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { BillingEntity } from "@/types/entity-type/billingEntity";
 
 export default function InvoiceDownloadButton({
   invoice,
 }: {
-  invoice: InvoiceData;
+  invoice: BillingEntity;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +29,7 @@ export default function InvoiceDownloadButton({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `invoice-${invoice.invoiceNumber}.pdf`;
+      link.download = `invoice-${invoice.billID}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

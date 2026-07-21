@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
 import InvoiceDetails from "../details/InvoiceDetails";
+import { formatAriary } from "@/lib/invoice-data";
 
 export default function CustomerInvoices(){
     const user=getLocalStorage();
@@ -164,7 +165,7 @@ export default function CustomerInvoices(){
                       Montant HT
                     </div>
                     <p className="mt-1 text-lg font-bold text-gray-900">
-                      {invoice.totalHT}
+                      {formatAriary(invoice.totalHT!)}
                     </p>
                   </div>
 
@@ -174,7 +175,7 @@ export default function CustomerInvoices(){
                       Montant TTC
                     </div>
                     <p className="mt-1 text-lg font-bold text-blue-700">
-                      {invoice.totalTTC!} 
+                      {formatAriary(invoice.totalTTC!)} 
                     </p>
                   </div>
 

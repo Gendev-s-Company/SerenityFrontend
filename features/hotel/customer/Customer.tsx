@@ -67,13 +67,13 @@ export default function Customer(){
            user.profil.company.companyID!,
            page.pageIndex,
            page.pageSize,
-         )
+          )
            .then((data) => {
-             setCustomer(data.content);
-        setPage((prevPage) => ({
-          ...prevPage,
-          pageIndex: data.page.number,
-        }));
+            setCustomer(data.content);
+            setPage((prevPage) => ({
+              ...prevPage,
+              pageIndex: data.page.number,
+            }));
              setAll({
                totalElement: data.page.totalElements,
                totalPage: data.page.totalPages,
@@ -117,13 +117,13 @@ export default function Customer(){
         return (
           <div className="flex gap-2">
             {/* Impression de facture */}
-              <button 
+              {/* <button 
                 className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-white text-green-600 hover:bg-blue-50 transition-colors" 
                 aria-label="Modifier"
                 onClick={() => printReceipt(row)}
               >
                 <ReceiptText size={15} className="text-green-600" />
-              </button>     
+              </button>      */}
 
 
             {/* Modifier */}
@@ -190,7 +190,7 @@ export default function Customer(){
         </div>
         
         {/* Detail de la facture d'un client */}
-        <InvoicePreviewModal invoice={previewInvoice} open={openInvoiceModal} onOpenChange={setOpenInvoiceModal}/>         
+        {/* <InvoicePreviewModal invoice={previewInvoice} open={openInvoiceModal} onOpenChange={setOpenInvoiceModal}/>          */}
       </div>
     );
     

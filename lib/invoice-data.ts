@@ -70,3 +70,7 @@ export function computeTotals(invoice: InvoiceData) {
 export function formatUSD(value: number) {
   return `$${value.toFixed(2)}`;
 }
+
+export function formatAriary(value: number) {
+  return `Ar ${value.toFixed(2)}`;
+}
