@@ -17,7 +17,7 @@ export const createTax = async (tax: TaxEntity) => {
 }
 
 export const updateTax = async (tax: TaxEntity) => {
-    return await putCall<TaxEntity>(`${taxPath}/update/${tax.taxID}`,tax);
+    return await putCall<TaxEntity>(`${taxPath}/${tax.taxID}`,tax);
 }
 export const deleteTax = async (id: string) => {
     return await deleteCall<TaxEntity>(`${taxPath}/${id}`);

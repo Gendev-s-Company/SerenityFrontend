@@ -11,6 +11,6 @@ export const TaxColumnOptions : ColumnConfig<TaxEntity>[]=[
 ];
 
 export const TaxNameField :FieldConfig<TaxEntity>[]=[
-    {name:"taxRate", libelle:"Taux(en %)",type:"number" , normal:true},
-    {name:"datetax", libelle:"Date de parution",type:"date" , normal:true},
+    {name:"taxRate", libelle:"Taux(en %)",type:"number" , normal:true },
+    {name:"datetax", libelle:"Date de parution",type:"date" , normal:true },
 ];
