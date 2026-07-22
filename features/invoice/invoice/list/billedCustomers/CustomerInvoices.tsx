@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import InvoiceDetails from "../details/InvoiceDetails";
 import { formatAriary } from "@/lib/invoice-data";
+import Tooltips from "@/components/tooltips/tooltips";
 
 export default function CustomerInvoices(){
     const user=getLocalStorage();
@@ -134,26 +135,48 @@ export default function CustomerInvoices(){
                     </div>
                   </div>
 
-                  {/* Etat de la facture :Payé/Non payé */}
-                  <span
-                    className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                      invoice.state === 1
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {invoice.state === 1 ? (
-                      <>
-                        <CircleCheck size={13} />
-                        Payée
-                      </>
-                    ) : (
-                      <>
-                        <CircleX size={13} />
-                        Non payée
-                      </>
-                    )}
-                  </span>
+                     <div className="ml-auto flex items-center gap-2">
+                       {/* Taxe */}
+                       <Tooltips children={ 
+                         <span
+                           className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold
+                             ${invoice.taxe != null ? "bg-blue-900 text-white" : "bg-gray-100 text-gray-900"}`}
+                         >
+                           <Percent size={13} />
+                           {invoice.taxe != null ? `${invoice.taxe}%` : "—"}
+ 
+                         </span>
+                       } 
+                         libelle={"Taxe"}
+                       >                       
+                       </Tooltips>
+                                                                 
+                       {/* Etat de la facture : Payé/Non payé */}
+                       <Tooltips children={ 
+                         <span
+                           className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+                             invoice.state === 1
+                               ? "bg-emerald-100 text-emerald-700"
+                               : "bg-red-100 text-red-700"
+                           }`}
+                         >
+                           {invoice.state === 1 ? (
+                             <>
+                               <CircleCheck size={13} />
+                               Payée
+                             </>
+                           ) : (
+                             <>
+                               <CircleX size={13} />
+                               Non payée
+                             </>
+                           )}
+                         </span>
+                             } 
+                           libelle={"Etat de facturation"}
+                         >                       
+                       </Tooltips>
+                     </div>
                 </div>
                   
                 {/* Informations */}

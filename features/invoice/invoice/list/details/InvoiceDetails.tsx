@@ -73,6 +73,12 @@ export default function InvoiceDetails({ invoice, open, onOpenChange }: InvoiceD
                     <p className="text-xs text-gray-500 uppercase tracking-wide">Montant TTC</p>
                     <p className="text-lg font-bold text-blue-700">{formatAriary(invoice.totalTTC!)}</p>
                   </div>
+                    
+                  {/* Promotion */}
+                  <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-right">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide">Promotion</p>
+                    <p className="text-lg font-bold text-gray-900">{invoice.packID != null ? `${invoice.packID}%` : "—"}</p>
+                  </div>
                 </div>
               </div>
             </div>  

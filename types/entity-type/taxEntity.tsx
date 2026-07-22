@@ -3,8 +3,8 @@ import { CompanyEntity } from "./companyEntity";
 export interface TaxEntity {
     taxID: string | null,
     taxRate: number,
-    dateTax: Date | string,
-    company: CompanyEntity,
+    datetax: Date | string,
+    companyID: string,
     status: number,
     skipValidation?: boolean
 }

@@ -7,12 +7,13 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 import { timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
-import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Info, Percent, Receipt, ReceiptText, Search, Trash2, X } from "lucide-react";
+import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, Info, Percent, Receipt, ReceiptText, Search, TicketPercent, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import InvoiceDetails from "./details/InvoiceDetails";
 import { toast } from "sonner";
 import InvoicePreviewModal from "../InvoicePreviewModal";
 import { formatAriary } from "@/lib/invoice-data";
+import Tooltips from "@/components/tooltips/tooltips";
 
 
 export default function InvoiceList() {
@@ -162,32 +163,54 @@ export default function InvoiceList() {
                       </p>
                     </div>
                   </div>
+                    <div className="ml-auto flex items-center gap-2">
+                      {/* Taxe */}
+                      <Tooltips children={ 
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold
+                            ${invoice.taxe != null ? "bg-blue-900 text-white" : "bg-gray-100 text-gray-900"}`}
+                        >
+                          <Percent size={13} />
+                          {invoice.taxe != null ? `${invoice.taxe}%` : "—"}
 
-                  {/* Etat de la facture :Payé/Non payé */}
-                  <span
-                    className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                      invoice.state === 1
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {invoice.state === 1 ? (
-                      <>
-                        <CircleCheck size={13} />
-                        Payée
-                      </>
-                    ) : (
-                      <>
-                        <CircleX size={13} />
-                        Non payée
-                      </>
-                    )}
-                  </span>
+                        </span>
+                      } 
+                        libelle={"Taxe"}
+                      >                       
+                      </Tooltips>
+                                                                
+                      {/* Etat de la facture : Payé/Non payé */}
+                      <Tooltips children={ 
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+                            invoice.state === 1
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {invoice.state === 1 ? (
+                            <>
+                              <CircleCheck size={13} />
+                              Payée
+                            </>
+                          ) : (
+                            <>
+                              <CircleX size={13} />
+                              Non payée
+                            </>
+                          )}
+                        </span>
+                            } 
+                          libelle={"Etat de facturation"}
+                        >                       
+                      </Tooltips>
+                    </div>
                 </div>
                   
                 {/* Informations */}
                 <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
 
+                    {/* Total HT */}
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
                     <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
                       <Receipt size={14} />
@@ -198,6 +221,7 @@ export default function InvoiceList() {
                     </p>
                   </div>
 
+                  {/* Total TTC */}
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
                     <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
                       <Receipt size={14} />
@@ -208,6 +232,7 @@ export default function InvoiceList() {
                     </p>
                   </div>
 
+                  {/* Date */}
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
                     <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
                       <CalendarClock size={14} />
@@ -218,13 +243,14 @@ export default function InvoiceList() {
                     </p>
                   </div>
 
+                  {/* Si un pack promo est affilié a cette facture  */}
                   <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
                     <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-wide">
-                      <Percent size={14} />
-                      Taxe
+                      <TicketPercent size={14} />
+                      Promotion
                     </div>
-                    <p className="mt-1 text-lg font-bold text-indigo-600">
-                      {invoice.taxe}%
+                    <p className="mt-1 text-lg font-bold text-gray  -600">
+                       {invoice.packID != null ? `${invoice.packID}%` : "—"}
                     </p>
                   </div>
 

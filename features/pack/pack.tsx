@@ -7,7 +7,7 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { BadgePercent, CalendarClock, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Hotel, Info, Package, Percent, Plus, Search, Sparkles, Trash, UtensilsCrossed } from "lucide-react";
+import { BadgePercent, CalendarClock, ChevronLeft, ChevronRight, CircleCheck, CircleX, Edit, Hotel, Info, Plus, Search, Sparkles, TicketPercent, Trash, UtensilsCrossed } from "lucide-react";
 
 import DeleteBox from "@/components/delete/delete-box";
 import PackDetails from "./packDetails/packDetails";
@@ -200,7 +200,7 @@ export default function  Pack(){
 
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100">
-                      <Package size={18} className="text-slate-600" />
+                      <TicketPercent size={18} className="text-slate-600" />
                     </div>
 
                     <div className="min-w-0">

@@ -81,21 +81,12 @@ export default function Tax(){
     const columns = useMemo(() => {
       return [...TaxColumnOptions, btnAction];
     }, []);
-    
-    const company: CompanyEntity = {
-      skipValidation: true,
-      companyID: user?.profil?.company.companyID,
-      mail: "",
-      name: "",
-      phone: "",
-      status: 0,
-    };
 
     const body: TaxEntity = {
       taxID: null,
-      company: company,
+      companyID: user?.profil?.company.companyID!,
       taxRate: 0,
-      dateTax: new Date(),
+      datetax: new Date(),
       status: 0,
       skipValidation: false,
     };

@@ -9,7 +9,7 @@ export const getAllTaxes = async (company:string) => {
 }
 
 export const getPaginateTaxes = async (company:string, page:number, size:number) => {
-    return await getCall<Page<TaxEntity>>(`${taxPath}/all/${page}/${size}?company=${company}` );
+    return await getCall<Page<TaxEntity>>(`${taxPath}/all/${page}/${size}?company=${company}&field=dateTax` );
 }
 
 export const createTax = async (tax: TaxEntity) => {
