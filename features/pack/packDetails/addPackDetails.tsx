@@ -36,6 +36,7 @@ import { DishEntity } from "@/types/entity-type/dishEntity";
 import { createPack, updatePack } from "@/infrastructure/pack/packRequest";
 import { PackEntity } from "@/types/entity-type/packEntity";
 import Sbutton from "@/components/button/Sbutton";
+import { SectionLabel } from "@/components/label/SectionLabel";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -67,37 +68,7 @@ interface PackFormData {
   activityItems: ActivityItem[];
 }
 
-// ─── Mock data — remplacez par vos vrais appels API ───────────────────────────
-
-// const ROOMS = [
-//   { id: "R001", label: "Chambre Deluxe" },
-//   { id: "R002", label: "Suite Présidentielle" },
-//   { id: "R003", label: "Chambre Standard" },
-// ];
-
-// const DISHES = [
-//   { id: "D001", label: "Menu Gastronomique" },
-//   { id: "D002", label: "Brunch du Dimanche" },
-//   { id: "D003", label: "Dégustation de vins" },
-// ];
-
-// const ACTIVITIES = [
-//   { id: "A001", label: "Spa & Bien-être" },
-//   { id: "A002", label: "Excursion en mer" },
-//   { id: "A003", label: "Cours de cuisine" },
-// ];
-
-
-
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400 pb-2 border-b border-slate-100">
-      {children}
-    </p>
-  );
-}
-
+// ───  Bouton ajouter de ligne d'insertion  ────────────────────────────────────────────────────────────────
 function AddRowButton({
   onClick,
   label,
@@ -666,10 +637,17 @@ export function AddPackDetails({
 
           {/* ── Footer ── */}
           <div className="px-8 py-4 border-t border-slate-100 bg-white flex justify-end gap-3 shrink-0">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => onOpenChange(false)} 
+              className="transition-all duration-200 hover:bg-red-600 hover:text-white"
+            >
               Annuler
             </Button>
-            <Sbutton message={packToEdit ?"Modification réussie!":"Création réussi!"}  formAction={handleSubmit} />
+            <Sbutton
+              className="transition-all duration-200 hover:bg-gray-700 hover:text-white"
+              message={packToEdit ?"Modification réussie!":"Création réussi!"}  
+              formAction={handleSubmit} />
           </div>
 
         </Tabs>

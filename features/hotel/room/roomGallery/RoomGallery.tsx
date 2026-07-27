@@ -35,6 +35,7 @@ import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeReq
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
 import { getCurrency } from "@/utils/Util"
 import { RoomPhotoEntity } from "@/types/entity-type/roomPhotoEntity"
+import Tooltips from "@/components/tooltips/tooltips"
 
 export function RoomGallery() {
 
@@ -214,10 +215,11 @@ return (
                     </DropdownMenuTrigger>              
 
                     <DropdownMenuContent align="end">
+
                       {/* VOIR DETAIL */}
                       <button
                         onClick={() => router.push(`/view/hotel/room/detail?roomID=${room.roomID}`)}
-                        className="flex items-center px-2 py-1.5 text-sm w-full hover:bg-muted rounded-sm"
+                        className="flex items-center px-2 py-1.5 text-sm w-full rounded-sm transition-all duration-200 hover:bg-slate-600 hover:text-white"
                       >
                         <Info className="mr-2 h-4 w-4" />
                         Voir détail
@@ -227,7 +229,7 @@ return (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <button
-                            className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm"
+                            className="flex items-center px-2 py-1.5 text-sm w-full text-destructive rounded-sm transition-all duration-200 hover:bg-red-600 hover:text-white" 
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Supprimer
@@ -237,7 +239,7 @@ return (
                       {/* RESERVER */}
                       <button
                         onClick={() => reserve(room.roomID ?? "")}
-                        className="flex items-center px-2 py-1.5 text-blue-500 text-sm w-full hover:bg-blue-50 rounded-sm"
+                        className="flex items-center px-2 py-1.5 text-blue-500 text-sm w-full hover:bg-blue-50 rounded-sm transition-all duration-200 hover:bg-blue-600 hover:text-white"
                       >
                         <BookMarked className="mr-2 h-4 w-4" />
                         Réserver
@@ -295,61 +297,63 @@ return (
                             {paginatePhotos.map((photo) => (
                               <Card
                                 key={photo.photoID}
-                                className="aspect-[4/3] overflow-hidden border-2 hover:border-primary/50 transition-colors relative group"
+                                className="aspect-[4/3] overflow-hidden border-2 hover:border-primary/50 transition-colors relative group/photo"
                               >
                                 <CardContent className="p-0 h-full relative">
 
-                              {/* MENU ACTIONS SUR PHOTO */}
-                              <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="secondary"
-                                      size="icon"
-                                      className="h-8 w-8 shadow-md hover:bg-white"
-                                    >
-                                      <MoreVertical className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
+                                  {/* MENU ACTIONS SUR PHOTO */}
+                                  <div className="absolute top-2 right-2 z-20 opacity-0  group-hover/photo:opacity-100 transition-opacity">
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <Button
+                                          variant="secondary"
+                                          size="icon"
+                                          className="h-8 w-8 shadow-md hover:bg-white"
+                                        >
+                                          <MoreVertical className="h-4 w-4" />
+                                        </Button>
+                                      </DropdownMenuTrigger>
 
-                                  <DropdownMenuContent align="end">
-                                    <AlertDialog>
-                                      <AlertDialogTrigger asChild>
-                                    <button className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm">
-                                      <Trash2 className="mr-2 h-4 w-4" />
-                                      Supprimer
-                                    </button>
-                                      </AlertDialogTrigger>
+                                      <DropdownMenuContent align="end">
+                                        <AlertDialog>
+                                          <AlertDialogTrigger asChild>
+                                        <button className="flex items-center px-2 py-1.5 text-sm w-full text-destructive hover:bg-red-50 rounded-sm transition-all duration-200 hover:bg-red-600 hover:text-white">
+                                          <Trash2 className="mr-2 h-4 w-4" />
+                                          Supprimer
+                                        </button>
+                                          </AlertDialogTrigger>
 
-                                      <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Êtes-vous sûr ?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Cette action est irréversible.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>
-                                  Annuler
-                                </AlertDialogCancel>
-                                <AlertDialogAction>
-                                  Supprimer
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                                      </AlertDialogContent>
-                                    </AlertDialog>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                              {/* Image cliquable */}
-                              <img
-                                src={photo.src}
-                                alt="Room"
-                                className="object-cover w-full h-full"
-                                onClick={() => setPreview(photo.src)}
-                              />
+                                          <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                              <AlertDialogTitle>
+                                                Êtes-vous sûr ?
+                                              </AlertDialogTitle>
+                                              <AlertDialogDescription>
+                                                Cette action est irréversible.
+                                              </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                              <AlertDialogCancel>
+                                                Annuler
+                                              </AlertDialogCancel>
+                                              <AlertDialogAction>
+                                                Supprimer
+                                              </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                        </AlertDialog>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
+                                  {/* Image cliquable */}
+                                  <Tooltips libelle="Cliquez pour agrandir la photo">
+                                  <img
+                                    src={photo.src}
+                                    alt="Room"
+                                    className="object-cover w-full h-full"
+                                    onClick={() => setPreview(photo.src)}
+                                  />
+                                  </Tooltips>
                                 </CardContent>
                               </Card>
                             ))}

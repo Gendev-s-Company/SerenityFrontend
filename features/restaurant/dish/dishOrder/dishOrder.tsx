@@ -10,6 +10,10 @@ import { ColumnConfig } from "@/types/component-type/column-config";
 import { PageType } from "@/types/component-type/PageType";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "@/components/liste/complexe-data-table";
+import { Edit } from "lucide-react";
+import DeleteBox from "@/components/delete/delete-box";
+import EditDishOrder from "./edit/EditDishOrder";
+import Tooltips from "@/components/tooltips/tooltips";
 
 export default function DishOrder() {
     const user = getLocalStorage()!;
@@ -31,6 +35,9 @@ export default function DishOrder() {
         totalElement: 0,
         totalPage: 0,
       });
+
+    const [selectedDishOrder,setSelectedDishOrder] = useState<DishOrderEntity|null>();
+    const [openEditDishOrder,setOpenEditDishOrder] = useState(false);
 
     interface TriggerOption {
       id: string;
@@ -98,10 +105,6 @@ export default function DishOrder() {
       }
   }, [refresh, page.pageIndex, selectedState]);
 
-    const onUpdate = async (formData: DishOrderEntity) => {
-       await updateDishOrder(formData);
-       setRefresh((prev) => prev + 1);
-    };
 
     const onDelete = async (id: string | null) => {
       if (id !== null) {
@@ -109,14 +112,35 @@ export default function DishOrder() {
         setRefresh((prev) => prev + 1);
       }
     }
+    const handleEditDishorder = (dishOrder: DishOrderEntity) => {
+      setSelectedDishOrder(dishOrder);
+      setOpenEditDishOrder(true);
+    };
         
     const btnAction: ColumnConfig<DishOrderEntity> = {
           key: "action_btn",
           header: "Action",
           type: "button",
           hiding: false,
-          onUpdate: (row) => onUpdate(row),
-          onDelete: (row) => onDelete(row.orderID),
+          cell(row) {
+            return(
+              <div className="flex gap-2">                  
+                {/* Modifier */}
+                <Tooltips libelle="Modifier">
+                 <button 
+                    className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-white text-blue-600 cursor-pointer transition-all duration-200 hover:bg-blue-600 hover:text-white" 
+                    aria-label="Modifier"
+                    onClick={() => handleEditDishorder(row)}
+                  >
+                    <Edit size={15} />
+                  </button> 
+                </Tooltips>
+                {/* Supprimer  */}
+                <DeleteBox id={row.orderID!} onDelete={() => onDelete(row.orderID!)} />
+              </div>
+            )
+          },
+
     };
 
     const emptyReservation: Partial<DishOrderEntity> = {
@@ -139,8 +163,8 @@ export default function DishOrder() {
     }, [list]);
 
     const reset = async () => {
-    setdateOrder("");
-    setRefresh((prev) => prev + 1);
+      setdateOrder("");
+      setRefresh((prev) => prev + 1);
     }
 
     return (
@@ -182,6 +206,12 @@ export default function DishOrder() {
           authority={user?.profil?.authority}
         />
       </div>
+      <EditDishOrder 
+        openEditDishOrder={openEditDishOrder} 
+        onOpenChange={setOpenEditDishOrder} 
+        dishOrder={selectedDishOrder} 
+        onSuccess={() => setRefresh((prev) => prev + 1)} 
+      />
     </div>
     );
 }

@@ -15,6 +15,7 @@ import { timestampToText } from "@/utils/Util";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AddPackDetails } from "./packDetails/addPackDetails";
 import { title } from "process";
+import Tooltips from "@/components/tooltips/tooltips";
 
 const tags = {
   reduction: "bg-amber-50 text-amber-800 border border-amber-300",
@@ -241,7 +242,7 @@ export default function  Pack(){
                 
                   <span className="text-xs font-medium text-gray-400">
                     Inclus :
-                  </span>
+                  </span> 
                 
                   <EntityBadge
                     count={pack.activityPack?.length ?? 0}
@@ -294,33 +295,32 @@ export default function  Pack(){
                 
               {/* Bouton Actions */}
               <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-                
+
+                {/* Voir details */}
+                <Tooltips libelle="Voir détails">
                 <button
                   onClick={() => handleViewDetails(pack)}
                   aria-label="Voir les détails"
                   title="Voir les détails"
-                  className="flex h-10 w-10 items-center justify-center text-blue-600 transition-colors hover:bg-blue-50"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg text-blue-600 transition-colors hover:bg-blue-600 hover:text-white"
                 >
                   <Info size={16}/>
                 </button>
+                </Tooltips>
                 
-                
-                <div className="h-5 w-px bg-gray-200" />
-                
-                
-                <button
-                  onClick={() => handleUpdatePack(pack)}
-                  aria-label="Modifier"
-                  title="Modifier"
-                  className="flex h-10 w-10 items-center justify-center text-amber-600 transition-colors hover:bg-amber-50"
-                >
-                  <Edit size={16}/>
-                </button>
-                
-                
-                <div className="h-5 w-px bg-gray-200" />
-                
-                
+                {/* Modifier */}
+                <Tooltips libelle="Modifier">
+                  <button
+                    onClick={() => handleUpdatePack(pack)}
+                    aria-label="Modifier"
+                    title="Modifier"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg text-amber-600 transition-colors hover:bg-amber-600 hover:text-white"
+                  >
+                    <Edit size={16}/>
+                  </button>
+                </Tooltips>
+
+              {/* Supprimer */}
                 <DeleteBox
                   id={pack.packID!}
                   onDelete={() => onDelete(pack.packID)}

@@ -15,6 +15,7 @@ import { Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Spinner } from "../ui/spinner";
+import Tooltips from "../tooltips/tooltips";
 
 interface DeleteBoxProps {
   id: string;
@@ -42,9 +43,11 @@ export default function DeleteBox({ id, onDelete }: DeleteBoxProps) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="icon-sm" className="cursor-pointer">
-          <Trash2 color="#f70808" />
-        </Button>
+        <Tooltips libelle="Supprimer">
+          <Button variant="outline" size="icon-sm" className=" text-red-600 cursor-pointer transition-all duration-200 hover:bg-red-600 hover:text-white">
+            <Trash2 />
+          </Button>
+        </Tooltips>
       </AlertDialogTrigger>
       
       <AlertDialogContent size="sm">

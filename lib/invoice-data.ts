@@ -72,5 +72,7 @@ export function formatUSD(value: number) {
 }
 
 export function formatAriary(value: number) {
-  return `Ar ${value.toFixed(2)}`;
+  const [integerPart, decimalPart] = value.toFixed(2).split(".");
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return `${formattedInteger}.${decimalPart} Ar`;
 }

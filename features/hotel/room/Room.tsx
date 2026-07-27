@@ -76,7 +76,7 @@ export default function Room() {
       await updateRoom(formData);
       setRefresh((prev) => prev + 1);
     };
-    const onDelete = async (id: string | null) => {
+    const onDelete = async (id: string) => {
       if (id !== null) {
         await deleteRoom(id);
         setRefresh((prev) => prev + 1);
@@ -89,7 +89,7 @@ export default function Room() {
       type: "button",
       hiding: false,
       onUpdate: (row) => onUpdate(row),
-      onDelete: (row) => onDelete(row.roomID),
+      onDelete: (row) => onDelete(row.roomID!),
       onClick: (row) => console.log("Editer", row.roomID),
     };
 

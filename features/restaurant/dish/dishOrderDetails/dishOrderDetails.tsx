@@ -84,7 +84,7 @@ export default function DishOrderDetails() {
       header: "Action",
       type: "button",
       hiding: false,
-      onUpdate: (row) => onUpdate(row),
+      // onUpdate: (row) => onUpdate(row),
       onDelete: (row) => onDelete(row.orderDetailsID),
       onClick: (row) => console.log("Editer", row.orderDetailsID),
     };

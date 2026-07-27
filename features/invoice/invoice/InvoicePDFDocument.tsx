@@ -135,12 +135,12 @@ export default function InvoicePDFDocument({
           </View>
       
           <View style={{ alignItems: "flex-start" }}>
-            <Text style={styles.invoiceTitle}>Invoice</Text>
+            <Text style={styles.invoiceTitle}>Facture</Text>
             <Text style={styles.small}>Facture N°. {invoice.billID}</Text>
             <Text style={styles.small}>Date: {timestampToText(invoice.billingDate)}</Text>
       
-            <Text style={styles.sectionLabel}>Billed to:</Text>
-            <Text style={styles.small}>{invoice.customerID}</Text>
+            <Text style={styles.sectionLabel}>Facturé à:</Text>
+            <Text style={styles.small}>{invoice.customer?.name}</Text>
           </View>
         </View>
       
@@ -208,7 +208,7 @@ export default function InvoicePDFDocument({
       
           <View style={styles.totalsBlock}>
             <View style={styles.totalsLine}>
-              <Text>Sous-Total</Text>
+              <Text>Total(HT)</Text>
               <Text>{formatAriary(invoice.totalHT!)}</Text>
             </View>
             <View style={styles.totalsLine}>
@@ -216,7 +216,7 @@ export default function InvoicePDFDocument({
               <Text>{formatAriary(invoice.taxe)}</Text>
             </View>
             <View style={styles.totalsLineBold}>
-              <Text>Total</Text>
+              <Text>Total(TTC)</Text>
               <Text>{formatAriary(invoice.totalTTC!)}</Text>
             </View>
           </View>
@@ -225,15 +225,15 @@ export default function InvoicePDFDocument({
         {/* Bottom: Contact / Payment */}
         <View style={styles.bottomRow}>
           <View style={styles.bottomCol}>
-            <Text style={styles.sectionLabel}>Contact</Text>
+            <Text style={styles.sectionLabel}>Contact: </Text>
             <Text style={styles.small}>{invoice.company?.phone}</Text>
             <Text style={styles.small}>{invoice.company?.mail}</Text>
           </View>
           <View style={styles.bottomCol}>
             <Text style={styles.sectionLabel}>Paiement</Text>
-            <Text style={styles.small}>{invoice.company?.name}</Text>
+            <Text style={styles.small}>Espèce ou chèque</Text>
             <Text style={styles.small}>
-              Total: {invoice.totalAmount}
+              Total: {formatAriary(invoice.totalTTC!)}
             </Text>
           </View>
         </View>

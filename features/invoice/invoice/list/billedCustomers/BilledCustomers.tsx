@@ -1,4 +1,5 @@
 "use client";
+import Tooltips from "@/components/tooltips/tooltips";
 import { getBilledCustomers } from "@/infrastructure/invoice/invoiceRequest";
 import { PageType } from "@/types/component-type/PageType";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
@@ -127,15 +128,18 @@ export default function BilledCustomers(){
 
               {/* Bouton Actions */}
               <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+
                 {/* VOIR FACTURE CLIENT */}
+                <Tooltips libelle="Voir details">
                 <button
                   onClick={() => navigate(customer.customerID!)}
                   aria-label="Voir les détails"
                   title="Voir les détails"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-600 hover:text-white"
                 >
                   <Info size={16} />
                 </button>
+                </Tooltips>
               </div>
             </div>
           )))}

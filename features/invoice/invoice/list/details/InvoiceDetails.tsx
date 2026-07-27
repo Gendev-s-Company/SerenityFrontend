@@ -56,7 +56,8 @@ export default function InvoiceDetails({ invoice, open, onOpenChange }: InvoiceD
                     <p className="text-xs text-gray-500">
                       Client
                       <span title={invoice.customerID} className="ml-1 font-medium text-gray-700">
-                        {invoice.customerID}
+                        {/* {invoice.customerID} */}
+                        {invoice.customer?.name}
                       </span>
                     </p>
                   </div>

@@ -7,7 +7,7 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { getLocalStorage } from "@/utils/storage";
 import { timestampToText } from "@/utils/Util";
 import { PaginationState } from "@tanstack/react-table";
-import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, Info, Percent, Receipt, ReceiptText, Search, TicketPercent, X } from "lucide-react";
+import { CalendarClock, Check, ChevronLeft, ChevronRight, CircleCheck, CircleX, HandCoins, Info, Percent, Receipt, ReceiptText, Search, TicketPercent, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import InvoiceDetails from "./details/InvoiceDetails";
 import { toast } from "sonner";
@@ -158,7 +158,8 @@ export default function InvoiceList() {
                       <p className="text-xs text-gray-500">
                         Client
                         <span title={invoice.customerID} className="ml-1 font-medium text-gray-700">
-                          {invoice.customerID}
+                          {/* {invoice.customerID} */}
+                          {invoice.customer?.name}
                         </span>
                       </p>
                     </div>
@@ -170,7 +171,7 @@ export default function InvoiceList() {
                           className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold
                             ${invoice.taxe != null ? "bg-blue-900 text-white" : "bg-gray-100 text-gray-900"}`}
                         >
-                          <Percent size={13} />
+                          <HandCoins  size={13} />
                           {invoice.taxe != null ? `${invoice.taxe}%` : "—"}
 
                         </span>
@@ -259,34 +260,39 @@ export default function InvoiceList() {
 
               {/* Bouton Actions */}
               <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-                {/* VOIR DETAILS FACTURE CLIENT */}
-                <button
-                  onClick={() => handleViewDetails(invoice)}
-                  aria-label="Voir les détails"
-                  title="Voir les détails"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <Info size={16} />
-                </button>
+                <Tooltips libelle="Voir détails">
+                  {/* VOIR DETAILS FACTURE CLIENT */}
+                  <button
+                    onClick={() => handleViewDetails(invoice)}
+                    aria-label="Voir les détails"
+                    title="Voir les détails"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition-all duration-200 hover:bg-blue-600 hover:text-white"
+                  >
+                    <Info size={16} />
+                  </button>
+                </Tooltips>
 
                 {/* APERCU DE LA FACTURE */}
+                <Tooltips libelle="Apercu de la facture">
                   <button
                     onClick={() => printReceipt(invoice)}
                     aria-label="Voir l'aperçu"
                     title="Voir l'aperçu"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-200 hover:bg-gray-50 hover:text-gray-700"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-600 transition-all duration-200 hover:bg-gray-600 hover:text-white"
                   >
                     <ReceiptText size={16} />
                   </button>
+                </Tooltips>
 
                 {/* MODIFIER ETAT */}
+                <Tooltips libelle = {invoice.state === 1 ? "Annuler la validation": "Valider la facture"}>
                 {invoice.state === 1 ? (
 
                   <button
                     onClick={() => onUpdate(invoice, 0)}
                     aria-label="Modifier"
                     title="Annuler validation"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-red-600 transition-all duration-200 hover:bg-red-50 hover:text-red-700"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-red-600 transition-all duration-200 hover:bg-red-600 hover:text-white"
                   >
                     <X size={16} />
                   </button>
@@ -295,11 +301,13 @@ export default function InvoiceList() {
                     onClick={() => onUpdate(invoice, 1)}
                     aria-label="Modifier"
                     title="Valider paiement"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-green-600 transition-all duration-200 hover:bg-green-50 hover:text-green-700"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-green-600 transition-all duration-200 hover:bg-green-600 hover:text-white"
                   >
                     <Check size={16} />
                   </button>
                   )}
+                  </Tooltips>
+
                   {/* SUPPRIMER */}
                   <DeleteBox id={invoice.billID!} onDelete={() => onDelete(invoice.billID!)}></DeleteBox>
               </div>

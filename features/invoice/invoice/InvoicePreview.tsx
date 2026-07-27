@@ -12,7 +12,6 @@ export default function InvoicePreview({
   invoice: BillingEntity 
   showDownloadButton?: boolean;
 }) {
-  const companyName = invoice.company?.name ?? "";
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -57,8 +56,9 @@ export default function InvoicePreview({
           <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
             Facturé à
           </p>
-          <p className="text-sm font-semibold text-neutral-900">
-            {invoice.customerID}
+          <p className="text-sm font-bold text-neutral-900">
+            {/* {invoice.customerID} */}
+            {invoice.customer?.name}
           </p>
         </div>
 
@@ -184,10 +184,10 @@ export default function InvoicePreview({
             <div className="space-y-1.5 text-sm text-neutral-600">
               <p className="flex items-center gap-2">
                 <Landmark size={13} className="text-neutral-400" />
-                {invoice.company?.name}
+                    Espèce ou chèque
               </p>
               <p className="tabular-nums">
-                Total : {invoice.totalAmount}
+                Total TTC : {formatAriary(invoice.totalTTC!)}
               </p>
             </div>
           </div>

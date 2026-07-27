@@ -231,7 +231,7 @@ export default function TableOrder() {
     
       getAllTableAvalaible(
         user.profil.company.companyID,
-        [0,5,6,8],
+        [0,2,3,4,5,6,8],
         startDate,
         endDate
       )
