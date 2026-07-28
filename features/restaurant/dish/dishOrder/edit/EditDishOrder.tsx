@@ -13,7 +13,10 @@ import { getLocalStorage } from "@/utils/storage";
 import { DishEntity } from "@/types/entity-type/dishEntity";
 import { getAllDishes } from "@/infrastructure/restaurant/dish/dishRequest";
 import { formatAriary } from "@/lib/invoice-data";
-import { updateDishOrder } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
+import { updateDishOrderState } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
+import { stateLabel } from "../prep-view-dishOrder";
+import { UserEntity } from "@/types/entity-type/userEntity";
+import { DishOrderDetailsEntity } from "@/types/entity-type/dishOrderDetailsEntity";
 
 interface DishOrderDetailsItem{
   id: string |null,
@@ -26,6 +29,8 @@ interface DishOrderDetailsItem{
 interface DishOrderFormData {
   totalPrice: number,
   dateOrder: string,
+  state:number,
+  status: number,
   details:DishOrderDetailsItem[],
 }
 
@@ -34,7 +39,7 @@ interface EditDishOrderProps{
     openEditDishOrder: boolean;
     onOpenChange: (open: boolean) => void;
     onSubmit?: (data:DishOrderFormData) => void;
-    onSuccess?:() => void;
+    onSuccess?: () => void;
     dishOrder?: DishOrderEntity | null,
 }
 
@@ -43,6 +48,7 @@ export default function EditDishOrder({
   openEditDishOrder,
   onOpenChange,
   dishOrder,
+  onSuccess,
   }: 
   EditDishOrderProps){
   const user = getLocalStorage();  
@@ -51,11 +57,61 @@ export default function EditDishOrder({
   const [form, setForm] = useState<DishOrderFormData>({
        totalPrice: 0,
        dateOrder:"",
+       state:0,
+       status:0,
        details:[] as DishOrderDetailsItem[] ,
     });
 
-  const handleSubmit = (formData: DishOrderEntity) =>{
-    updateDishOrder(formData);
+  const [state, setState] = useState<number>(
+    dishOrder?.state ?? 0
+  );
+
+  // Mise a jour
+  const handleSubmit = () => {
+    const body : DishOrderEntity = {
+      orderID: dishOrder?.orderID ?? null,
+      totalPrice: form?.totalPrice ?? 0,
+      dateOrder : form?.dateOrder ? new Date(form.dateOrder) : new Date(),
+      state : form?.state ?? 0,
+      status : dishOrder?.status ?? 0,
+      details: form.details.map((item): DishOrderDetailsEntity => ({
+        orderDetailsID: item.id ?? null,
+      
+        dish: {
+          dishID: item.dishID,
+          name: "",
+          description: "",
+          type: null,
+          state: 0,
+          status: 0,
+          photo: [],
+          price: null,
+          skipValidation: true,
+        },
+      
+        orderID: dishOrder?.orderID ?? null,
+      
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+      
+        user: {
+          userID: item.userID,
+        } as UserEntity,
+      
+        dateOrder: dishOrder?.dateOrder ?? new Date().toISOString(),
+      
+        state: 0,
+        status: 0,
+      
+        skipValidation: true,
+      })),
+      tableOccupation: dishOrder?.tableOccupation ?? null,
+      skipValidation:false
+
+    }
+    updateDishOrderState(body);
+    onOpenChange(false);
+    onSuccess?.();
   }  
   
   // Récupération des donnees 
@@ -64,12 +120,14 @@ export default function EditDishOrder({
     setForm({
       totalPrice: dishOrder ? dishOrder.totalPrice : 0,
       dateOrder: dishOrder?.dateOrder.toString().split("T")[0] ?? "",
+      state: dishOrder?.state ?? 0,
+      status: dishOrder?.status ?? 0,
       details: (dishOrder?.details ?? []).map((r) => ({
         id: String(r.orderDetailsID),
         dishID: r.dish?.dishID ?? "",
         unitPrice: r.unitPrice,
         quantity: r.quantity,
-        userID: r.user.userID ?? "",
+        userID: r.user?.userID ?? "",
       })),
     });
   }, [dishOrder]);
@@ -97,7 +155,7 @@ export default function EditDishOrder({
     }));
   };
 
-  // Fonction ajout de details
+  // Fonction ajout de bloc de details
   const updateDetails = (details: DishOrderDetailsItem[]) => {
     update("details", details);
   };
@@ -156,8 +214,9 @@ export default function EditDishOrder({
           {/* Body */}
           <div className="bg-white flex-1 overflow-y-auto">
             <div className="px-8 py-6 flex flex-col gap-5">
+
               {/* Formulaire principal */}
-              <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="pack-title" className="text-sm font-medium text-slate-600">
                     Date de commande
@@ -166,10 +225,36 @@ export default function EditDishOrder({
                     type="date"
                     id="pack-title"
                     placeholder="Date commande"
-                    className="h-10"
+                    className="w-full"
                     value={form.dateOrder}
                     onChange={(e) => update("dateOrder", e.target.value)}
                   />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="text-sm font-medium text-slate-600">
+                    Etat de la commande
+                  </Label>
+
+                  <Select
+                    value={state.toString()}
+                    onValueChange={(value) => {
+                      const newState = Number(value);
+                      setState(newState);
+                      update("state", newState);
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Sélectionner un état" />
+                    </SelectTrigger>
+                  
+                    <SelectContent>
+                      {Object.entries(stateLabel).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -190,7 +275,7 @@ export default function EditDishOrder({
                             dishID: "",
                             unitPrice: 0,
                             quantity: 1,
-                            userID: "", // à adapter selon ton contexte
+                            userID: "",
                           },
                         ])
                       }
@@ -267,7 +352,6 @@ export default function EditDishOrder({
                           />
                         </div>
 
-                        {/* Prix unitaire prédéfini */}
 
                         {/* Total ligne */}
                         <div className="col-span-2 flex flex-col gap-1.5">
@@ -323,7 +407,7 @@ export default function EditDishOrder({
             </Button>
             <Sbutton 
               message={"Modification réussie!"}  
-              formAction={() => handleSubmit}  
+              formAction={handleSubmit}  
               className="transition-all duration-200 hover:bg-gray-700 hover:text-white"/>
           </div>
 

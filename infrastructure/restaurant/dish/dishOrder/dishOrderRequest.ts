@@ -29,8 +29,13 @@ export const createDishOrder = async (dishOrder: DishOrderEntity) => {
     return await postCall<DishOrderEntity>(dishOrderPath, dishOrder);
 }
 
-export const updateDishOrder = async (dishOrder: DishOrderEntity) => {
-    return await putCall<DishOrderEntity>(`${dishOrderPath}/update/state/${dishOrder.orderID}?state=${dishOrder.state}`, null);
+export const updateDishOrderState = async (dishOrder: DishOrderEntity) => {
+    return await putCall<DishOrderEntity>(`${dishOrderPath}/update/state/${dishOrder.orderID}?state=${dishOrder.state}`, dishOrder);
+}
+
+
+export const updateDishOrder= async (dishOrder: DishOrderEntity) => {
+    return await putCall<DishOrderEntity>(`${dishOrderPath}/update/${dishOrder.orderID}`, dishOrder);
 }
 
 export const deleteDishOrder = async (id: string) => {

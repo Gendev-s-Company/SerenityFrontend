@@ -5,7 +5,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { pageSize } from "@/utils/PaginationUtility";
 import {DishOrderColumnOptions, DishOrderNameField, stateLabel} from "./prep-view-dishOrder";
-import { deleteDishOrder, getPaginateDishOrderbyState, updateDishOrder } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
+import { deleteDishOrder, getPaginateDishOrderbyState } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { PageType } from "@/types/component-type/PageType";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -210,7 +210,7 @@ export default function DishOrder() {
         openEditDishOrder={openEditDishOrder} 
         onOpenChange={setOpenEditDishOrder} 
         dishOrder={selectedDishOrder} 
-        onSuccess={() => setRefresh((prev) => prev + 1)} 
+        onSuccess={() => setRefresh((prev) => prev + 1)}
       />
     </div>
     );

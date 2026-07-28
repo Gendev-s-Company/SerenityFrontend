@@ -55,7 +55,7 @@ export default function DishOrderDetails() {
                     setDishOrderDetails(orders);
                   // Maintenant récupérer les détails
                   if (Array.isArray(orders)) {
-                      const allDetails = orders.flatMap(order => order.details || []);
+                     orders.flatMap(order => order.details || []);
                   }
 
                   setLoading(false);
@@ -84,7 +84,7 @@ export default function DishOrderDetails() {
       header: "Action",
       type: "button",
       hiding: false,
-      // onUpdate: (row) => onUpdate(row),
+      onUpdate: (row) => onUpdate(row),
       onDelete: (row) => onDelete(row.orderDetailsID),
       onClick: (row) => console.log("Editer", row.orderDetailsID),
     };

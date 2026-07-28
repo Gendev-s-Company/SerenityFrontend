@@ -8,7 +8,7 @@ export interface DishOrderDetailsEntity {
     unitPrice: number,
     quantity: number,
     user:UserEntity,
-    dateOrder:string,
+    dateOrder: Date | string,
     state:number,
     status:number,
     skipValidation: boolean,
