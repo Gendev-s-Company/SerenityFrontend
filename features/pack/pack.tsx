@@ -14,7 +14,6 @@ import PackDetails from "./packDetails/packDetails";
 import { timestampToText } from "@/utils/Util";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AddPackDetails } from "./packDetails/addPackDetails";
-import { title } from "process";
 import Tooltips from "@/components/tooltips/tooltips";
 
 const tags = {

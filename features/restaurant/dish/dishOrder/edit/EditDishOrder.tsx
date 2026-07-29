@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DishOrderEntity } from "@/types/entity-type/dishOrderEntity";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Trash2, Utensils } from "lucide-react";
+import { Minus, Plus, Trash2, Utensils } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { getLocalStorage } from "@/utils/storage";
 import { DishEntity } from "@/types/entity-type/dishEntity";
 import { getAllDishes } from "@/infrastructure/restaurant/dish/dishRequest";
 import { formatAriary } from "@/lib/invoice-data";
-import { updateDishOrderState } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
+import { updateDishOrder, updateDishOrderState } from "@/infrastructure/restaurant/dish/dishOrder/dishOrderRequest";
 import { stateLabel } from "../prep-view-dishOrder";
 import { UserEntity } from "@/types/entity-type/userEntity";
 import { DishOrderDetailsEntity } from "@/types/entity-type/dishOrderDetailsEntity";
@@ -70,46 +70,45 @@ export default function EditDishOrder({
   const handleSubmit = () => {
     const body : DishOrderEntity = {
       orderID: dishOrder?.orderID ?? null,
-      totalPrice: form?.totalPrice ?? 0,
+      totalPrice: totalGeneral ?? 0,
       dateOrder : form?.dateOrder ? new Date(form.dateOrder) : new Date(),
       state : form?.state ?? 0,
       status : dishOrder?.status ?? 0,
-      details: form.details.map((item): DishOrderDetailsEntity => ({
-        orderDetailsID: item.id ?? null,
+      skipValidation:false,
+      tableOccupation: dishOrder?.tableOccupation ?? null,
+      details: form.details.map((item): DishOrderDetailsEntity => {
+        const dish = dishes.find(d => d.dishID === item.dishID);
       
-        dish: {
-          dishID: item.dishID,
-          name: "",
-          description: "",
-          type: null,
+        return {
+          orderDetailsID: item.id ?? null,        
+          dish: dish
+            ? {
+                ...dish,
+                skipValidation: true,
+              }
+            : null,
+            
+          orderID: dishOrder?.orderID ?? null,
+            
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+            
+          user: {
+            userID: item.userID,
+          } as UserEntity,
+        
+          dateOrder: dishOrder?.dateOrder ?? new Date().toISOString(),
+        
           state: 0,
           status: 0,
-          photo: [],
-          price: null,
+        
           skipValidation: true,
-        },
-      
-        orderID: dishOrder?.orderID ?? null,
-      
-        unitPrice: item.unitPrice,
-        quantity: item.quantity,
-      
-        user: {
-          userID: item.userID,
-        } as UserEntity,
-      
-        dateOrder: dishOrder?.dateOrder ?? new Date().toISOString(),
-      
-        state: 0,
-        status: 0,
-      
-        skipValidation: true,
-      })),
-      tableOccupation: dishOrder?.tableOccupation ?? null,
-      skipValidation:false
+        };
+      })
 
     }
-    updateDishOrderState(body);
+    console.log(body);
+    updateDishOrder(body);
     onOpenChange(false);
     onSuccess?.();
   }  
@@ -173,16 +172,15 @@ export default function EditDishOrder({
   };
   
   // Total somme
-  const totalGeneral = useMemo(
-    () =>
-      (dishOrder?.totalPrice ?? 0) +
-      form.details.reduce(
-        (sum, d) => sum + (d.unitPrice || 0) * (d.quantity || 0),
-        0
-      ),
-    [form.details, dishOrder]
-  );
-  
+    const totalGeneral = useMemo(
+      () =>
+        form.details.reduce(
+          (sum, d) => sum + (d.unitPrice || 0) * (d.quantity || 0),
+          0
+        ),
+      [form.details]
+    );
+
     return(
     <Dialog open={openEditDishOrder} onOpenChange={onOpenChange}>
         <DialogContent
@@ -218,17 +216,12 @@ export default function EditDishOrder({
               {/* Formulaire principal */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="pack-title" className="text-sm font-medium text-slate-600">
-                    Date de commande
+                  <Label className="text-xs font-medium text-slate-500">
+                    Total
                   </Label>
-                  <Input
-                    type="date"
-                    id="pack-title"
-                    placeholder="Date commande"
-                    className="w-full"
-                    value={form.dateOrder}
-                    onChange={(e) => update("dateOrder", e.target.value)}
-                  />
+                    <div className="h-9 flex items-center px-3 rounded-md bg-slate-100 text-sm font-medium text-slate-700">
+                      {formatAriary(totalGeneral)} 
+                    </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <Label className="text-sm font-medium text-slate-600">
@@ -298,7 +291,7 @@ export default function EditDishOrder({
                     return (
                       <div
                         key={detail.id ?? `new-${index}`}
-                        className="grid grid-cols-12 gap-3 items-end p-3 rounded-lg border border-slate-100 bg-slate-50/50"
+                        className="grid grid-cols-10 gap-3 items-end p-3 rounded-lg border border-slate-100 bg-slate-50/50"
                       >
                         {/* Plat */}
                         <div className="col-span-5 flex flex-col gap-1.5">
@@ -337,23 +330,63 @@ export default function EditDishOrder({
                           <Label className="text-xs font-medium text-slate-500">
                             Quantité
                           </Label>
-                           <Input
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateDetailItem(index, {
+                                  ...detail,
+                                  quantity: Math.max(0, detail.quantity - 1),
+                                })
+                              }
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 transition-colors hover:bg-red-600 hover:text-white"
+                            >
+                              <Minus size={14} />
+                            </button>
+                            
+                          <Input
                             type="number"
                             className="h-9 bg-white"
                             value={detail.quantity === 0 ? "" : detail.quantity}
                             onChange={(e) => {
                               const rawValue = e.target.value;
                               const parsed = rawValue === "" ? 0 : parseInt(rawValue, 10);
+                            
+                              const oldQuantity = detail.quantity;
+                              const newQuantity = isNaN(parsed) ? 0 : parsed;
+                            
+                              const difference = newQuantity - oldQuantity;
+                            
+                              if (difference > 0) {
+                                console.log(`Augmentation de ${difference}`);
+                              } else if (difference < 0) {
+                                console.log(`Diminution de ${Math.abs(difference)}`);
+                              }
+                            
                               updateDetailItem(index, {
                                 ...detail,
-                                quantity: isNaN(parsed) ? 0 : parsed,
+                                quantity: newQuantity,
                               });
                             }}
                           />
+                        
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateDetailItem(index, {
+                                  ...detail,
+                                  quantity: detail.quantity + 1,
+                                })
+                              }
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 transition-colors hover:bg-blue-600 hover:text-white"
+                            >
+                              <Plus size={14} />
+                            </button>
+                          </div>
                         </div>
 
 
-                        {/* Total ligne */}
+                        {/* Total par ligne */}
                         <div className="col-span-2 flex flex-col gap-1.5">
                           <Label className="text-xs font-medium text-slate-500">
                             Total
@@ -381,17 +414,7 @@ export default function EditDishOrder({
                 </div>
 
                 {/* Total général */}
-                {form.details.length > 0 && (
-                  <div className="flex justify-end pt-2">
-                    <div className="text-sm font-medium text-slate-700">
-                      Total général :{" "}
-                      <span className="text-slate-900">
-                      {formatAriary(totalGeneral)}{" "}
 
-                      </span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
