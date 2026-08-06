@@ -56,7 +56,7 @@ export default function DeleteBox({ id, onDelete }: DeleteBoxProps) {
             <Trash2 />
           </AlertDialogMedia>
           <AlertDialogTitle>
-            Suppression de <i>{id}</i>
+            Voulez vous vraiment supprimer cet élément ? <br />
           </AlertDialogTitle>
           <AlertDialogDescription>
             Êtes-vous sûr de vouloir continuer?

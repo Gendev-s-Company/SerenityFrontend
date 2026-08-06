@@ -56,6 +56,7 @@ export default function Company() {
     setRefresh((prev) => prev + 1);
   };
   const onDelete = async (id: string | null) => {
+    console.log("Delete company with id:", id);
     if (id !== null) {
       await deleteCompany(id);
       setRefresh((prev) => prev + 1);
