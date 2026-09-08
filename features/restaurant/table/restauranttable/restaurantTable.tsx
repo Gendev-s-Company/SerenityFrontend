@@ -12,8 +12,7 @@ import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { DataTable } from "@/components/liste/complexe-data-table";
 import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
 import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
-// import { convertListToOption } from "@/infrastructure/restaurant/table/tabletype/tabletypeFonction";
-// import { getAllTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
+import {statusLabel} from "@/lib/utils";
 
 export default function RestaurantTable() {
     const [restaurantTable,setRestaurantTable]=useState<RestaurantTableEntity[]>([]);
@@ -48,7 +47,11 @@ export default function RestaurantTable() {
         if (user && user.profil.company.companyID) {
         getPaginateTable(user.profil.company.companyID,page.pageIndex,page.pageSize)
             .then((data) => {                
-                setRestaurantTable(data.content);
+                const mappedData = data.content.map((item) => ({
+                  ...item,
+                  stateLabel: statusLabel[item.status] || "Inconnu",
+                }));
+                setRestaurantTable(mappedData);
                   setPage((prevPage) => ({
                     ...prevPage,
                     pageIndex: data.page.number,
@@ -150,7 +153,7 @@ export default function RestaurantTable() {
     <div className="container mx-auto py-10 px-3">
 
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-        <h2 className="text-xl font-semibold">{"Liste des personnes enregistrés dans l'établissement"}</h2>
+        <h2 className="text-xl font-semibold">{"Liste des tables enregistrés dans l'établissement"}</h2>
         <DataTable
           body={body}
           onCreate={onCreate}

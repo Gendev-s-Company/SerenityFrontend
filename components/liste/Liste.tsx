@@ -12,7 +12,7 @@ export default function Liste<TData>({
   const rowCount = table.getState().pagination.pageSize
 
   return (
-    <Table>
+    <Table className="min-w-[1100px]">
       {/* HEADER */}
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (

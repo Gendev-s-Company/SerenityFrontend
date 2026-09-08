@@ -43,7 +43,7 @@ export default function PhotoDetailRoom({ roomId }: PhotoDetailRoomProps) {
   const [preview, setPreview] = useState<string | null>(null);
 
 
-  const size = 4;
+  const size = 2;
 
 
   const fetchPhotos = async () => {

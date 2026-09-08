@@ -16,6 +16,7 @@ import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { FieldConfig } from "@/types/component-type/form-type";
+import {statusLabel} from "@/lib/utils";
 
 export default function Activity() {
   const [activity, setActivity] = useState<ActivityEntity[]>([]);
@@ -41,7 +42,10 @@ export default function Activity() {
         page.pageSize,
       )
         .then((data) => {
-          setActivity(data.content);
+          const mappedData = data.content.map((item) => ({
+            ...item,
+            stateLabel: statusLabel[item.status] || "Inconnu",
+          }));
                   setPage((prevPage) => ({
           ...prevPage,
           pageIndex: data.page.number,
@@ -50,7 +54,7 @@ export default function Activity() {
             totalElement: data.page.totalElements,
             totalPage: data.page.totalPages,
           });
-          console.log(data.content);
+          setActivity(mappedData);
 
           setLoading(false);
         })

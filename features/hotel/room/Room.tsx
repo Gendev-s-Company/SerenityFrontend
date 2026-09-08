@@ -13,6 +13,7 @@ import { RoomTypeEntity } from "@/types/entity-type/roomTypeEntity";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { getAllRoomType } from "@/infrastructure/hotel/room/roomType/roomTypeRequest";
 import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
+import {statusLabel} from "@/lib/utils";
 
 export default function Room() {
     const user = getLocalStorage()!;
@@ -53,7 +54,10 @@ export default function Room() {
           page.pageSize,
         )
           .then((data) => {
-            setRoom(data.content);
+            const mappedData = data.content.map((item) => ({
+              ...item,
+              stateLabel: statusLabel[item.status] || "Inconnu",
+            }));
             setPage((prevPage) => ({
               ...prevPage,
               pageIndex: data.page.number,
@@ -62,6 +66,7 @@ export default function Room() {
                 totalElement: data.page.totalElements,
                 totalPage: data.page.totalPages,
             });
+            setRoom(mappedData);
             setLoading(false)
           })
           .catch((error) => {

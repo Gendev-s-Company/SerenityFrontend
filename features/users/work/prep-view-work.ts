@@ -22,7 +22,7 @@ export const WSCColumnOptions: ColumnConfig<WorkSchedule>[] = [
         hiding: false,
         sorting:true,
     },
-    { key: "status", header: "Statut", type: "text", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 
 export const WSCNamefield: FieldConfig<WorkSchedule>[] = [

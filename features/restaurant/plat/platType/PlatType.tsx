@@ -11,6 +11,7 @@ import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { PlatTypeEntity } from "@/types/entity-type/platTypeEntity";
 import { PlatTypeColumnOptions, PlatTypeNamefield } from "./prep-viewplatType";
 import { createPlatType, deletePlatType, getPaginatePlatTypes, updatePlatType } from "@/infrastructure/restaurant/plat/platType/platTypeRequest";
+import {statusLabel} from "@/lib/utils";
 
 export default function PlatType() {
     const [PlatType,setPlatType]=useState<PlatTypeEntity[]>([]);
@@ -36,7 +37,11 @@ export default function PlatType() {
             page.pageSize,
           )
             .then((data) => {
-              setPlatType(data.content);
+              const mappedData = data.content.map((item) => ({
+              ...item,
+              stateLabel: statusLabel[item.status] || "Inconnu",
+              }));
+              setPlatType(mappedData);
               setPage((prevPage) => ({
                 ...prevPage,
                 pageIndex: data.page.number,

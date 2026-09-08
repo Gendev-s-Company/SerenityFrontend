@@ -8,7 +8,7 @@ import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { ReservationEntity } from "@/types/entity-type/reservationEntity";
 import { RoomEntity } from "@/types/entity-type/roomEntity";
 import { getLocalStorage } from "@/utils/storage";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { ReservationFieldValidator } from "../reservation";
 
 interface Form {
@@ -186,7 +186,7 @@ export const convertListRoomsToOption = (list: RoomEntity[]): FieldOptions[] => 
   const result: FieldOptions[] = [];
   list?.map((row) => {
     if (row.roomID) {
-      result.push({ id: row.roomID, label: row.name! });
+      result.push({ id: row.roomID, label: row.name! + " - " + row.description });
     }
   });
   return result;

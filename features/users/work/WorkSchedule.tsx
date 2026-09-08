@@ -18,6 +18,7 @@ import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { getAllUser, getUserById } from "@/infrastructure/user/userRequest";
 import { convertListUsersToOption } from "@/infrastructure/user/userFunction";
 import { UserEntity } from "@/types/entity-type/userEntity";
+import {statusLabel} from "@/lib/utils";
 
 export default function WorkSchedulePage() {
   const [works, setWorks] = useState<WorkSchedule[]>([]);
@@ -41,8 +42,12 @@ export default function WorkSchedulePage() {
     if(user.profil.company.companyID){
       getPaginateworkSCByUser(user.userID!, page.pageIndex, page.pageSize)
         .then((data) => {
-          setWorks(data.content);
-                  setPage((prevPage) => ({
+          const mappedData = data.content.map((item) => ({
+            ...item,
+            stateLabel: statusLabel[item.status] || "Inconnu",
+          }));
+          setWorks(mappedData);
+          setPage((prevPage) => ({
           ...prevPage,
           pageIndex: data.page.number,
         }));

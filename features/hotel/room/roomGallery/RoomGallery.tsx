@@ -36,6 +36,7 @@ import { convertListToOption } from "@/infrastructure/hotel/room/roomFunction";
 import { getCurrency } from "@/utils/Util"
 import { RoomPhotoEntity } from "@/types/entity-type/roomPhotoEntity"
 import Tooltips from "@/components/tooltips/tooltips"
+import {statusLabel} from "@/lib/utils";
 
 export function RoomGallery() {
 
@@ -157,7 +158,11 @@ export function RoomGallery() {
     if (user && user.profil.company.companyID) {
       getPaginateRooms(user.profil.company.companyID, page.pageIndex, page.pageSize)
         .then((data) => {
-          setRoom(data.content)
+          const mappedData = data.content.map((item) => ({
+            ...item,
+            stateLabel: statusLabel[item.status] || "Inconnu",
+          }));
+          setRoom(mappedData)
           setAll({
             totalElement: data.page.totalElements,
             totalPage: data.page.totalPages,
@@ -200,8 +205,18 @@ return (
 
               {/*DROPDOWN MENU*/}
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">{room.name}</h2>              
-
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-semibold">{room.name}</h2>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-xs font-bold border ${
+                        room.status === 0
+                          ? "bg-blue-100 text-blue-700 border-blue-200"
+                          : "bg-red-100 text-red-700 border-red-200"
+                      }`}
+                    >
+                      {statusLabel[room.status] || "Inconnu"}
+                    </span>
+                </div>
                 <div className="grid grid-cols-[auto_auto] gap-2 items-center">
                   {/* UpdateBox en grid à côté du bouton */}
                   <UpdateBox body={room} onUpdate={onUpdate} fields={namefield} />

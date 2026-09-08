@@ -97,7 +97,7 @@ export function DataTable<TData>({
   }, [loading]);
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[1230px] flex-col items-center">
       {canRead ? (
         <>
           <div className="flex items-center py-4">
@@ -128,7 +128,7 @@ export function DataTable<TData>({
         */}
           </div>
           {/* affichage de la liste */}
-          <div className="overflow-hidden rounded-md border">
+          <div className="w-full overflow-x-auto rounded-md border">
             <Liste table={table} loading={showSkeleton} />
           </div>
           <div className="flex items-center justify-end space-x-2 py-4">

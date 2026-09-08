@@ -21,18 +21,18 @@ export const UsersColumnOptions: ColumnConfig<UserEntity>[] = [
         type: "text",
         sorting: true,
     },
-    { key: "status", header: "Statut", type: "text", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 // type field pour le formulaire
 export const UserNamefield: FieldConfig<UserEntity>[] = [
-    { name: "name", libelle: "Nom :", type: "text", normal: true },
+    { name: "name", libelle: "Nom", type: "text", normal: true },
 
-    { name: "phone", libelle: "Téléphone :", type: "text", normal: true },
+    { name: "phone", libelle: "Téléphone", type: "text", normal: true },
     {
         name: "joinedDate",
-        libelle: "Date d'inscription :",
+        libelle: "Date d'inscription",
         type: "date",
         normal: true,
     },
-    { name: "status", libelle: "Statut :", type: "number", normal: true },
+    // { name: "status", libelle: "Statut :", type: "number", normal: true },
 ];

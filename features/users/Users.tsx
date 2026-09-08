@@ -6,14 +6,12 @@ import { getAllProfils } from "@/infrastructure/user/profil/profilRequest";
 import {
   createUser,
   deleteUser,
-  getAllUser,
   getPaginateUsers,
   updateUser,
 } from "@/infrastructure/user/userRequest";
 import { ColumnConfig } from "@/types/component-type/column-config";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { PageType } from "@/types/component-type/PageType";
-import { ProfilEntity } from "@/types/entity-type/profilEntity";
 import { UserEntity } from "@/types/entity-type/userEntity";
 import { pageSize } from "@/utils/PaginationUtility";
 import { PaginationState } from "@tanstack/react-table";
@@ -21,6 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import { UserNamefield, UsersColumnOptions } from "./prep-view-users";
 import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
+import {statusLabel} from "@/lib/utils";
 
 export default function Users() {
   const user = getLocalStorage();//maka localstorage 
@@ -55,7 +54,11 @@ export default function Users() {
     if (user && user.profil.company.companyID) {
       getPaginateUsers(user.profil.company.companyID, page.pageIndex, page.pageSize)
         .then((data) => {
-          setUsers(data.content);
+          const mappedData = data.content.map((item) => ({
+                  ...item,
+                  stateLabel: statusLabel[item.status] || "Inconnu",
+          }));
+          setUsers(mappedData);
                   setPage((prevPage) => ({
           ...prevPage,
           pageIndex: data.page.number,
@@ -103,7 +106,7 @@ export default function Users() {
   const options: FieldConfig<UserEntity> = useMemo(
     () => ({
       name: "profil",
-      libelle: "Profil :",
+      libelle: "Profil",
       type: "select",
       normal: false,
       items: profilOption,
@@ -137,6 +140,7 @@ export default function Users() {
       company: company,
       name: "",
       authority: 0,
+      status: 0,
     },
     phone: "",
     joinedDate: new Date().toDateString(),
@@ -158,7 +162,7 @@ export default function Users() {
     <div className="container mx-auto py-10 px-3">
 
       <div className="w-full mix-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
-        <h2 className="text-xl font-semibold">{"Liste des personnes enregistrés dans l'établissement"}</h2>
+        <h2 className="text-xl font-semibold">{"Liste des utilisateurs enregistrés dans l'établissement"}</h2>
         <DataTable
           body={body}
           onCreate={onCreate}

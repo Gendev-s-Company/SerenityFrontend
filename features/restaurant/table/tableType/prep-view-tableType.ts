@@ -7,7 +7,7 @@ export const TableTypeColumnOptions: ColumnConfig<TableTypeEntity>[] = [
     { key: "tabletypeid", header: "tabletypeid", sorting: true },
     { key: "name", header: "Nom",  sorting: true },
     { key: "description", header: "Description", sorting: true },
-    { key: "status", header: "Statut", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 
 ];
 export const TableTypeNamefield: FieldConfig<TableTypeEntity>[] = [

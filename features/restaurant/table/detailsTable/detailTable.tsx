@@ -18,7 +18,7 @@ import { PageType } from '@/types/component-type/PageType';
 import { ReservationTableEntity } from '@/types/entity-type/reservationTableEntity';
 import { getLocalStorage } from '@/utils/storage';
 import { createReservation } from '@/infrastructure/restaurant/table/tablereservation/tableReservationRequest';
-import { getAllCustomer } from '@/infrastructure/hotel/customer/customerRequest';
+import { getAllCustomer, getAllCustomerByCompany } from '@/infrastructure/hotel/customer/customerRequest';
 import { CustomerEntity } from '@/types/entity-type/customerEntity';
 
 export default function Detailtable() {
@@ -130,7 +130,8 @@ export default function Detailtable() {
 
     useEffect(() => {
       if (user.profil.company.companyID) {
-          getAllCustomer(user.profil.company.companyID).then((data) => {
+          getAllCustomerByCompany(user.profil.company.companyID)
+              .then((data) => {
               setCustomers(data);
           })
               .catch((error) => {

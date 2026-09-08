@@ -6,4 +6,5 @@ export interface ProfilEntity {
     name: string,
     authority: number,
     skipValidation: boolean,
+    status: number,
 }

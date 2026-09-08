@@ -2,8 +2,9 @@ import { CallMethod } from "@/types/enums";
 
 
 // https://development-observe-lakes-indication.trycloudflare.com
+// const basePath = "http://10.200.30.152:8000/api";
+// const basePath = "http://10.200.30.137:8000/api";
 const basePath = "http://localhost:8000/api";
-
 
 const apiCall = async<T>(path: string, body?: unknown, method = CallMethod.get): Promise<T> => {
   const config: RequestInit = {

@@ -10,11 +10,8 @@ import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { CustomerEntity } from "@/types/entity-type/customerEntity";
-import { ReceiptText } from "lucide-react";
-import UpdateBox from "@/components/update/update-box";
-import DeleteBox from "@/components/delete/delete-box";
-import InvoicePreviewModal from "@/features/invoice/invoice/InvoicePreviewModal";
-import { InvoiceData, sampleInvoice } from "@/lib/invoice-data";
+import { InvoiceData } from "@/lib/invoice-data";
+import {statusLabel} from "@/lib/utils";
 
 function mapRowToInvoice(row: any): InvoiceData {
   // adapte les champs à la forme réelle de ton `row`
@@ -69,7 +66,11 @@ export default function Customer(){
            page.pageSize,
           )
            .then((data) => {
-            setCustomer(data.content);
+            const mappedData = data.content.map((item) => ({
+              ...item,
+              stateLabel: statusLabel[item.status] || "Inconnu",
+            }));
+            setCustomer(mappedData);
             setPage((prevPage) => ({
               ...prevPage,
               pageIndex: data.page.number,
@@ -113,29 +114,7 @@ export default function Customer(){
       onUpdate: (row) => onUpdate(row),
       onDelete: (row) => onDelete(row.customerID),
       onClick: (row) => console.log("Editer", row.customerID),
-      cell: (row: CustomerEntity) => {
-        return (
-          <div className="flex gap-2">
-            {/* Impression de facture */}
-              {/* <button 
-                className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-white text-green-600 hover:bg-blue-50 transition-colors" 
-                aria-label="Modifier"
-                onClick={() => printReceipt(row)}
-              >
-                <ReceiptText size={15} className="text-green-600" />
-              </button>      */}
 
-
-            {/* Modifier */}
-            <UpdateBox body={row} onUpdate={onUpdate} fields={CustomerNamefield} />
-
-            {/* Supprimer  */}
-            <DeleteBox id={row.customerID!} onDelete={() => onDelete(row.customerID)} />
-          </div>
-
-        )
-
-      }
     };
 
     const columns = useMemo(() => {

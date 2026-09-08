@@ -18,4 +18,5 @@ export interface ColumnConfig<T> {
   href?: (data: T) => string; 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cell?: (data: T) => React.ReactNode;
+  class?: string;
 }

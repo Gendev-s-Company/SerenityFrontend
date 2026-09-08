@@ -14,6 +14,7 @@ import { PaginationState } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 import { CompanyColumnOptions, CompanyNamefield } from "./prep-view-company";
 import { getLocalStorage } from "@/utils/storage";
+import {statusLabel} from "@/lib/utils";
 
 export default function Company() {
   const [company, setCompany] = useState<CompanyEntity[]>([]);
@@ -34,7 +35,11 @@ export default function Company() {
     setLoading(true);
     getPaginateCompany(page.pageIndex, page.pageSize)
       .then((data) => {
-        setCompany(data.content);
+        const mappedData = data.content.map((item) => ({
+        ...item,
+        stateLabel: statusLabel[item.status] || "Inconnu",
+        }));
+        setCompany(mappedData);
         setPage((prevPage) => ({
           ...prevPage,
           pageIndex: data.page.number,

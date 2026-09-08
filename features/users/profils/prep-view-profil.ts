@@ -4,8 +4,7 @@ import { ProfilEntity } from "@/types/entity-type/profilEntity";
 
 export const ProfilColumnOptions: ColumnConfig<ProfilEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" },
-    { key: "profilID", header: "ProfilID", sorting: true },
-    { key: "company.companyID", header: "CompanyID", type:'text', sorting: true },
+    { key: "profilID", header: "ProfilID", sorting: true }, 
     {
         key: "name",
         header: "Nom",
@@ -15,6 +14,7 @@ export const ProfilColumnOptions: ColumnConfig<ProfilEntity>[] = [
         sorting:true,
     },
     { key: "authority", header: "Autorité", type: "text", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 export const ProfilNamefield: FieldConfig<ProfilEntity>[] = [
     { name: "name", libelle: "Nom :", type: "text", normal: true },

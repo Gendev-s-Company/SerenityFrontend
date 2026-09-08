@@ -42,9 +42,22 @@ const AvatarOption = () => {
 
 return (
     <div className="flex items-center gap-2 ml-auto">
-      <span className="text-sm font-medium">
-        {user?.name || ""}/{user?.profil.name || ""}
-      </span>
+      <div className="flex flex-col items-end justify-center gap-1">
+        <span className="text-sm font-medium">
+          {user?.name || ""}
+        </span>
+    
+        {(user?.profil?.name || user?.profil?.company?.name) && (
+          <span className="inline-flex w-fit items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+            {user?.profil?.name}
+            {user?.profil?.name && user?.profil?.company?.name && (
+              <span className="text-gray-400">•</span>
+            )}
+            {user?.profil?.company?.name}
+          </span>
+        )}
+      </div>
+      
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="cursor-pointer focus:outline-none transition-opacity hover:opacity-80">

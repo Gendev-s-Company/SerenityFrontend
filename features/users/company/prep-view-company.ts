@@ -14,12 +14,12 @@ export const CompanyColumnOptions: ColumnConfig<CompanyEntity>[] = [
         hiding: false,
     },
     { key: "phone", header: "Téléphone", type: "text", sorting: true },
-    { key: "status", header: "Statut", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 // préparation des fields à utiliser pour le form de create et update
 export   const CompanyNamefield: FieldConfig<CompanyEntity>[] = [
         { name: "name", libelle: "Nom :", type: "text", normal: true },
         { name: "mail", libelle: "Email :", type: "text", normal: true },
         { name: "phone", libelle: "Téléphone :", type: "text", normal: true },
-        { name: "status", libelle: "Statut :", type: "number", normal: true }
+        // { name: "status", libelle: "Statut :", type: "number", normal: true }
     ];

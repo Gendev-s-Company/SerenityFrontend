@@ -15,7 +15,7 @@ export const RestaurantTableColumnOptions: ColumnConfig<RestaurantTableEntity>[]
     { key: "description", header: "Description", sorting: true },
     { key: "capacity", header: "Capacité", sorting: true },
     { key: "tabletype.name", header: "Type de table", sorting: true },
-    { key: "status", header: "Statut", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 export const RestaurantTableNameField: FieldConfig<RestaurantTableEntity>[] = [
     { name: "name", libelle: "Nom", type: "text", normal: true },

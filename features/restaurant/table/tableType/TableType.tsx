@@ -13,6 +13,7 @@ import { getLocalStorage } from "@/utils/storage";
 import { TableTypeEntity } from "@/types/entity-type/tableTypeEntity";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { createTableType, deleteTableType, getPaginateTableTypes, updateTableType } from "@/infrastructure/restaurant/table/tabletype/tableTypeRequest";
+import {statusLabel} from "@/lib/utils";
 
 export default function TableType() {
     const [tableType,settableType]=useState<TableTypeEntity[]>([]);
@@ -38,7 +39,11 @@ export default function TableType() {
             page.pageSize,
           )
             .then((data) => {
-              settableType(data.content);
+              const mappedData = data.content.map((item) => ({
+                ...item,
+                stateLabel: statusLabel[item.status] || "Inconnu",
+              }));
+              settableType(mappedData);
               setPage((prevPage) => ({
                 ...prevPage,
                 pageIndex: data.page.number,

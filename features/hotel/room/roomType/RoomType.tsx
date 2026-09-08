@@ -11,6 +11,7 @@ import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { RoomTypeEntity } from "@/types/entity-type/roomTypeEntity";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
+import {statusLabel} from "@/lib/utils";
 
 export default function RoomType() {
     const [roomType,setRoomType]=useState<RoomTypeEntity[]>([]);
@@ -36,7 +37,11 @@ export default function RoomType() {
             page.pageSize,
           )
             .then((data) => {
-              setRoomType(data.content);
+              const mappedData = data.content.map((item) => ({
+                ...item,
+                stateLabel: statusLabel[item.status] || "Inconnu",
+              }));
+              setRoomType(mappedData);
               setPage((prevPage) => ({
                 ...prevPage,
                 pageIndex: data.page.number,

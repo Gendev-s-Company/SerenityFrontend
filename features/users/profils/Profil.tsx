@@ -16,6 +16,7 @@ import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
 import { getLocalStorage } from "@/utils/storage";
 import { CompanyEntity } from "@/types/entity-type/companyEntity";
+import {statusLabel} from "@/lib/utils";
 
 export default function Profil() {
   const [profil, setProfil] = useState<ProfilEntity[]>([]);
@@ -30,6 +31,7 @@ export default function Profil() {
   });
   const [loading, setLoading] = useState(true)
   const user = getLocalStorage()!;
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
@@ -40,14 +42,18 @@ export default function Profil() {
         page.pageSize,
       )
         .then((data) => {
-          setProfil(data.content);
-                  setPage((prevPage) => ({
+          const mappedData = data.content.map((item) => ({
+            ...item,
+            stateLabel: statusLabel[item.status] || "Inconnu",
+          }));
+          setProfil(mappedData);
+          setPage((prevPage) => ({
           ...prevPage,
           pageIndex: data.page.number,
         }));
           setAll({
             totalElement: data.page.totalElements,
-            totalPage: data.page.totalElements,
+            totalPage: data.page.totalPages,
           });
           setLoading(false)
         })
@@ -77,9 +83,11 @@ export default function Profil() {
     onDelete: (row) => onDelete(row.profilID),
     onClick: (row) => console.log("Editer", row.profilID),
   };
+
   const columns = useMemo(() => {
     return [...ProfilColumnOptions, btnAction];
   }, []);
+
   const company: CompanyEntity = {
     skipValidation: true,
     companyID: user?.profil?.company.companyID,
@@ -88,17 +96,17 @@ export default function Profil() {
     phone: "",
     status: 0,
   };
+
   const body: ProfilEntity = {
     profilID: null,
     company: company,
     name: "",
     authority: 0,
     skipValidation: false,
+    status: 0,
   };
   const onCreate = async (formData: ProfilEntity) => {
-    console.log(user);
 
-    console.log(formData);
 
     await createProfil(formData);
     setRefresh((prev) => prev + 1);

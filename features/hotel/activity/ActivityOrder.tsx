@@ -35,6 +35,7 @@ import OrderSearchform from "./form/OrderSearchform";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
 
+
 export default function ActivitiesOrder() {
   const user = getLocalStorage(); //maka localstorage
   const [activitieso, setActivitieso] = useState<ActivityOrderEntity[]>([]);
@@ -271,7 +272,15 @@ export default function ActivitiesOrder() {
             Filtrer
           </FieldLabel>
         </Field>
-        {toogle && <OrderSearchform customer={customerOption} forms={forms} handleSearch={handleSearch} />}
+
+        <OrderSearchform
+          open={toogle}
+          onOpenChange={setToogle}
+          customer={customerOption}
+          forms={forms}
+          handleSearch={handleSearch}
+        />
+        
         <DataTable
           body={body}
           onCreate={onCreate}

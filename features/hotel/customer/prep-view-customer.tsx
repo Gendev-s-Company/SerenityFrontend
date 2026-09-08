@@ -5,9 +5,9 @@ export const CustomerColumnOptions: ColumnConfig<CustomerEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" ,href: (row) => `/customer/${row.customerID}`},
     { key: "customerID", header: "customerID", sorting: true },
     { key: "name", header: "Nom", type:'text', sorting: true },
-    { key: "company.name", header: "Entreprise", type: "text", sorting: true },
     { key: "phone", header: "Téléphone", type: "text", sorting: true },
     { key: "mail", header: "Email", type: "text", sorting: true },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 
 ];
 export const CustomerNamefield: FieldConfig<CustomerEntity>[] = [

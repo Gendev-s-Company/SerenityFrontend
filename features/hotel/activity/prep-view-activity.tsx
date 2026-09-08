@@ -5,8 +5,7 @@ import { ActivityEntity } from "@/types/entity-type/activityEntity";
 export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" ,href: (row) => `/activities/${row.activityID}`},
     { key: "activityID", header: "activityID", sorting: true },
-    { key: "company.name", header: "Société", type:'text', sorting: true },
-    {key:"isindividual", header: "Type d'activité", type:'text', sorting: true,
+    { key:"isindividual", header: "Type d'activité", type:'text', sorting: true,
         cell: (row) => <>{row.isIndividual ? "Individuel" : "Collectif"}</>
     },
     {
@@ -18,7 +17,10 @@ export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
         // href: (row) => `/view/hotel/activity/activityPrice?activityID=${row.activityID}`,
         href: (row) => `/view/hotel/activity/detail?activityID=${row.activityID}`,
     },
-    { key: "description", header: "description", type: "text", sorting: true },
+    { key: "description", header: "description", type: "text", sorting: true,
+        cell: (row) => <>{row.description ? row.description : "Aucune description disponible"}</>
+    },
+    { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 
 export const ActivityNamefield: FieldConfig<ActivityEntity>[] = [
