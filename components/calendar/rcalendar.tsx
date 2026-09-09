@@ -13,6 +13,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { modifyListEvent } from '../../features/users/work/planning/planningFunction';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(
@@ -35,13 +36,16 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
     const [view, setView] = useState<View>(Views.MONTH);
     const [date, setDate] = useState(new Date());
     const [events, setEvents] = useState<CalendarEvent[]>(works);
-
+    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+    const [open, setOpen] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
     const minTime = new Date();
     minTime.setHours(6, 0, 0);
 
     const maxTime = new Date();
     maxTime.setHours(18, 0, 0);
+
+    
     const eventPropGetter: CalendarProps<CalendarEvent>["eventPropGetter"] = (event) => {
         const variant = event.variant;
         return {
@@ -95,6 +99,7 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
             end: endDate,
             allDay: allDaySelection,
             variant: data.variant,
+            description: data.description,
         };
         setEvents((previous) => [...previous, newEvent]);
         await saveToDb(body)
@@ -212,6 +217,11 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
                 draggableAccessor={() => true}
                 resizableAccessor={() => true}
                 events={events}
+                selected={selectedEvent}
+                onSelectEvent={(event) => {
+                    setSelectedEvent(event);
+                    setOpen(true);
+                }}
                 eventPropGetter={eventPropGetter}
                 onSelectSlot={handleSelectSlot}
                 onEventDrop={handleEventDrop}
@@ -219,6 +229,44 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
             />
         
         </div>
+                    
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent>
+            <DialogHeader>      
+                <DialogTitle>{selectedEvent?.title}</DialogTitle>
+                    <DialogDescription>{selectedEvent?.description}</DialogDescription>
+            </DialogHeader>
+                    
+            <div className="space-y-2 py-2 text-sm">        
+                <div>
+                  <span className="font-medium">Début : </span>
+                  {selectedEvent?.start.toLocaleString("fr-FR", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </div>
+                <div>
+                  <span className="font-medium">Fin : </span>
+                  {selectedEvent?.end.toLocaleString("fr-FR", {
+          dateStyle: "medium",
+          timeStyle: "short",
+                  })}
+                </div>
+            </div>
+            
+            <DialogFooter>      
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                        Fermer
+                </Button>
+                <Button onClick={() => {
+                    // logique d'édition ou de suppression ici
+                    }}>
+                  Modifier
+                </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
             
         </div>
     );

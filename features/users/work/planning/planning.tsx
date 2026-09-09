@@ -40,6 +40,7 @@ const Planning = () => {
     endtime: null,
     color: "#2196F3",
     status: 0,
+    description: "",
   };
   const [form, setForm] = useState<WorkSchedule>(body);
   useEffect(() => {
@@ -65,6 +66,7 @@ const Planning = () => {
   useEffect(() => {
     getAllworkSCByAutority(user.userID!)
       .then((data) => {
+        console.log("Liste des workschedule:", data);
         const events = convertListToEvent(data);
         setWorks(events);
       })

@@ -26,6 +26,7 @@ export const WSCColumnOptions: ColumnConfig<WorkSchedule>[] = [
 ];
 
 export const WSCNamefield: FieldConfig<WorkSchedule>[] = [
+    { name: "description", libelle: "Description :", type: "textarea", normal: false },
     { name: "starttime", libelle: "Début :", type: "datetime-local", normal: true },
     { name: "endtime", libelle: "Fin :", type: "datetime-local", normal: true },
     { name: "color", libelle: "Couleur :", type: "color", normal: true },

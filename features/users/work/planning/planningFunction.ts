@@ -9,9 +9,11 @@ export function convertListToEvent(list: WorkSchedule[]): CalendarEvent[]{
             title: row.userID,
             start: simpleTransform(row.starttime),
             end: simpleTransform(row.endtime!),
-            color:row.color
+            color:row.color,
+            description: row.description,
         })
     })
+    console.log("Liste des events:",result)
     return result;
 }
 

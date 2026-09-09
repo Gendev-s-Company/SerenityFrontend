@@ -4,5 +4,6 @@ export interface WorkSchedule {
     color?: string,
     starttime: Date,
     endtime: Date|null,
+    description: string,
     status: number,
 }

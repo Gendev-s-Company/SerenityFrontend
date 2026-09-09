@@ -18,7 +18,8 @@ export type CalendarEvent = {
     end: Date;
     allDay?: boolean;
     variant?: "primary" | "secondary" | "outline";
-    color?: string
+    color?: string;
+    description?: string;
 };
 export type Calendarbody = {
     title: string;
@@ -26,6 +27,7 @@ export type Calendarbody = {
     end: string;
     color?: string,
     variant: CalendarEvent["variant"]
+    description?: string;
 }
 // export const calendarData: CalendarEvent[] = [
 //     {

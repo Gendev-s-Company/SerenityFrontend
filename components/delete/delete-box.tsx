@@ -34,7 +34,7 @@ export default function DeleteBox({ id, onDelete }: DeleteBoxProps) {
       await new Promise((res) => setTimeout(res, 3000));
       await onDelete();
       
-      toast.success("Suppression réussie !!", { position: "top-right" });
+      toast.success("Suppression réussie !", { position: "top-right" });
 
       setTimeout(() => setOpen(false), 500); 
     });
