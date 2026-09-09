@@ -45,7 +45,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
 
 
 
-  const size = 4;
+  const size = 2;
 
 
   const fetchPhotos = async () => {
@@ -216,6 +216,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
         </div>
       ) : (
         <>
+        <div className="relative group"> 
           <Carousel className="w-full">
             <CarouselContent>
               <CarouselItem>
@@ -261,45 +262,59 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
 
                         <img
                           src={photo.src}
-                          alt="Activity"
+                          alt={photo.files.type}
                           className="object-cover w-full h-full transition-transform group-hover:scale-105"
                           onClick={() => setPreview(photo.src)}
                         />
                       </CardContent>
                     </Card>
                   ))}
-                  {displayPhotos.length<=0 && "Aucune photo détectée"}
+                  {displayPhotos.length <=0 && (
+                    <div className="col-span-2 flex items-center justify-center border border-dashed rounded-xl bg-gray-50">
+                      <p className="text-gray-400 text-sm text-center">
+                        Aucune photo détectée
+                      </p>
+                    </div>
+                  )}
                 </div>
               </CarouselItem>
             </CarouselContent>
           </Carousel>
 
-          {/* --- PAGINATION --- */}
-          <div className="flex justify-center items-center mt-6 gap-4">
+        {/* --- NAVIGATION PAR FLÈCHES (INCRUSTÉES) --- */}
+        {displayPhotos.length > 0 && (
+          <>
+            {/* Flèche Gauche */}
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:hidden"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0 || loading}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-6 w-6" />
             </Button>
 
-            <span className="text-sm font-medium bg-white px-3 py-1 rounded-full border shadow-sm">
-              Page {page + 1}
-            </span>
-
+            {/* Flèche Droite */}
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:hidden"
               onClick={() => setPage((p) => p + 1)}
               disabled={photos.length < size || loading}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-6 w-6" />
             </Button>
-          </div>
-            {/* Le modal de l'image cliqué en plein écran */}
-              {preview && (
+
+            {/* Indicateur de page discret en bas au centre */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+               <span className="text-[10px] uppercase tracking-widest font-bold bg-black/50 text-white px-3 py-1 rounded-full backdrop-blur-sm">
+                Page {page + 1}
+              </span>
+            </div>
+
+          {/* Le modal de l'image cliqué en plein écran */}
+            {preview && (
                 <div
                   onClick={() => setPreview(null)}
                   className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-zoom-out
@@ -319,6 +334,9 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
                   />
                 </div>
             )}
+          </>         
+        )}
+        </div>
         </>
       )}
     </div>

@@ -11,6 +11,9 @@ export type FieldConfig<T> = {
     idKey: string,
     labelKey: string
   };
+  min?:number,
+  max?:number,
+  step?:number
 };
 
 export type UseFormReturn<G> = {

@@ -79,11 +79,18 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                         onChange={(e) =>
                           forms.handleInputChange(
                             fieldName,
-                            e.target.value as T[keyof T],
+                            (row.type === "number"
+                              ? (e.target.value === "" ? "" : Number(e.target.value))
+                              : e.target.value) as T[keyof T],
                           )
                         }
                         placeholder={"Entrez " + row.libelle}
                         required
+                        {...(row.type === "number" && {
+                          min: row.min,
+                          max: row.max,
+                          step: row.step ?? 1,
+                        })}
                       />
                     </Field>
                   }
@@ -122,7 +129,7 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                                 row.objectMapping.idKey
                                 ],
                               )
-                              : (fieldValue as string)
+                              : (fieldValue as string) || "__placeholder__"
                           }
                           onValueChange={(selectedId) => {
                             const selectedOption =
@@ -164,6 +171,9 @@ export default function Forms<T>({ forms, fields }: FormsProps<T>) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
+                                <SelectItem value="__placeholder__" disabled>
+                                  {"Choisir " + row.libelle}
+                                </SelectItem>
                               {row.items.map((item) => (
                                 <SelectItem key={item.id} value={item.id}>
                                   {item.label}

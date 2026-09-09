@@ -40,8 +40,8 @@ export const ActivityOrderColumnOptions: ColumnConfig<ActivityOrderEntity>[] = [
 
 export const ActivityOrderfield: FieldConfig<ActivityOrderEntity>[] = [
   // { name: "price", libelle: "Prix :", type: "amount", normal: true },
-  { name: "duration", libelle: "Durée :", type: "number", normal: true },
-  { name: "totalPerson", libelle: "Nombre de personne :", type: "number", normal: true },
+  { name: "duration", libelle: "Durée :", type: "number", normal: true, min: 1 },
+  { name: "totalPerson", libelle: "Nombre de personne :", type: "number", normal: true, min: 1 },
   { name: "state", libelle: "Statut :", type: "select", normal: false, items: stateOption },
   { name: "dateOrder", libelle: "Date de commande :", type: "datetime-local", normal: true },
 ];
