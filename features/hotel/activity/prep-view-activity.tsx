@@ -5,7 +5,7 @@ import { ActivityEntity } from "@/types/entity-type/activityEntity";
 export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
     { key: "select", header: "Select", type: "checkbox" ,href: (row) => `/activities/${row.activityID}`},
     { key: "activityID", header: "activityID", sorting: true },
-    { key:"isindividual", header: "Type d'activité", type:'text', sorting: true,
+    { key:"isIndividual", header: "Type d'activité", type:'text', sorting: true,
         cell: (row) => <>{row.isIndividual ? "Individuel" : "Collectif"}</>
     },
     {
@@ -20,6 +20,8 @@ export const ActivityColumnOptions: ColumnConfig<ActivityEntity>[] = [
     { key: "description", header: "description", type: "text", sorting: true,
         cell: (row) => <>{row.description ? row.description : "Aucune description disponible"}</>
     },
+    { key: "price.price", header: "Prix actuel", type: "amount", sorting: true },
+    { key: "price.hourPrice", header: "Prix à l'heure", type: "amount", sorting: true },
     { key: "stateLabel", header: "Etat", type: "text", sorting: true },
 ];
 

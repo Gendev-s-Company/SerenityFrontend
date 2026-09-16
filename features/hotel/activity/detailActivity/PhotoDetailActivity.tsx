@@ -52,7 +52,7 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
     setLoading(true);
     try {
       const response = await getAllphoto(activityId, page, size);
-      console.log(response.content);
+      // console.log(response.content);
 
       setPhotos(response.content);
     } catch (error) {
@@ -217,125 +217,330 @@ export default function PhotoDetailActivity({ activityId }: PhotoDetailActivityP
       ) : (
         <>
         <div className="relative group"> 
-          <Carousel className="w-full">
-            <CarouselContent>
-              <CarouselItem>
-                <div className="grid grid-cols-2 gap-4 h-[400px]">
-                  {displayPhotos.map((photo, id) => (
-                    <Card key={id} className="overflow-hidden border-2 hover:border-primary/50 transition-colors relative group">
-                      <CardContent className="p-0 h-full relative">
-                      <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="secondary" size="icon" className="h-8 w-8 shadow-md hover:bg-white">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-      
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <button className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-red-50 hover:text-red-600 w-full text-left text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Supprimer
-                              </button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  {"Cette action est irréversible. La photo sera définitivement supprimée de l'activité."}
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDelete(photo.photoID)} variant={"destructive"}>
-                                  Supprimer
-                                </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
+          <div className="relative w-full group">
+            <Carousel className="w-full">
+              <CarouselContent>
+                <CarouselItem>
+                  <div
+                    className="
+                      grid
+                      grid-cols-1
+                      sm:grid-cols-2
+                      gap-3 sm:gap-4
+                      h-auto
+                      sm:h-[400px]
+                    "
+                  >
+                    {displayPhotos.map((photo, id) => (
+                      <Card
+                        key={id}
+                        className="
+                          overflow-hidden
+                          border-2
+                          hover:border-primary/50
+                          transition-colors
+                          relative
+                          group/card
+                          h-[240px]
+                          sm:h-full
+                        "
+                      >
+                        <CardContent className="p-0 h-full relative">
+                    
+                         {/* Liste de photos */}
+                          <div
+                            className="
+                              absolute
+                              top-2
+                              right-2
+                              z-10
+                              opacity-100
+                              sm:opacity-0
+                              sm:group-hover/card:opacity-100
+                              transition-opacity
+                            "
+                          >
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="secondary"
+                                  size="icon"
+                                  className="
+                                    h-8 w-8
+                                    shadow-md
+                                    bg-white/90
+                                    backdrop-blur-sm
+                                    hover:bg-white
+                                  "
+                                >
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                    
+                              <DropdownMenuContent align="end">
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <button
+                                      className="
+                                        relative
+                                        flex
+                                        cursor-pointer
+                                        select-none
+                                        items-center
+                                        rounded-sm
+                                        px-2
+                                        py-1.5
+                                        text-sm
+                                        outline-none
+                                        transition-colors
+                                        hover:bg-red-50
+                                        hover:text-red-600
+                                        w-full
+                                        text-left
+                                        text-destructive
+                                      "
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Supprimer
+                                    </button>
+                                  </AlertDialogTrigger>
+                    
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Êtes-vous sûr ?
+                                      </AlertDialogTitle>
+                    
+                                      <AlertDialogDescription>
+                                        Cette action est irréversible. La photo sera
+                                        définitivement supprimée de l'activité.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                    
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Annuler
+                                      </AlertDialogCancel>
+                    
+                                      <AlertDialogAction
+                                        onClick={() => handleDelete(photo.photoID)}
+                                        variant="destructive"
+                                      >
+                                        Supprimer
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                    
+                          <img
+                            src={photo.src}
+                            alt={photo.files.type}
+                            className="
+                              object-cover
+                              w-full
+                              h-full
+                              cursor-pointer
+                              transition-transform
+                              group-hover/card:scale-105
+                            "
+                            onClick={() => setPreview(photo.src)}
+                          />
 
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
+                        </CardContent>
+                      </Card>
+                    ))}
 
-                        <img
-                          src={photo.src}
-                          alt={photo.files.type}
-                          className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                          onClick={() => setPreview(photo.src)}
-                        />
-                      </CardContent>
-                    </Card>
-                  ))}
-                  {displayPhotos.length <=0 && (
-                    <div className="col-span-2 flex items-center justify-center border border-dashed rounded-xl bg-gray-50">
-                      <p className="text-gray-400 text-sm text-center">
-                        Aucune photo détectée
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </CarouselItem>
-            </CarouselContent>
-          </Carousel>
-
-        {/* --- NAVIGATION PAR FLÈCHES (INCRUSTÉES) --- */}
-        {displayPhotos.length > 0 && (
-          <>
-            {/* Flèche Gauche */}
-            <Button
-              variant="secondary"
-              size="icon"
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:hidden"
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-              disabled={page === 0 || loading}
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-
-            {/* Flèche Droite */}
-            <Button
-              variant="secondary"
-              size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:hidden"
-              onClick={() => setPage((p) => p + 1)}
-              disabled={photos.length < size || loading}
-            >
-              <ChevronRight className="h-6 w-6" />
-            </Button>
-
-            {/* Indicateur de page discret en bas au centre */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
-               <span className="text-[10px] uppercase tracking-widest font-bold bg-black/50 text-white px-3 py-1 rounded-full backdrop-blur-sm">
-                Page {page + 1}
-              </span>
-            </div>
-
-          {/* Le modal de l'image cliqué en plein écran */}
-            {preview && (
-                <div
-                  onClick={() => setPreview(null)}
-                  className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-zoom-out
-                             animate-in fade-in duration-200"
+                    {displayPhotos.length <= 0 && (
+                      <div
+                        className="
+                          col-span-full
+                          flex
+                          items-center
+                          justify-center
+                          border
+                          border-dashed
+                          rounded-xl
+                          bg-gray-50
+                          min-h-[240px]
+                          sm:h-full
+                        "
+                      >
+                        <p className="text-gray-400 text-sm text-center">
+                          Aucune photo détectée
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+            </Carousel>
+                  
+            {displayPhotos.length > 0 && (
+              <>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="
+                    absolute
+                    left-1
+                    sm:left-2
+                    top-1/2
+                    -translate-y-1/2
+                    z-20
+            
+                    h-9
+                    w-9
+                    sm:h-10
+                    sm:w-10
+            
+                    shadow-lg
+                    bg-white/90
+                    backdrop-blur-sm
+            
+                    opacity-70
+                    sm:opacity-0
+                    sm:group-hover:opacity-100
+            
+                    transition-all
+                    duration-300
+            
+                    hover:opacity-100
+                    hover:bg-white
+            
+                    disabled:hidden
+                  "
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0 || loading}
+                  aria-label="Photo précédente"
                 >
-                  <img
-                    src={preview}
-                    alt="preview"
-                    className="max-h-[90vh] max-w-[90vw] rounded shadow-xl
-                               animate-in zoom-in-90 duration-200"
-                    style={{ 
-                      animation: "zoomIn 0.2s ease",
-                      minWidth: "400px",   // taille minimale
-                      minHeight: "300px",
-                      objectFit: "contain" // évite la déformation
-                    }}
-                  />
+                  <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Button>
+            
+          
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="
+                    absolute
+                    right-1
+                    sm:right-2
+                    top-1/2
+                    -translate-y-1/2
+                    z-20
+            
+                    h-9
+                    w-9
+                    sm:h-10
+                    sm:w-10
+            
+                    shadow-lg
+                    bg-white/90
+                    backdrop-blur-sm
+            
+                    opacity-70
+                    sm:opacity-0
+                    sm:group-hover:opacity-100
+            
+                    transition-all
+                    duration-300
+            
+                    hover:opacity-100
+                    hover:bg-white
+            
+                    disabled:hidden
+                  "
+                  onClick={() => setPage((p) => p + 1)}
+                  disabled={photos.length < size || loading}
+                  aria-label="Photo suivante"
+                >
+                  <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Button>
+            
+                <div
+                  className="
+                    absolute
+                    bottom-3
+                    sm:bottom-4
+                    left-1/2
+                    -translate-x-1/2
+                    z-20
+                  "
+                >
+                  <span
+                    className="
+                      text-[9px]
+                      sm:text-[10px]
+                      uppercase
+                      tracking-widest
+                      font-bold
+            
+                      bg-black/50
+                      text-white
+            
+                      px-2.5
+                      sm:px-3
+            
+                      py-1
+                      rounded-full
+                      backdrop-blur-sm
+            
+                      whitespace-nowrap
+                    "
+                  >
+                    Page {page + 1}
+                  </span>
                 </div>
+            
+            
+                {preview && (
+                  <div
+                    onClick={() => setPreview(null)}
+                    className="
+                      fixed
+                      inset-0
+                      z-50
+                
+                      bg-black/80
+                
+                      flex
+                      items-center
+                      justify-center
+                
+                      cursor-zoom-out
+                
+                      animate-in
+                      fade-in
+                      duration-200
+                
+                      p-4
+                    "
+                  >
+                    <img
+                      src={preview}
+                      alt="preview"
+                      className="
+                        max-h-[90vh]
+                        max-w-[95vw]
+                        sm:max-w-[90vw]
+                
+                        rounded
+                        shadow-xl
+                
+                        object-contain
+                
+                        animate-in
+                        zoom-in-90
+                        duration-200
+                      "
+                    />
+                  </div>
+                )}
+              </>
             )}
-          </>         
-        )}
+          </div>
         </div>
         </>
       )}

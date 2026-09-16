@@ -97,7 +97,7 @@ export default function Activity() {
 
   const optionsF: FieldConfig<ActivityEntity> = useMemo(
     () => ({
-      name: "isindividual",
+      name: "isIndividual",
       libelle: "Activité Individuel?",
       type: "select",
       normal: false,
@@ -126,8 +126,9 @@ export default function Activity() {
     name: "",
     description: "",
     status: 0,
-    isindividual:'true',
+    isIndividual:'true',
     skipValidation: false,
+    price: null,
   };
 
   const onCreate = async (formData: ActivityEntity) => {

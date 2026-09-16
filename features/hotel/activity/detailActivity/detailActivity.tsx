@@ -8,7 +8,7 @@ import { ActivityPriceEntity } from '@/types/entity-type/activityPriceEntity';
 import PhotoDetailActivity from './PhotoDetailActivity';
 import ActivityPrice from '../activityPrice/ActivityPrice';
 import { getCurrency } from '@/utils/Util';
-import { Sparkles } from "lucide-react";
+import { Clock, Receipt, Sparkles } from "lucide-react";
 
 export default function DetailActivity() {
     const activityID = useSearchParams().get('activityID');
@@ -19,9 +19,11 @@ export default function DetailActivity() {
     const [lastPrice, setLastPrice] = useState<ActivityPriceEntity | null>(null);
 
     useEffect(() => {
+        
         if (activityID) {
             getActivityById(activityID).then((data) => {
                 setActivity(data);
+                console.log("Fetched activity details:", data);
             })
                 .catch((error) => {
                     console.error("Error fetching activity details:", error);
@@ -77,12 +79,12 @@ export default function DetailActivity() {
                             <div className="p-4 rounded-xl border border-slate-100 bg-indigo-50/30">
                                 <span className="block text-xs font-semibold text-indigo-500 uppercase">Prix actif:</span>
                                 {lastPrice ? (
-                                    <div className="mt-1">
-                                        <span className="text-2xl font-extrabold text-slate-800">
-                                            {getCurrency(lastPrice.price)}
+                                    <div className="flex flex-wrap gap-3 mt-4">
+                                        <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">                                            
+                                            <Receipt size={14} style={{ marginRight: '8px' }}/> {getCurrency(lastPrice.price)}                                   
                                         </span>
-                                        <span className="text-slate-500 ml-2">
-                                            pour {lastPrice.hourPrice}h de prestation
+                                        <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
+                                            <Clock size={14} style={{ marginRight: '8px' }}/> {getCurrency(lastPrice.hourPrice)} / heure
                                         </span>
                                     </div>
                                 ) : (
@@ -105,7 +107,17 @@ export default function DetailActivity() {
             <div className='p-3'><PhotoDetailActivity activityId={activityID || ""} /></div>
             <div className="w-full max-w-4xl mx-auto p-3 relative border rounded-xl bg-slate-50/50">
                 <h2 className="text-xl font-semibold">Historique de prix</h2>
-                <ActivityPrice refresh={refresh} setRefresh={setRefresh} activityId={activityID || ""} />
+                {activity ? (
+                    <ActivityPrice
+                        refresh={refresh}
+                        setRefresh={setRefresh}
+                        Activity={activity}
+                    />
+                ) : (
+                    <div className="text-center py-4">
+                        Chargement...
+                    </div>
+                )}
             </div>
         </>
     );

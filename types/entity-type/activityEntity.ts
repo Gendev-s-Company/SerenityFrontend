@@ -1,3 +1,4 @@
+import { ActivityPriceEntity } from "./activityPriceEntity";
 import { CompanyEntity } from "./companyEntity";
 
 export interface ActivityEntity {
@@ -8,5 +9,5 @@ export interface ActivityEntity {
     status: number,
     skipValidation: boolean,
     isIndividual?: string,
-    isindividual?: string,
+    price: ActivityPriceEntity|null,
 }

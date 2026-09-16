@@ -55,7 +55,7 @@ export default function CalendarDialog<T>({ selectedSlot, setSelectedSlot, handl
                 )}
                 <DialogFooter>
                     <Button className="cursor-pointer" onClick={cancel} variant="outline">Annuler</Button>
-                    <Sbutton message="Création réussi!" formAction={submit} />
+                    <Sbutton message="Création réussie!" formAction={submit} />
                 </DialogFooter>
             </DialogContent>
         </Dialog>

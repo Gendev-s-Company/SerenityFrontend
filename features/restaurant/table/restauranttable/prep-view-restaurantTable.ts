@@ -20,6 +20,6 @@ export const RestaurantTableColumnOptions: ColumnConfig<RestaurantTableEntity>[]
 export const RestaurantTableNameField: FieldConfig<RestaurantTableEntity>[] = [
     { name: "name", libelle: "Nom", type: "text", normal: true },
     { name: "description", libelle: "Description", type: "text", normal: true },
-    { name: "capacity", libelle: "Capacité", type: "number", normal: true },
+    { name: "capacity", libelle: "Capacité", type: "number", normal: true, min: 1 },
     { name: "status", libelle: "Statut", type: "number", normal: false }
 ];

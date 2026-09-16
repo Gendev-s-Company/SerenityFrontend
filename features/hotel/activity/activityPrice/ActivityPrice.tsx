@@ -9,17 +9,17 @@ import { PaginationState } from "@tanstack/react-table";
 import { pageSize } from "@/utils/PaginationUtility";
 import { PageType } from "@/types/component-type/PageType";
 import { ActivityEntity } from "@/types/entity-type/activityEntity";
-import { CompanyEntity } from "@/types/entity-type/companyEntity";
 import { getLocalStorage } from "@/utils/storage";
+import { CompanyEntity } from "@/types/entity-type/companyEntity";
 
 interface ActivityPriceProps {
-  activityId: string;
+  Activity: ActivityEntity | null;
   refresh: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setRefresh: (value: any) => void;
 }
-export default function ActivityPrice({ activityId, refresh, setRefresh }: ActivityPriceProps) {
-  const activityID = activityId;
+export default function ActivityPrice({ Activity, refresh, setRefresh }: ActivityPriceProps) {
+  const selectedActivity = Activity;
   const [activityPrice, setActivityPrice] = useState<ActivityPriceEntity[]>([]);
   // const [refresh, setRefresh] = useState<number>(0);
   const [page, setPage] = useState<PaginationState>({
@@ -34,17 +34,16 @@ export default function ActivityPrice({ activityId, refresh, setRefresh }: Activ
   const user = getLocalStorage()!;
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    console.log("Selected Activity:", selectedActivity?.activityID);
     setLoading(true)
-    if (activityID) {
+    if (selectedActivity?.activityID) {
       getPaginateActivityPrices(
-        activityID,
+        selectedActivity?.activityID,
         page.pageIndex,
         page.pageSize,
       )
         .then((data) => {
           setActivityPrice(data.content);
-          console.log(data.content);
                   setPage((prevPage) => ({
           ...prevPage,
           pageIndex: data.page.number,
@@ -62,12 +61,24 @@ export default function ActivityPrice({ activityId, refresh, setRefresh }: Activ
     }
   }, [refresh, page.pageIndex]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const onUpdate = async (formData: ActivityPriceEntity) => {
-    await updateActivityPrice(formData);
-    setRefresh((prev: number) => prev + 1);
+      const updatedFormData: ActivityPriceEntity = {
+          ...formData,
+          activity: formData.activity
+              ? {
+                    ...formData.activity,
+                    company: user?.profil?.company,
+                    name: formData.activity.name ?? "Aucun nom",
+                }
+              : formData.activity,
+      };
+      console.log("Updated Form Data:", updatedFormData);
+      await updateActivityPrice(updatedFormData);
+
+      setRefresh((prev: number) => prev + 1);
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const onDelete = async (id: string | null) => {
     if (id !== null) {
       await deleteActivityPrice(id);
@@ -89,21 +100,16 @@ export default function ActivityPrice({ activityId, refresh, setRefresh }: Activ
     };
     return [...ActivityPriceColumnOptions, btnAction];
   }, [onUpdate, onDelete]);
-  const company: CompanyEntity = {
-    skipValidation: true,
-    companyID: user?.profil?.company.companyID,
-    mail: "",
-    name: "",
-    phone: "",
-    status: 0,
-  };
+
+
   const activity: ActivityEntity = {
-    skipValidation: true,
-    activityID: activityID,
-    company: company,
-    name: "",
+    activityID: selectedActivity?.activityID ?? null,
+    company: user.profil.company,
+    name: selectedActivity?.name ?? "",
     description: "",
+    price: null,
     status: 0,
+    skipValidation: true,
   };
 
   const body: ActivityPriceEntity = {
@@ -123,6 +129,7 @@ export default function ActivityPrice({ activityId, refresh, setRefresh }: Activ
     await createActivityPrice(formData);
     setRefresh((prev: number) => prev + 1);
   };
+
   return (
     <div className="container mx-auto py-10 px-3">
       <DataTable

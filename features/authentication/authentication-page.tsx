@@ -98,7 +98,7 @@ export default function AuthenticationPage() {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Sbutton
-            message="Connexion réussi !"
+            message="Connexion réussie !"
             libelle="Se connecter"
             className="w-full"
             formAction={formAction}

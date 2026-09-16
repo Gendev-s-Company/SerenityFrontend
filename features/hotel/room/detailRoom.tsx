@@ -34,7 +34,7 @@ export default function DetailRoom() {
                     console.error("Error fetching room details:", error);
                 });
         }
-    }, [roomID]);
+    }, [roomID,refresh]);
 
 
     // useEffect(() => {

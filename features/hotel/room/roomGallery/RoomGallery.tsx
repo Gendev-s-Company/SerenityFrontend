@@ -205,18 +205,26 @@ return (
 
               {/*DROPDOWN MENU*/}
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-semibold">{room.name}</h2>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-bold border ${
-                        room.status === 0
-                          ? "bg-blue-100 text-blue-700 border-blue-200"
-                          : "bg-red-100 text-red-700 border-red-200"
-                      }`}
-                    >
-                      {statusLabel[room.status] || "Inconnu"}
-                    </span>
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-xl font-semibold">{room.name}</h2>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-bold border ${
+                          room.status === 0
+                            ? "bg-blue-100 text-blue-700 border-blue-200"
+                            : "bg-red-100 text-red-700 border-red-200"
+                        }`}
+                      >
+                        {statusLabel[room.status] || "Inconnu"}
+                      </span>
+                    </div>
+                      
+                    {room.description && (
+                      <p className="text-sm text-gray-500 leading-snug">
+                        {room.description}
+                      </p>
+                    )}
+                  </div>
                 <div className="grid grid-cols-[auto_auto] gap-2 items-center">
                   {/* UpdateBox en grid à côté du bouton */}
                   <UpdateBox body={room} onUpdate={onUpdate} fields={namefield} />
@@ -281,19 +289,21 @@ return (
               </div>
 
               {/* BADGES PRIX */}
-              <div className="mb-6 flex gap-3">
+              <div className="mb-6 flex flex-wrap gap-2 sm:gap-3">
                 {room.roomPrice?.nightPrice && (
                   <div>
-                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold border border-emerald-200">
-                    <Moon size={14} style={{ marginRight: '8px' }}/>  {getCurrency(room.roomPrice.nightPrice)}/nuit
+                    <span className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-emerald-100 text-emerald-700 text-xs sm:text-sm font-bold border border-emerald-200 whitespace-nowrap">
+                      <Moon className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5 sm:mr-2" />
+                      {getCurrency(room.roomPrice.nightPrice)}/nuit
                     </span>
                   </div>
                 )}
 
                 {room.roomPrice?.hourPrice && (
                   <div>
-                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-bold border border-amber-200">
-                     <Clock size={14} style={{ marginRight: '8px' }} />  {getCurrency(room.roomPrice.hourPrice)}/heure
+                    <span className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-amber-100 text-amber-700 text-xs sm:text-sm font-bold border border-amber-200">
+                      <Clock size={12} className="mr-1.5 sm:mr-2 sm:!size-[14px]" />
+                      {getCurrency(room.roomPrice.hourPrice)}/heure
                     </span>
                   </div>
                 )}
