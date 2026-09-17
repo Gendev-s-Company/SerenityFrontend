@@ -90,7 +90,7 @@ export default function WorkSchedulePage() {
 
   const options: FieldConfig<WorkSchedule> = useMemo(
     () => ({
-      name: "userID",
+      name: "users",
       libelle: "Utilisateur :",
       type: "select",
       normal: false,
@@ -107,12 +107,8 @@ export default function WorkSchedulePage() {
   }, [options]);
 
   const onUpdate = async (formData: WorkSchedule) => {
-    const dataToSend = {
-      ...formData,
-      userID: formData.userID?.userID || formData.userID
-    };
     // console.log('Donnees envoyees:',formData);
-    await updateworkSC(dataToSend);
+    await updateworkSC(formData);
     setRefresh((prev) => prev + 1);
   };
   const onDelete = async (id: string | null) => {
@@ -137,20 +133,17 @@ export default function WorkSchedulePage() {
 
   const body: WorkSchedule = {
     scheduleID: null,
-    userID: user?.userID ? user.userID : "",
+    users: user,
+    description: "",
     starttime: new Date(),
     endtime: null,
     color:"#2196F3",
-    status: 0
+    status: 0,
   };
 
   const onCreate = async (formData: WorkSchedule) => {
-    const dataToSend = {
-      ...formData,
-      userID: formData.userID?.userID || formData.userID
-    };
     // console.log('Donnees envoyees:',formData);
-    await createworkSC(dataToSend);
+    await createworkSC(formData);
     setRefresh((prev) => prev + 1);
   };
 

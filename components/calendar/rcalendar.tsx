@@ -3,7 +3,7 @@ import './shadcn-big-calendar/shadcn-big-calendar.css'
 import { Calendarbody, CalendarEvent } from "@/components/calendar/calendar-function";
 import ShadcnBigCalendar from "@/components/calendar/shadcn-big-calendar/shadcn-big-calendar";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Calendar, Calendar1, Clock, Pencil, Plus, Trash2 } from "lucide-react";
 import moment from "moment";
 import { ComponentType, SetStateAction, useEffect, useMemo, useState } from "react";
 import type { CalendarProps, View } from "react-big-calendar";
@@ -14,7 +14,7 @@ import CalendarDialog from "./shadcn-big-calendar/CalendarDialog";
 import { FieldConfig, FieldOptions } from "@/types/component-type/form-type";
 import { modifyListEvent } from '../../features/users/work/planning/planningFunction';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
-
+import { useRouter } from "next/navigation";
 
 const DnDCalendar = withDragAndDrop<CalendarEvent>(
     ShadcnBigCalendar as ComponentType<CalendarProps<CalendarEvent>>
@@ -33,6 +33,7 @@ interface CEventsProps<T> {
 
 function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToDb, initForm }: CEventsProps<T>) {
 
+    const router = useRouter();
     const [view, setView] = useState<View>(Views.MONTH);
     const [date, setDate] = useState(new Date());
     const [events, setEvents] = useState<CalendarEvent[]>(works);
@@ -163,6 +164,11 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
         const slotInfo: SlotInfo = { start: minTime, end: maxTime, slots: [], action: "click" }
         setSelectedSlot(slotInfo)
     }
+
+    const planning = () => {
+         router.push('/view/users/work/')
+    }
+
     return (
         <div className="container py-6 px-5 space-y-6">
             
@@ -221,6 +227,7 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
                 onSelectEvent={(event) => {
                     setSelectedEvent(event);
                     setOpen(true);
+                    console.log("Selected event:", event);
                 }}
                 eventPropGetter={eventPropGetter}
                 onSelectSlot={handleSelectSlot}
@@ -229,45 +236,60 @@ function Rcalendar<T>({ list, works, fields, body, convertionToCalendar, saveToD
             />
         
         </div>
-                    
+
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent>
-            <DialogHeader>      
-                <DialogTitle>{selectedEvent?.title}</DialogTitle>
-                    <DialogDescription>{selectedEvent?.description}</DialogDescription>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader className="space-y-1">
+              <DialogTitle className="text-xl font-semibold">
+                {selectedEvent?.title}
+              </DialogTitle>
+              {selectedEvent?.description && (
+                <DialogDescription className="text-sm text-muted-foreground">
+                  {selectedEvent.description}
+                </DialogDescription>
+              )}
             </DialogHeader>
-                    
-            <div className="space-y-2 py-2 text-sm">        
-                <div>
-                  <span className="font-medium">Début : </span>
-                  {selectedEvent?.start.toLocaleString("fr-FR", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
+          
+            <div className="space-y-3 py-4">
+              <div className="flex items-center gap-3 rounded-lg border bg-muted/40 p-3">
+                <Calendar className="h-4 w-4 text-blue-500 shrink-0" />
+                <div className="text-sm">
+                  <span className="font-medium text-foreground">Début : </span>
+                  <span className="text-muted-foreground">
+                    {selectedEvent?.start.toLocaleString("fr-FR", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
                 </div>
-                <div>
-                  <span className="font-medium">Fin : </span>
-                  {selectedEvent?.end.toLocaleString("fr-FR", {
-          dateStyle: "medium",
-          timeStyle: "short",
-                  })}
+              </div>
+                
+              <div className="flex items-center gap-3 rounded-lg border bg-muted/40 p-3">
+                <Clock className="h-4 w-4 text-blue-500 shrink-0" />
+                <div className="text-sm">
+                  <span className="font-medium text-foreground">Fin : </span>
+                  <span className="text-muted-foreground">
+                    {selectedEvent?.end.toLocaleString("fr-FR", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
                 </div>
+              </div>
             </div>
-            
-            <DialogFooter>      
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                        Fermer
-                </Button>
-                <Button onClick={() => {
-                    // logique d'édition ou de suppression ici
-                    }}>
-                  Modifier
-                </Button>
+                
+            <DialogFooter className="gap-2 sm:gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 gap-2 cursor-pointer transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
+                onClick={planning}
+              >
+                <Calendar1 className="h-4 w-4" />
+                Voir le planning
+              </Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
-
-            
+        </Dialog>  
         </div>
     );
 };

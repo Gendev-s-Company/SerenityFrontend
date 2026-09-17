@@ -15,6 +15,7 @@ export const getAllworkSCByAutority = async (userID: string) => {
 
 export const getAllByListUser = async (list: FieldOptions[],company: string) => {
   const param = convertOptionToListParam(list)
+  console.log(param);
   return await getCall<WorkSchedule[]>(`${workPath}/calendar/choice${param}&company=${company}`);
 }
 

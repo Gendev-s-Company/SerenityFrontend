@@ -1,9 +1,11 @@
+import { UserEntity } from "./userEntity";
+
 export interface WorkSchedule {
-    scheduleID: string | null,
-    userID: string,
-    color?: string,
-    starttime: Date,
-    endtime: Date|null,
-    description: string,
-    status: number,
+    scheduleID: string | null;
+    users: UserEntity;
+    color?: string;
+    starttime: Date;
+    endtime: Date | null;
+    description: string;
+    status: number;
 }

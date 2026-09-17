@@ -35,7 +35,7 @@ const Planning = () => {
   
   const body: WorkSchedule = {
     scheduleID: null,
-    userID: user?.userID ? user.userID : "",
+    users: user,
     starttime: new Date(),
     endtime: null,
     color: "#2196F3",
@@ -89,14 +89,14 @@ const Planning = () => {
 
   const options: FieldConfig<WorkSchedule> = useMemo(
     () => ({
-      name: "userID",
+      name: "users",
       libelle: "Utilisateur :",
       type: "select",
       normal: false,
       items: users,
       objectMapping: {
-          idKey: "userID",
-          labelKey: "name"
+          idKey: "id",
+          labelKey: "label"
       }
     }),
     [users],
@@ -106,7 +106,8 @@ const Planning = () => {
   }, [options]);
   const convertionToCalendar = (body: WorkSchedule): Calendarbody => {
     const value: Calendarbody = {
-      title: body.userID,
+      title: body.users?.name,
+      description: body.description,
       start: body.starttime.toString(),
       end: body.endtime!.toString(),
       variant: "primary",
@@ -117,28 +118,31 @@ const Planning = () => {
   };
 
     const onCreate = async (formData: WorkSchedule) => {
-      const dataToSend = {
-        ...formData,
-        userID: formData.userID?.userID || formData.userID
-      };
-      // console.log('Donnees envoyees:',formData);
-      await createworkSC(dataToSend);
-      setRefresh((prev) => prev + 1);
+        try {
+            console.log("Données envoyées :", formData);
+        
+            await createworkSC(formData);
+        
+            setRefresh((prev) => prev + 1);
+        } catch (error) {
+            console.error("Error creating work schedule:", error);
+        }
     };
 
-  const initForm = (body: WorkSchedule, slot: SlotInfo) => {
-    body.starttime = slot.start;
-    body.endtime = slot.end;
-    setForm(body);
-  };
-   
-  const updateFilter = (filters:FieldOptions[]) => {
-    setFilters(filters)
-    if (filters.length<=0) {
-      setRefresh((prev) => prev+1)
-      
+    const initForm = (body: WorkSchedule, slot: SlotInfo) => {
+      body.starttime = slot.start;
+      body.endtime = slot.end;
+      setForm(body);
+    };
+
+    const updateFilter = (filters:FieldOptions[]) => {
+      setFilters(filters)
+      if (filters.length<=0) {
+        setRefresh((prev) => prev+1)
+
+      }
     }
-  }
+
   return (
       <div className="space-y-6">        
         {/* Filter Section */}

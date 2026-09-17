@@ -6,7 +6,7 @@ export function convertListToEvent(list: WorkSchedule[]): CalendarEvent[]{
     const result:CalendarEvent[] = []
     list.map((row) => {
         result.push({
-            title: row.userID,
+            title: row.users.name,
             start: simpleTransform(row.starttime),
             end: simpleTransform(row.endtime!),
             color:row.color,
@@ -26,7 +26,8 @@ export const modifyListEvent = (events: CalendarEvent[], options:FieldOptions[])
             title: found ? found.label : row.title,
             start: row.start,
             end: row.end,
-            color:row.color
+            color:row.color,
+            description: row.description,
         })
     })
     return result;

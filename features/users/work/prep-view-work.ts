@@ -5,7 +5,7 @@ import { WorkSchedule } from "@/types/entity-type/workschedule";
 export const WSCColumnOptions: ColumnConfig<WorkSchedule>[] = [
     { key: "select", header: "Select", type: "checkbox" },
     { key: "scheduleID", header: "scheduleID", sorting: true },
-    { key: "userID", header: "userID", sorting: true },
+    { key: "users.name", header: "Utilisateur", sorting: true },
     {
         key: "starttime",
         header: "Début",
